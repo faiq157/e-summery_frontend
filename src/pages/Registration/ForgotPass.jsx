@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { ForgotValidationSchema } from "../../utils/authValidation";
-
+const base_URL = import.meta.env.VITE_APP_API_URL;
 const ForgotPass = () => {
   const [loginError, setLoginError] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -14,7 +14,7 @@ const ForgotPass = () => {
   const handleSubmit = async (values) => {
     try {
       const response = await axios.post(
-        "https://e-summery-backend.onrender.com/api/auth/forgotpassword",
+        `${base_URL}/auth/forgotpassword`,
         values
       );
       setLoginError(null);

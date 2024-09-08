@@ -3,18 +3,25 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginValidationSchema } from "../../utils/authValidation";
-
+const base_URL = import.meta.env.VITE_APP_API_URL;
+console.log(base_URL);
 const Login = () => {
   const [loginError, setLoginError] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (values) => {
     try {
-      const response = await axios.post(
-        "https://e-summery-backend.onrender.com/api/auth/login",
-        values
-      );
+      const response = await axios.post(`${base_URL}/auth/login`, values);
       console.log("Login successful", response.data);
+      console.log("Login successful", response.data);
+
+      // Assuming your backend sends the token in response.data.token
+      const token = response.data.token;
+
+      // Store the token in localStorage
+      localStorage.setItem("authToken", token);
+
+      // Now navigate to the home page
       navigate("/");
     } catch (error) {
       setLoginError(error.response.data.msg);

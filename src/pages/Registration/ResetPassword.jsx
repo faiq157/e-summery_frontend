@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { resetPasswordValidationSchema } from "../../utils/authValidation";
-
+const base_URL = import.meta.env.VITE_APP_API_URL;
 const ResetPassword = () => {
   const { token } = useParams();
   const navigate = useNavigate();
@@ -18,12 +18,9 @@ const ResetPassword = () => {
     }
 
     try {
-      const res = await axios.post(
-        `https://e-summery-backend.onrender.com/api/auth/reset-password/${token}`,
-        {
-          password: values.password,
-        }
-      );
+      const res = await axios.post(`${base_URL}/auth/reset-password/${token}`, {
+        password: values.password,
+      });
       setMessage(res.data.msg);
       setTimeout(() => {
         navigate("/login");

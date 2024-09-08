@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { IoChevronDownCircleOutline } from "react-icons/io5";
 import { RegisterValidationSchema } from "../../utils/authValidation";
-
+const base_URL = import.meta.env.VITE_APP_API_URL;
 const Register = () => {
   const [RegisterError, SetRegisterError] = useState(null);
   const [selectedRole, setSelectedRole] = useState(null);
@@ -25,10 +25,7 @@ const Register = () => {
 
     try {
       setIsLoading(true);
-      const response = await axios.post(
-        "https://e-summery-backend.onrender.com/api/auth/register",
-        values
-      );
+      const response = await axios.post(`${base_URL}/auth/register`, values);
       console.log("Registration successful", response.data);
       navigate("/login");
     } catch (error) {
