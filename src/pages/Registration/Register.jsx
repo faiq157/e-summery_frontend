@@ -25,8 +25,10 @@ const Register = () => {
 
     try {
       setIsLoading(true);
-      const baseURL = import.meta.env.VITE_BASE_URL;
-      const response = await axios.post(`${baseURL}/auth/register`, values);
+      const response = await axios.post(
+        "https://e-summery-backend.onrender.com/api/auth/register",
+        values
+      );
       console.log("Registration successful", response.data);
       navigate("/login");
     } catch (error) {
