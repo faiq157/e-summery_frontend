@@ -11,7 +11,7 @@ const Login = () => {
   const handleSubmit = async (values) => {
     try {
       const response = await axios.post(
-        "https://e-summery.netlify.app/api/auth/login",
+        "https://e-summery-backend.onrender.com/api/auth/login",
         values
       );
       console.log("Login successful", response.data);

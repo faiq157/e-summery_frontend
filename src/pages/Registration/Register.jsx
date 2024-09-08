@@ -26,7 +26,7 @@ const Register = () => {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        "https://e-summery.netlify.app/api/auth/register",
+        "https://e-summery-backend.onrender.com/api/auth/register",
         values
       );
       console.log("Registration successful", response.data);

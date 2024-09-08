@@ -14,7 +14,7 @@ const ForgotPass = () => {
   const handleSubmit = async (values) => {
     try {
       const response = await axios.post(
-        "https://e-summery.netlify.app/api/auth/forgotpassword",
+        "https://e-summery-backend.onrender.com/api/auth/forgotpassword",
         values
       );
       setLoginError(null);

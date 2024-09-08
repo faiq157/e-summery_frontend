@@ -19,7 +19,7 @@ const ResetPassword = () => {
 
     try {
       const res = await axios.post(
-        `https://e-summery.netlify.app/api/auth/reset-password/${token}`,
+        `https://e-summery-backend.onrender.com/api/auth/reset-password/${token}`,
         {
           password: values.password,
         }
