@@ -17,7 +17,7 @@ const Header = () => {
     <header className="sticky top-0 z-999 flex w-full bg-background border-b-2 dark:border-border h-20  drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
       <div className="flex items-center ml-auto mr-4">
         <ModeToggle/>
-        <DropdownMenu>
+        <DropdownMenu >
           <DropdownMenuTrigger asChild>
             <button className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-lg font-bold text-gray-800">

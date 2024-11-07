@@ -1,5 +1,8 @@
-import { Calendar, ChevronUp, Home, Inbox, Search, Settings, User2 } from "lucide-react"
-
+import { useLocation } from "react-router-dom";
+import { ChevronUp, Home, Settings, User2 } from "lucide-react";
+import { TbProgressBolt } from "react-icons/tb";
+import { MdOutlineSpatialTracking } from "react-icons/md";
+import { FaRegCheckCircle } from "react-icons/fa";
 import {
   Sidebar,
   SidebarContent,
@@ -10,10 +13,14 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
+} from "@/components/ui/sidebar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
-// Menu items.
 const items = [
   {
     title: "Home",
@@ -21,28 +28,30 @@ const items = [
     icon: Home,
   },
   {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
+    title: "Progress",
+    url: "/progress",
+    icon: TbProgressBolt,
   },
   {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
+    title: "Completed",
+    url: "/completed",
+    icon: FaRegCheckCircle,
   },
   {
-    title: "Search",
-    url: "#",
-    icon: Search,
+    title: "Tracking",
+    url: "/tracking",
+    icon: MdOutlineSpatialTracking,
   },
   {
     title: "Settings",
-    url: "#",
+    url: "/setting",
     icon: Settings,
   },
-]
+];
 
 export function AppSidebar() {
+  const location = useLocation();
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -51,9 +60,16 @@ export function AppSidebar() {
           <SidebarGroupContent className="mt-10">
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem className="my-1 data-[active=true]:bg-gray-200 dark:data-[active=true]:bg-gray-700" key={item.title}>
+                <SidebarMenuItem
+                  key={item.title}
+                  className={`my-1 ${
+                    location.pathname === item.url
+                      ? "bg-gray-200 dark:bg-gray-700 rounded-md text-black dark:text-white"
+                      : "hover:bg-gray-100 rounded-md dark:hover:bg-gray-800"
+                  }`}
+                >
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <a href={item.url} className="flex items-center gap-2">
                       <item.icon />
                       <span>{item.title}</span>
                     </a>
@@ -65,30 +81,30 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton>
-                    <User2 /> Username
-                    <ChevronUp className="ml-auto" />
-                  </SidebarMenuButton>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  side="top"
-                  className="w-[--radix-popper-anchor-width]"
-                >
-                  <DropdownMenuItem>
-                    <span>Account</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span className="text-red-500">Sign out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton>
+                  <User2 /> Username
+                  <ChevronUp className="ml-auto" />
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                side="top"
+                className="w-[--radix-popper-anchor-width]"
+              >
+                <DropdownMenuItem>
+                  <span>Account</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <span className="text-red-500">Sign out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
