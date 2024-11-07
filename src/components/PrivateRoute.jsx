@@ -1,9 +1,14 @@
+import { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
-const PrivateRoute = () => {
-  const isAuthenticated = !!localStorage.getItem("authToken");
+const ProtectedRoute = () => {
+  const { isAuthenticated, user } = useContext(AuthContext);
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+  // Check for user in cookies or local storage
+  const isUserLoggedIn = isAuthenticated || !!user || !!localStorage.getItem("user");
+
+  return isUserLoggedIn ? <Outlet /> : <Navigate to="/login" />;
 };
 
-export default PrivateRoute;
+export default ProtectedRoute;

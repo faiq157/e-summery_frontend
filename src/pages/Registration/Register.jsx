@@ -131,44 +131,85 @@ const Register = () => {
 
               <label>Role</label>
               <div className="w-52 text-right">
-                <Menu>
-                  <MenuButton
-                    className={`inline-flex items-center justify-between gap-2 rounded-md border w-80 py-1.5 px-3 text-sm font-semibold text-black shadow-inner shadow-white/10 focus:outline-none ${
-                      touched.role && errors.role
-                        ? "border-red-500"
-                        : "border-[#D9D9D9]"
-                    }`}
-                  >
-                    {selectedRole || "Select a Role"}
-                    <IoChevronDownCircleOutline className="size-4 fill-black/60" />
-                  </MenuButton>
-                  <MenuItems
-                    transition
-                    anchor="bottom start"
-                    className="w-80 left-0 bg-gray-100 rounded-xl border border-gray-300 p-1 text-sm text-black transition duration-100 ease-out"
-                  >
-                    <MenuItem
-                      onClick={() => {
-                        setFieldValue("role", "Admin");
-                        setSelectedRole("Admin");
-                      }}
-                    >
-                      <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3">
-                        Admin
-                      </button>
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => {
-                        setFieldValue("role", "User");
-                        setSelectedRole("User");
-                      }}
-                    >
-                      <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3">
-                        User
-                      </button>
-                    </MenuItem>
-                  </MenuItems>
-                </Menu>
+       <Menu>
+  <MenuButton
+    className={`inline-flex items-center justify-between gap-2 rounded-md border w-80 py-1.5 px-3 text-sm font-semibold text-black shadow-inner shadow-white/10 focus:outline-none ${
+      touched.role && errors.role
+        ? "border-red-500"
+        : "border-[#D9D9D9]"
+    }`}
+  >
+    {selectedRole || "Select a Role"}
+    <IoChevronDownCircleOutline className="size-4 fill-black/60" />
+  </MenuButton>
+  <MenuItems
+    transition
+    anchor="bottom start"
+    className="w-80 left-0 bg-gray-100 rounded-xl border border-gray-300 p-1 text-sm text-black transition duration-100 ease-out"
+  >
+    <MenuItem
+      onClick={() => {
+        setFieldValue("role", "HeadOfDepartment");
+        setSelectedRole("HeadOfDepartment");
+      }}
+    >
+      <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3">
+        Head of Department
+      </button>
+    </MenuItem>
+    <MenuItem
+      onClick={() => {
+        setFieldValue("role", "Registrar");
+        setSelectedRole("Registrar");
+      }}
+    >
+      <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3">
+        Registrar
+      </button>
+    </MenuItem>
+    <MenuItem
+      onClick={() => {
+        setFieldValue("role", "DRegistrar");
+        setSelectedRole("DRegistrar");
+      }}
+    >
+      <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3">
+        Deputy Registrar
+      </button>
+    </MenuItem>
+    <MenuItem
+      onClick={() => {
+        setFieldValue("role", "VC");
+        setSelectedRole("VC");
+      }}
+    >
+      <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3">
+        Vice Chancellor
+      </button>
+    </MenuItem>
+    <MenuItem
+      onClick={() => {
+        setFieldValue("role", "Establishment");
+        setSelectedRole("Establishment");
+      }}
+    >
+      <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3">
+        Establishment
+      </button>
+    </MenuItem>
+    <MenuItem
+      onClick={() => {
+        setFieldValue("role", "OtherRoles");
+        setSelectedRole("OtherRoles");
+      }}
+    >
+      <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3">
+        Other Roles
+      </button>
+    </MenuItem>
+  </MenuItems>
+</Menu>
+
               </div>
               <ErrorMessage
                 className="text-red-500 text-xs"
