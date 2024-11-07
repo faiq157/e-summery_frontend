@@ -1,27 +1,26 @@
 import axios from "axios";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginValidationSchema } from "../../utils/authValidation";
+import { AuthContext } from "../../context/AuthContext";
+
 const base_URL = import.meta.env.VITE_APP_API_URL;
-console.log(base_URL);
+
 const Login = () => {
   const [loginError, setLoginError] = useState(null);
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);  // Access the login function from AuthContext
 
   const handleSubmit = async (values) => {
     try {
       const response = await axios.post(`${base_URL}/auth/login`, values);
-      console.log("Login successful", response.data);
-      console.log("Login successful", response.data);
+       const { token, user } = response.data;  // Assuming your API returns { token, user }
 
-      // Assuming your backend sends the token in response.data.token
-      const token = response.data.token;
+      // Use login function from context to store token and user data
+      login(token, user);
 
-      // Store the token in localStorage
-      localStorage.setItem("authToken", token);
-
-      // Now navigate to the home page
+      // Navigate to the home page after login
       navigate("/");
     } catch (error) {
       setLoginError(error.response.data.msg);
@@ -30,10 +29,7 @@ const Login = () => {
   };
 
   return (
-    <div
-      className="flex justify-center flex-col items-center h-screen"
-      id="login"
-    >
+    <div className="flex justify-center flex-col items-center h-screen" id="login">
       <div className="flex flex-col justify-center items-center gap-4">
         <h1 className="text-4xl font-bold">Login Your Account</h1>
         <p className="text-2xl m-5">Welcome back🙌</p>
@@ -53,34 +49,22 @@ const Login = () => {
               <label>Email</label>
               <Field
                 className={`py-1 border w-80 rounded-md px-2 ${
-                  touched.email && errors.email
-                    ? "border-red-500"
-                    : "border-[#D9D9D9]"
+                  touched.email && errors.email ? "border-red-500" : "border-[#D9D9D9]"
                 }`}
                 type="email"
                 name="email"
               />
-              <ErrorMessage
-                className="text-red-500 text-xs"
-                name="email"
-                component="div"
-              />
+              <ErrorMessage className="text-red-500 text-xs" name="email" component="div" />
 
               <label htmlFor="password">Password</label>
               <Field
                 className={`py-1 border w-80 rounded-md px-2 ${
-                  touched.password && errors.password
-                    ? "border-red-500"
-                    : "border-[#D9D9D9]"
+                  touched.password && errors.password ? "border-red-500" : "border-[#D9D9D9]"
                 }`}
                 type="password"
                 name="password"
               />
-              <ErrorMessage
-                className="text-xs text-red-500"
-                name="password"
-                component="div"
-              />
+              <ErrorMessage className="text-xs text-red-500" name="password" component="div" />
 
               <button
                 className="bg-[#2C2C2C] mb-10 mt-3 rounded py-2 text-white"
@@ -93,10 +77,7 @@ const Login = () => {
           )}
         </Formik>
         <div className="flex justify-between items-center w-80 text-sm gap-2">
-          <p
-            className="text-[#807878] cursor-pointer"
-            onClick={() => navigate("/forgot")}
-          >
+          <p className="text-[#807878] cursor-pointer" onClick={() => navigate("/forgot")}>
             Forgot Password?
           </p>
           <button
