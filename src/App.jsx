@@ -12,27 +12,28 @@ import Setting from "./pages/Setting";
 
 import DraftApplication from "./pages/createApp/DraftApplication";
 import NotFoundPage from "./pages/NotFoundPage";
-// import CreateApplication from "./pages/createApp/CreateApplication";
+import CreateApplication from "./pages/createApp/CreateApplication";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<PrivateRoute />}>
-           <Route path="/" element={<Home />} />
-           <Route path="*" element={<NotFoundPage />} />
-           <Route path="progress" element={<Progress />} />
-           <Route path="completed" element={<Completed />} />
-            <Route path="tracking" element={<Tracking />} />
-            <Route path="setting" element={<Setting />} />
-            {/* <Route path="create" element={<CreateApplication />} /> */}
-            <Route path="draft" element={<DraftApplication />} />
+        <Route path="/" element={<PrivateRoute/>}>
+          <Route index element={<Home />} /> {/* Use index for the default route */}
+          <Route path="progress" element={<Progress />} />
+          <Route path="completed" element={<Completed />} />
+          <Route path="tracking" element={<Tracking />} />
+          <Route path="setting" element={<Setting />} />
+          <Route path="create" element={<CreateApplication />} />
+          <Route path="draft" element={<DraftApplication />} />
         </Route>
-        <Route path="*" element={<NotFoundPage />} /> 
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
-        <Route path="forgot" element={<ForgotPass />} />
-        <Route path="resetpassword/:token" element={<ResetPassword />} />
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot" element={<ForgotPass />} />
+        <Route path="/resetpassword/:token" element={<ResetPassword />} />
+
+        <Route path="*" element={<NotFoundPage />} /> {/* 404 route should be last */}
       </Routes>
     </BrowserRouter>
   );
