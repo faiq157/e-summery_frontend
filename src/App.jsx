@@ -9,9 +9,10 @@ import Progress from "./pages/Progress";
 import Completed from "./pages/Completed";
 import Tracking from "./pages/Tracking";
 import Setting from "./pages/Setting";
-import CreateApplication from "./pages/createApp/createApplication";
+
 import DraftApplication from "./pages/createApp/DraftApplication";
 import NotFoundPage from "./pages/NotFoundPage";
+// import CreateApplication from "./pages/createApp/CreateApplication";
 
 function App() {
   return (
@@ -24,7 +25,7 @@ function App() {
            <Route path="completed" element={<Completed />} />
             <Route path="tracking" element={<Tracking />} />
             <Route path="setting" element={<Setting />} />
-            <Route path="create" element={<CreateApplication />} />
+            {/* <Route path="create" element={<CreateApplication />} /> */}
             <Route path="draft" element={<DraftApplication />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} /> 
