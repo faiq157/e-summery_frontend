@@ -51,7 +51,9 @@ const items = [
 
 export function AppSidebar() {
   const location = useLocation();
-
+   const storedUser = localStorage.getItem('user');
+     const userData = storedUser ? JSON.parse(storedUser) : null; 
+console.log("storedUser0",storedUser)
   return (
     <Sidebar>
       <SidebarContent>
@@ -86,7 +88,7 @@ export function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <User2 /> Username
+                  <User2 /> {userData.fullname}
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>

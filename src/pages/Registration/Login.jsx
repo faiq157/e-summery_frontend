@@ -48,7 +48,7 @@ const Login = () => {
             <Form className="flex flex-col gap-2">
               <label>Email</label>
               <Field
-                className={`py-1 border w-80 rounded-md px-2 ${
+                className={`py-1 border bg-transparent w-80 rounded-md px-2 ${
                   touched.email && errors.email ? "border-red-500" : "border-[#D9D9D9]"
                 }`}
                 type="email"
@@ -58,7 +58,7 @@ const Login = () => {
 
               <label htmlFor="password">Password</label>
               <Field
-                className={`py-1 border w-80 rounded-md px-2 ${
+                className={`py-1 bg-transparent border w-80 rounded-md px-2 ${
                   touched.password && errors.password ? "border-red-500" : "border-[#D9D9D9]"
                 }`}
                 type="password"
@@ -67,7 +67,7 @@ const Login = () => {
               <ErrorMessage className="text-xs text-red-500" name="password" component="div" />
 
               <button
-                className="bg-[#2C2C2C] mb-10 mt-3 rounded py-2 text-white"
+                className="bg-card border mb-10 mt-3 rounded py-2 text-black dark:text-white"
                 type="submit"
                 disabled={isSubmitting}
               >
@@ -80,14 +80,6 @@ const Login = () => {
           <p className="text-[#807878] cursor-pointer" onClick={() => navigate("/forgot")}>
             Forgot Password?
           </p>
-          <button
-            onClick={() => navigate("/register")}
-            type="button"
-            id="register"
-            className="px-12 border border-[#D9D9D9] rounded-lg py-2 text-black"
-          >
-            Register
-          </button>
         </div>
       </div>
     </div>
