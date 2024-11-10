@@ -14,5 +14,11 @@
      npm run dev
 # Live Demo
     https://e-summery.netlify.app/
+
+ ## Demo Credential
+   #### Email
+        demo@gmail.com
+   #### Password
+        Demo1234
   
   
