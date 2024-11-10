@@ -3,7 +3,16 @@ export default {
     darkMode: ["class"],
     content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
+	
   	extend: {
+		  animation: {
+        spin: "spin 1s linear infinite",
+        slower: "spin 2s linear infinite",
+        fastest: "spin 0.4s linear infinite",
+      },
+      backgroundImage: {
+        'gradient-r': 'linear-gradient(to right, var(--tw-gradient-stops))',
+      },
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
