@@ -15,7 +15,7 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-999 flex w-full bg-background border-b-2 dark:border-border h-20  drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
-      <div className="flex items-center ml-auto mr-4">
+      <div className="flex items-center gap-4 ml-auto mr-8">
         <ModeToggle/>
         <DropdownMenu >
           <DropdownMenuTrigger asChild>
