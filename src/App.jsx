@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Registration/Login";
-import Register from "./pages/Registration/Register";
+// import Register from "./pages/Registration/Register";
 import ForgotPass from "./pages/Registration/ForgotPass";
 import ResetPassword from "./pages/Registration/ResetPassword";
 import PrivateRoute from "./components/PrivateRoute";
@@ -19,7 +19,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<PrivateRoute/>}>
-          <Route index element={<Home />} /> {/* Use index for the default route */}
+          <Route index element={<Home />} />
           <Route path="progress" element={<Progress />} />
           <Route path="completed" element={<Completed />} />
           <Route path="tracking" element={<Tracking />} />
@@ -29,7 +29,7 @@ function App() {
         </Route>
 
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        {/* <Route path="/register" element={<Register />} /> */}
         <Route path="/forgot" element={<ForgotPass />} />
         <Route path="/resetpassword/:token" element={<ResetPassword />} />
 
