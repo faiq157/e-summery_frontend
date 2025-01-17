@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import Dashboardlayout from '@/layout/Dashboardlayout';
 import axios from 'axios';
@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 const CreateApplication = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submittedData, setSubmittedData] = useState(null);
+  const storedToken = localStorage.getItem('token');
 
   const TextInput = ({ label, name, type = "text", ...rest }) => (
     <div className="mb-4">

@@ -36,21 +36,27 @@ const Header = () => {
         <ModeToggle />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-lg font-bold text-gray-800">
+            <button className="flex items-center gap-2 focus:outline-none hover:border-none">
+              {/* Avatar Circle */}
+              <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-lg font-bold text-gray-800 hover:bg-gray-400 transition-colors">
                 {firstLetter}
               </div>
-              <span className="text-sidebar-accent-foreground">
+              {/* User Name */}
+              <span className="text-sidebar-accent-foreground hover:bg-gray-100 rounded px-2 py-1 transition-colors">
                 {userData?.fullname}
               </span>
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-48">
-            <DropdownMenuItem>{userData?.email}</DropdownMenuItem>
-            <DropdownMenuItem>{userData?.role}</DropdownMenuItem>
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem className="text-red-500" onClick={logout}>
+          {/* Dropdown Menu Content */}
+          <DropdownMenuContent className=" bg-secondary cursor-pointer dark:bg-boxdark rounded-lg p-2 mt-3">
+            <DropdownMenuItem className="focus:outline-none px-2 py-1 rounded hover:bg-gray-200">{userData?.email}</DropdownMenuItem>
+            <DropdownMenuItem className="focus:outline-none px-2 py-1 rounded hover:bg-gray-200">{userData?.role}</DropdownMenuItem>
+            <DropdownMenuItem className="focus:outline-none px-2 py-1 rounded hover:bg-gray-200">Profile</DropdownMenuItem>
+            <DropdownMenuItem className="focus:outline-none px-2 py-1 rounded hover:bg-gray-200">Settings</DropdownMenuItem>
+            <DropdownMenuItem
+              className="text-red-500 hover:bg-red-100 focus:outline-none cursor-pointer rounded px-2 py-1 transition-colors"
+              onClick={logout}
+            >
               Logout
             </DropdownMenuItem>
           </DropdownMenuContent>

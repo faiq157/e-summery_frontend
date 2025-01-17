@@ -2,13 +2,10 @@ import axios from "axios";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { IoChevronDownCircleOutline } from "react-icons/io5";
 import { RegisterValidationSchema } from "../../utils/authValidation";
 const base_URL = import.meta.env.VITE_APP_API_URL;
 const Register = () => {
   const [RegisterError, SetRegisterError] = useState(null);
-  const [selectedRole, setSelectedRole] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -65,13 +62,12 @@ const Register = () => {
             setSubmitting(false);
           }}
         >
-          {({ isSubmitting, errors, touched, setFieldValue }) => (
+          {({ isSubmitting, errors, touched }) => (
             <Form className="flex flex-col gap-2">
               <label>Full Name</label>
               <Field
-                className={`py-1 border w-80 rounded-md px-2 ${
-                  errors.fullname && touched.fullname ? "border-red-500" : ""
-                }`}
+                className={`py-1 border w-80 rounded-md px-2 ${errors.fullname && touched.fullname ? "border-red-500" : ""
+                  }`}
                 type="text"
                 name="fullname"
                 placeholder="Full Name"
@@ -84,9 +80,8 @@ const Register = () => {
 
               <label>Email</label>
               <Field
-                className={`py-1 border w-80 rounded-md px-2 ${
-                  errors.email && touched.email ? "border-red-500" : ""
-                }`}
+                className={`py-1 border w-80 rounded-md px-2 ${errors.email && touched.email ? "border-red-500" : ""
+                  }`}
                 type="email"
                 name="email"
                 placeholder="Email"
@@ -99,9 +94,8 @@ const Register = () => {
 
               <label htmlFor="password"> Password</label>
               <Field
-                className={`py-1 border w-80 rounded-md px-2 ${
-                  errors.password && touched.password ? "border-red-500" : ""
-                }`}
+                className={`py-1 border w-80 rounded-md px-2 ${errors.password && touched.password ? "border-red-500" : ""
+                  }`}
                 type="password"
                 name="password"
                 placeholder="Password"
@@ -114,11 +108,10 @@ const Register = () => {
 
               <label htmlFor="Confpassword">Confirm Password</label>
               <Field
-                className={`py-1 border w-80 rounded-md px-2 ${
-                  errors.Confpassword && touched.Confpassword
-                    ? "border-red-500"
-                    : ""
-                }`}
+                className={`py-1 border w-80 rounded-md px-2 ${errors.Confpassword && touched.Confpassword
+                  ? "border-red-500"
+                  : ""
+                  }`}
                 type="password"
                 name="Confpassword"
                 placeholder="Confirm Password"
@@ -131,84 +124,12 @@ const Register = () => {
 
               <label>Role</label>
               <div className="w-52 text-right">
-       <Menu>
-  <MenuButton
-    className={`inline-flex items-center justify-between gap-2 rounded-md border w-80 py-1.5 px-3 text-sm font-semibold text-black shadow-inner shadow-white/10 focus:outline-none ${
-      touched.role && errors.role
-        ? "border-red-500"
-        : "border-[#D9D9D9]"
-    }`}
-  >
-    {selectedRole || "Select a Role"}
-    <IoChevronDownCircleOutline className="size-4 fill-black/60" />
-  </MenuButton>
-  <MenuItems
-    transition
-    anchor="bottom start"
-    className="w-80 left-0 bg-gray-100 rounded-xl border border-gray-300 p-1 text-sm text-black transition duration-100 ease-out"
-  >
-    <MenuItem
-      onClick={() => {
-        setFieldValue("role", "HeadOfDepartment");
-        setSelectedRole("HeadOfDepartment");
-      }}
-    >
-      <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3">
-        Head of Department
-      </button>
-    </MenuItem>
-    <MenuItem
-      onClick={() => {
-        setFieldValue("role", "Registrar");
-        setSelectedRole("Registrar");
-      }}
-    >
-      <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3">
-        Registrar
-      </button>
-    </MenuItem>
-    <MenuItem
-      onClick={() => {
-        setFieldValue("role", "DRegistrar");
-        setSelectedRole("DRegistrar");
-      }}
-    >
-      <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3">
-        Deputy Registrar
-      </button>
-    </MenuItem>
-    <MenuItem
-      onClick={() => {
-        setFieldValue("role", "VC");
-        setSelectedRole("VC");
-      }}
-    >
-      <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3">
-        Vice Chancellor
-      </button>
-    </MenuItem>
-    <MenuItem
-      onClick={() => {
-        setFieldValue("role", "Establishment");
-        setSelectedRole("Establishment");
-      }}
-    >
-      <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3">
-        Establishment
-      </button>
-    </MenuItem>
-    <MenuItem
-      onClick={() => {
-        setFieldValue("role", "OtherRoles");
-        setSelectedRole("OtherRoles");
-      }}
-    >
-      <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3">
-        Other Roles
-      </button>
-    </MenuItem>
-  </MenuItems>
-</Menu>
+                <Field
+                  className={`py-1 border w-80 rounded-md px-2 ${errors.role && touched.role
+                    ? "border-red-500"
+                    : ""
+                    }`}
+                  name="role" type="text" placeholder="Please Enter Role" />
 
               </div>
               <ErrorMessage
