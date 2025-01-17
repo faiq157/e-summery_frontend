@@ -121,7 +121,21 @@ const Register = () => {
                 name="Confpassword"
                 component="div"
               />
+              <label>Department</label>
+              <div className="w-52 text-right">
+                <Field
+                  className={`py-1 border w-80 rounded-md px-2 ${errors.role && touched.role
+                    ? "border-red-500"
+                    : ""
+                    }`}
+                  name="department" type="text" placeholder="Please Enter department" />
 
+              </div>
+              <ErrorMessage
+                className="text-red-500 text-xs"
+                name="role"
+                component="div"
+              />
               <label>Role</label>
               <div className="w-52 text-right">
                 <Field
