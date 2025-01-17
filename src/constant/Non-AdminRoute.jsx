@@ -41,7 +41,7 @@ export function NonAdminRoute({ children }) {
                     You are not authorized to access this page.
                 </motion.p>
                 <motion.a
-                    href="/"
+                    href="/adminDashboard"
                     className="mt-6 px-6 py-2 text-white bg-blue-500 rounded-lg shadow hover:bg-blue-600"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
