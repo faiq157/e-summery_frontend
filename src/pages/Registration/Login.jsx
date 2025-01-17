@@ -4,31 +4,36 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginValidationSchema } from "../../utils/authValidation";
 import { AuthContext } from "../../context/AuthContext";
-import { Toaster } from "sonner";
 import Loader from "@/components/Loader";
 
 const base_URL = import.meta.env.VITE_APP_API_URL;
 
 const Login = () => {
   const [loginError, setLoginError] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext);  
+  const { login } = useContext(AuthContext);
 
   const handleSubmit = async (values) => {
-     setIsLoading(true);
+    setIsLoading(true);
     try {
       const response = await axios.post(`${base_URL}/auth/login`, values);
-       const { token, user } = response.data;  
+      const { token, user } = response.data;
 
       login(token, user);
-      navigate("/");
+
+      // Navigate to the admin dashboard if the user is an admin
+      if (user.role === 'admin') {
+        navigate("/AdminDashboard");
+      } else {
+        // Navigate to the default user page (or home page)
+        navigate("/");
+      }
     } catch (error) {
       setLoginError(error.response.data.msg);
       console.log("Login failed", error.response.data.msg);
-    }
-    finally{
-       setIsLoading(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -52,9 +57,8 @@ const Login = () => {
             <Form className="flex flex-col gap-2">
               <label>Email</label>
               <Field
-                className={`py-1 border bg-transparent w-80 rounded-md px-2 ${
-                  touched.email && errors.email ? "border-red-500" : "border-[#D9D9D9]"
-                }`}
+                className={`py-1 border bg-transparent w-80 rounded-md px-2 ${touched.email && errors.email ? "border-red-500" : "border-[#D9D9D9]"
+                  }`}
                 type="email"
                 name="email"
               />
@@ -62,9 +66,8 @@ const Login = () => {
 
               <label htmlFor="password">Password</label>
               <Field
-                className={`py-1 bg-transparent border w-80 rounded-md px-2 ${
-                  touched.password && errors.password ? "border-red-500" : "border-[#D9D9D9]"
-                }`}
+                className={`py-1 bg-transparent border w-80 rounded-md px-2 ${touched.password && errors.password ? "border-red-500" : "border-[#D9D9D9]"
+                  }`}
                 type="password"
                 name="password"
               />
@@ -73,9 +76,9 @@ const Login = () => {
               <button
                 className="bg-card border mb-10 mt-3 rounded py-2 text-black dark:text-white"
                 type="submit"
-                disabled={isSubmitting || isLoading} 
+                disabled={isSubmitting || isLoading}
               >
-                {isLoading ? <Loader/> : "Login"} 
+                {isLoading ? <Loader /> : "Login"}
               </button>
             </Form>
           )}

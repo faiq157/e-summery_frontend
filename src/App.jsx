@@ -13,12 +13,14 @@ import Setting from "./pages/Setting";
 import DraftApplication from "./pages/createApp/DraftApplication";
 import NotFoundPage from "./pages/NotFoundPage";
 import CreateApplication from "./pages/createApp/CreateApplication";
+import Register from "./pages/Registration/Register";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<PrivateRoute/>}>
+        <Route path="/" element={<PrivateRoute />}>
           <Route index element={<Home />} />
           <Route path="progress" element={<Progress />} />
           <Route path="completed" element={<Completed />} />
@@ -27,9 +29,10 @@ function App() {
           <Route path="create" element={<CreateApplication />} />
           <Route path="draft" element={<DraftApplication />} />
         </Route>
+        <Route path="/adminDashboard" element={<AdminDashboard />} />
 
         <Route path="/login" element={<Login />} />
-        {/* <Route path="/register" element={<Register />} /> */}
+        <Route path="/register" element={<Register />} />
         <Route path="/forgot" element={<ForgotPass />} />
         <Route path="/resetpassword/:token" element={<ResetPassword />} />
 
