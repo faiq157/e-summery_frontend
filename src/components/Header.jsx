@@ -3,7 +3,6 @@ import { useContext } from "react";
 import { FaHome, FaRegCheckCircle, FaTractor } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
 import { RiProgress2Fill } from "react-icons/ri";
-import { ModeToggle } from "./mode-toggle";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 
 const Header = () => {
@@ -33,7 +32,6 @@ const Header = () => {
         ))}
       </nav>
       <div className="flex items-center gap-4 ml-auto mr-8">
-        <ModeToggle />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="flex items-center gap-2 focus:outline-none hover:border-none">
