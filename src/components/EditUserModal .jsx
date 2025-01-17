@@ -6,6 +6,8 @@ const EditUserModal = ({ isOpen, onClose, user, onUpdate }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [role, setRole] = useState("");
+    const [department, setDepartment] = useState("");
+
 
     useEffect(() => {
         if (user) {
@@ -13,13 +15,14 @@ const EditUserModal = ({ isOpen, onClose, user, onUpdate }) => {
             setEmail(user.email || "");
             setPassword("");  // Clear password field
             setRole(user.role || "");
+            setDepartment(user.department || "");
         }
     }, [user]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const updatedUser = { fullname, email, password, role };
+            const updatedUser = { fullname, email, password, role, department };
             const response = await axios.put(
                 `http://localhost:5000/api/auth/edit/${user._id}`,
                 updatedUser
@@ -70,6 +73,11 @@ const EditUserModal = ({ isOpen, onClose, user, onUpdate }) => {
                     <div className="mb-4">
                         <label className="block text-gray-700">Role</label>
                         <input type="text" value={role} onChange={(e) => setRole(e.target.value)} className="w-full p-2 border rounded-md" required />
+
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-700">Department</label>
+                        <input type="text" value={department} onChange={(e) => setDepartment(e.target.value)} className="w-full p-2 border rounded-md" required />
 
                     </div>
                     <div className="flex justify-between mt-6">
