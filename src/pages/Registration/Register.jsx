@@ -24,7 +24,7 @@ const Register = () => {
       setIsLoading(true);
       const response = await axios.post(`${base_URL}/auth/register`, values);
       console.log("Registration successful", response.data);
-      navigate("/login");
+      navigate("/adminDashboard");
     } catch (error) {
       const errorMessage =
         error.response?.status === 500
@@ -161,19 +161,7 @@ const Register = () => {
             </Form>
           )}
         </Formik>
-        <div className="flex justify-between items-center w-80 text-sm gap-2">
-          <p className="text-[#807878] cursor-pointer">
-            Already have an account?
-          </p>
-          <button
-            onClick={() => navigate("/login")}
-            type="button"
-            id="register"
-            className="border border-[#D9D9D9] rounded-lg px-12 py-2 text-black"
-          >
-            Login
-          </button>
-        </div>
+
       </div>
     </div>
   );
