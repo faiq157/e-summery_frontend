@@ -7,7 +7,7 @@ const EditUserModal = ({ isOpen, onClose, user, onUpdate }) => {
     const [password, setPassword] = useState("");
     const [role, setRole] = useState("");
     const [department, setDepartment] = useState("");
-
+    const base_URL = import.meta.env.VITE_APP_API_URL;
 
     useEffect(() => {
         if (user) {
@@ -24,7 +24,7 @@ const EditUserModal = ({ isOpen, onClose, user, onUpdate }) => {
         try {
             const updatedUser = { fullname, email, password, role, department };
             const response = await axios.put(
-                `http://localhost:5000/api/auth/edit/${user._id}`,
+                `${base_URL}/auth/edit/${user._id}`,
                 updatedUser
             );
             onUpdate(response.data); // Notify the parent component that the user has been updated

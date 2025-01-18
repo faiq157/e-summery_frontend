@@ -4,6 +4,7 @@ import AdminLayout from "@/layout/AdminLayout";
 import EditUserModal from "../components/EditUserModal ";
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel } from "@/components/ui/alert-dialog"; // Import alert dialog components
+import Loader from "@/components/Loader";
 
 const AdminDashboard = () => {
     const [users, setUsers] = useState([]);
@@ -81,7 +82,7 @@ const AdminDashboard = () => {
     };
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div className="flex justify-center items-center h-screen"><Loader /></div>;
     }
 
     if (error) {
