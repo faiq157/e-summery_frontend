@@ -8,7 +8,6 @@ const EditUserModal = ({ isOpen, onClose, user, onUpdate }) => {
     const [role, setRole] = useState("");
     const [department, setDepartment] = useState("");
     const base_URL = import.meta.env.VITE_APP_API_URL;
-
     useEffect(() => {
         if (user) {
             setFullname(user.fullname || "");
