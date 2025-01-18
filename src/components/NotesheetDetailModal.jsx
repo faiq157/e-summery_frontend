@@ -15,7 +15,6 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
     const [commentsUpdated, setCommentsUpdated] = useState(false); // Track if comments are updated
     const base_URL = import.meta.env.VITE_APP_API_URL;
     // eslint-disable-next-line react/prop-types
-    console.log(notesheet._id)
     useEffect(() => {
         const fetchComments = async () => {
             try {

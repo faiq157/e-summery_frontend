@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import NotesheetDetailModal from './NotesheetDetailModal';
 import { AiOutlineConsoleSql } from 'react-icons/ai';
+import Loader from './Loader';
 
 const NotesheetCardList = ({ userRole, searchQuery, refetchData }) => {
     const [notesheets, setNotesheets] = useState([]);
@@ -53,7 +54,7 @@ const NotesheetCardList = ({ userRole, searchQuery, refetchData }) => {
     }, [storedToken, refetchData]);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div className='flex items-center justify-center h-screen'><Loader /></div>;
     }
 
     if (error) {
