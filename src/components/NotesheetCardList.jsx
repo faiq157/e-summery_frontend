@@ -1,9 +1,9 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import NotesheetDetailModal from './NotesheetDetailModal';
-import { AiOutlineConsoleSql } from 'react-icons/ai';
 import Loader from './Loader';
 
 const NotesheetCardList = ({ userRole, searchQuery, refetchData }) => {
@@ -15,17 +15,24 @@ const NotesheetCardList = ({ userRole, searchQuery, refetchData }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [filteredNotesheets, setFilteredNotesheets] = useState([]);
     const base_URL = import.meta.env.VITE_APP_API_URL;
-    // Filter notesheets based on the search query
+
+    // Filter notesheets based on the search query and user role
     useEffect(() => {
-        if (searchQuery) {
-            const filtered = notesheets.filter((notesheet) =>
-                notesheet.subject.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-            setFilteredNotesheets(filtered);
-        } else {
-            setFilteredNotesheets(notesheets);
-        }
-    }, [searchQuery, notesheets]);
+        const filterNotesheets = () => {
+            const filteredByRole = userRole
+                ? notesheets.filter((notesheet) => notesheet.userRole === userRole) // Filter by userRole
+                : notesheets;
+
+            if (searchQuery) {
+                return filteredByRole.filter((notesheet) =>
+                    notesheet.subject.toLowerCase().includes(searchQuery.toLowerCase())
+                );
+            }
+            return filteredByRole;
+        };
+
+        setFilteredNotesheets(filterNotesheets());
+    }, [searchQuery, notesheets, userRole]);
 
     // Fetch notesheets and sort by createdAt
     useEffect(() => {
@@ -36,8 +43,6 @@ const NotesheetCardList = ({ userRole, searchQuery, refetchData }) => {
                         Authorization: ` ${storedToken}`,
                     },
                 });
-
-                // Sort notesheets by createdAt (most recent first)
                 const sortedNotesheets = response.data.sort((a, b) => {
                     return new Date(b.timestamps.createdAt) - new Date(a.timestamps.createdAt);
                 });

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Button } from "@/components/ui/button";
 import { AiOutlineClose } from 'react-icons/ai';
 
-const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken }) => {
+const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, userRole }) => {
     const [roles, setRoles] = useState([]);
     const [selectedRole, setSelectedRole] = useState('');
     const [loading, setLoading] = useState(false);
@@ -16,7 +16,7 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken }) => {
                 const response = await axios.get(`${base_URL}/auth/roles`, {
                     headers: { Authorization: `${storedToken}` },
                 });
-                console.log('Roles fetched:', response.data); // Debugging step
+                console.log('Roles fetched:', response.data);
                 setRoles(response.data);
             } catch (error) {
                 console.error('Error fetching roles:', error);
@@ -37,9 +37,9 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken }) => {
         setLoading(true);
         try {
             const response = await axios.post(
-                `http://localhost:5000/api/notesheet/send/${notesheet._id}`,
+                `${base_URL}/notesheet/send/${notesheet._id}`,
                 {
-                    currentRole: 'Admin',
+                    currentRole: { userRole },
                     toSendRole: selectedRole,
                 },
                 {
