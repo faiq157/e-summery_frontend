@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button } from "@/components/ui/button";
@@ -39,7 +40,7 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, userRole 
             const response = await axios.post(
                 `${base_URL}/notesheet/send/${notesheet._id}`,
                 {
-                    currentRole: { userRole },
+                    currentRole: userRole,  // Send the userRole directly as a string
                     toSendRole: selectedRole,
                 },
                 {

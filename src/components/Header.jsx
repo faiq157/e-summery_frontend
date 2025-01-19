@@ -11,6 +11,7 @@ const Header = () => {
   const items = [
     { title: "Home", url: "/", icon: FaHome },
     { title: "Progress", url: "/progress", icon: RiProgress2Fill },
+    { title: "Received", url: "/received", icon: FaRegCheckCircle },
     { title: "Completed", url: "/completed", icon: FaRegCheckCircle },
     { title: "Tracking", url: "/tracking", icon: FaTractor },
     { title: "Settings", url: "/setting", icon: IoSettingsOutline },
