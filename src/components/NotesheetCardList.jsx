@@ -129,37 +129,31 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
                         <p><strong>Created by:</strong> {notesheet.userName}</p>
                         <p><strong>Created at:</strong> {new Date(notesheet.timestamps.createdAt).toLocaleDateString('en-us', { weekday: "long", year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric", hour12: true })}</p>
 
-                        {/* Display roles dynamically */}
-                        <div>
-                            <strong>User Role:</strong>
-                            {notesheet.roles.map((role, index) => (
-                                <span key={index}>
-                                    <strong>{role.role}</strong>
-                                </span>
-                            ))}
+                        <div className='flex justify-between mt-2'>
+                            <Button className="" onClick={() => handleViewDetails(notesheet)}>View Details</Button>
+                            {status === 'New' && (
+                                <div className="">
+
+                                    <Button className="mr-2" onClick={() => handleEdit(notesheet)}>Edit</Button>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button className="bg-red-500 text-white" onClick={() => handleOpenDeleteDialog(notesheet)}>Delete</Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                Are you sure you want to delete this notesheet? This action cannot be undone.
+                                            </AlertDialogDescription>
+                                            <div className="flex justify-end space-x-2">
+                                                <AlertDialogCancel onClick={handleCloseDeleteDialog}>Cancel</AlertDialogCancel>
+                                                <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+                                            </div>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                </div>)
+                            }
                         </div>
 
-                        {status === 'New' && (
-                            <div className="mt-2">
-                                <Button className="mr-2" onClick={() => handleViewDetails(notesheet)}>View Details</Button>
-                                <Button className="mr-2" onClick={() => handleEdit(notesheet)}>Edit</Button>
-                                <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                        <Button className="bg-red-500 text-white" onClick={() => handleOpenDeleteDialog(notesheet)}>Delete</Button>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                        <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            Are you sure you want to delete this notesheet? This action cannot be undone.
-                                        </AlertDialogDescription>
-                                        <div className="flex justify-end space-x-2">
-                                            <AlertDialogCancel onClick={handleCloseDeleteDialog}>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
-                                        </div>
-                                    </AlertDialogContent>
-                                </AlertDialog>
-                            </div>)
-                        }
                     </CardContent>
                 </Card>
             ))}
