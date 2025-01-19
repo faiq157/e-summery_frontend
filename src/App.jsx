@@ -16,6 +16,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 
 import { NonAdminRoute } from "./constant/Non-AdminRoute";
 import { AdminRoute } from "./constant/AdminRoute";
+import Received from "./pages/Received";
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/" element={<NonAdminRoute><PrivateRoute /></NonAdminRoute>}>
           <Route index element={<NonAdminRoute><Home /></NonAdminRoute>} />
           <Route path="progress" element={<NonAdminRoute><Progress /></NonAdminRoute>} />
+          <Route path="received" element={<NonAdminRoute><Received /></NonAdminRoute>} />
           <Route path="completed" element={<NonAdminRoute><Completed /></NonAdminRoute>} />
           <Route path="tracking" element={<NonAdminRoute><Tracking /></NonAdminRoute>} />
           <Route path="setting" element={<NonAdminRoute><Setting /></NonAdminRoute>} />

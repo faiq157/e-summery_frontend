@@ -1,77 +1,53 @@
 /* eslint-disable react/prop-types */
+// NotesheetDetailModal.js
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Button } from "@/components/ui/button";  // Reuse the button component
+import { Button } from "@/components/ui/button";
 import { AiOutlineClose } from 'react-icons/ai';
 import RoleSelectionModal from './RoleSelectionModal';
+import { addComment, fetchComments } from '@/constant/notesheetAPI';
 
-// eslint-disable-next-line react/prop-types
 const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToken }) => {
     const [comment, setComment] = useState('');
     const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState(null);
-    const [rolesData, setRolesData] = useState([]); // State to store roles and comments
+    const [rolesData, setRolesData] = useState([]);
     const [isRoleModalOpen, setRoleModalOpen] = useState(false);
-    const [commentsUpdated, setCommentsUpdated] = useState(false); // Track if comments are updated
-    const base_URL = import.meta.env.VITE_APP_API_URL;
-    // eslint-disable-next-line react/prop-types
+    const [commentsUpdated, setCommentsUpdated] = useState(false);
+    console.log(storedToken)
     useEffect(() => {
-        const fetchComments = async () => {
+        const loadComments = async () => {
             try {
-                const response = await axios.get(
-                    `${base_URL}/notesheet/comments/${notesheet._id}`,
-                    {
-                        headers: {
-                            'Authorization': `${storedToken}`,
-                        },
-                    }
-                );
-                console.log(response.data); // This will log the response data
-                setRolesData(response.data.comments); // Store comments in state
+                const comments = await fetchComments(notesheet._id, storedToken);
+                setRolesData(comments);
             } catch (error) {
-                console.error('Error fetching comments:', error);
+                console.error(error);
             }
         };
 
         if (notesheet?._id && isOpen) {
-            fetchComments();
+            loadComments();
         }
-    }, [notesheet?._id, storedToken, commentsUpdated]); // Trigger refetch when commentsUpdated changes
+    }, [notesheet?._id, storedToken, commentsUpdated]);
 
-    // Add Comment
     const handleAddComment = async () => {
-        if (!comment) {
-            return;
-        }
+        if (!comment) return;
 
         setLoading(true);
         try {
-            // Create FormData to send as multipart/form-data
-            const formData = new FormData();
-            formData.append('role', userRole);
-            formData.append('comment', comment);
-
-            const response = await axios.post(
-                `${base_URL}/notesheet/add-comment/${notesheet._id}`,
-                formData,
-                {
-                    headers: {
-                        'Authorization': `${storedToken}`,
-                        'Content-Type': 'multipart/form-data',
-                    }
-                }
-            );
+            const newComment = await addComment(notesheet._id, comment, userRole, storedToken);
 
             setSuccessMessage('Comment added successfully!');
             setComment('');
-            setRolesData(prevData => [...prevData, response.data.comment]); // Update rolesData with the new comment
+            setRolesData(prevData => [...prevData, newComment]);
+
             setTimeout(() => {
                 setSuccessMessage(null);
             }, 2000);
-            // Trigger refetch after adding the comment
+
             setCommentsUpdated(prev => !prev); // Toggle to trigger useEffect
+
         } catch (error) {
-            console.error('Error adding comment:', error);
+            console.error(error);
             setSuccessMessage('Failed to add comment.');
         } finally {
             setLoading(false);
@@ -81,7 +57,7 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
     if (!isOpen) return null;
 
     const handleSendClick = () => {
-        setRoleModalOpen(true); // Open the RoleSelectionModal when 'Send' is clicked
+        setRoleModalOpen(true);
     };
 
     return (
@@ -93,7 +69,6 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                 </div>
 
                 <div className="flex space-x-8">
-                    {/* Notesheet Details */}
                     <div className="w-1/2 mb-4">
                         <p><strong>Subject:</strong> {notesheet?.subject}</p>
                         <p><strong>Description:</strong> {notesheet?.description}</p>
@@ -103,28 +78,23 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                         <p><strong>Email:</strong> {notesheet?.email}</p>
                         <p><strong>Contact Number:</strong> {notesheet?.contact_number}</p>
                         <p><strong>Created at:</strong> {new Date(notesheet?.timestamps.createdAt).toLocaleString()}</p>
-
-
-
                     </div>
 
-                    {/* Comments Section */}
                     <div className="w-1/2 mt-4 h-72 overflow-y-auto p-4 border border-gray-200 rounded-lg bg-gray-50">
                         <h3 className="text-xl font-bold mb-2">Comments:</h3>
                         {rolesData.length > 0 ? (
                             rolesData.map((commentData) => (
-                                commentData ? (  // Defensive check to ensure commentData is not undefined
+                                commentData ? (
                                     <div key={commentData._id} className="p-4 border border-gray-200 rounded-lg bg-white shadow-md mb-4">
-                                        <p className="font-medium">{commentData.user || 'Unknown User'}:</p> {/* Fallback if 'user' is missing */}
+                                        <p className="font-medium">{commentData.user || 'Unknown User'}:</p>
                                         <p className="text-gray-700">{commentData.comment}</p>
                                         <p className="text-sm text-gray-500">{new Date(commentData.timestamp).toLocaleString()}</p>
                                     </div>
-                                ) : null // Skip rendering if commentData is undefined
+                                ) : null
                             ))
                         ) : (
                             <p>No comments available.</p>
                         )}
-
                     </div>
                 </div>
 
@@ -147,12 +117,12 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                         {loading ? 'Adding...' : 'Add Comment'}
                     </Button>
 
-                    {/* Send Button */}
                     <Button onClick={handleSendClick}>Send</Button>
                 </div>
 
             </div>
             <RoleSelectionModal
+                userRole={userRole}
                 isOpen={isRoleModalOpen}
                 onClose={() => setRoleModalOpen(false)}
                 notesheet={notesheet}
