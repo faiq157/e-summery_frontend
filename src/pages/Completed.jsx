@@ -43,7 +43,7 @@ const Completed = () => {
 
         {/* Show the list of created notesheets (could be fetched from an API or static data) */}
         <div className="mt-8">
-          <NotesheetCardList status={"Received"} searchQuery={searchQuery} userRole={userRole} />
+          <NotesheetCardList status={"Completed"} searchQuery={searchQuery} userRole={userRole} />
         </div>
       </div>
 

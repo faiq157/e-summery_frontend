@@ -6,6 +6,7 @@ import { useModal } from '@/context/ModalContext';
 import axios from 'axios';
 import Dashboardlayout from '@/layout/Dashboardlayout';
 import NotesheetForm from './createApp/NotesheetForm';
+import { toast } from 'react-toastify';
 
 const New = () => {
     const { isModalOpen, openModal, closeModal } = useModal();
@@ -45,6 +46,7 @@ const New = () => {
         })
             .then(() => {
                 console.log("Notification sent successfully.");
+                toast.success('Notesheet created successfully');
             })
             .catch((error) => {
                 console.error("Error sending notification:", error);

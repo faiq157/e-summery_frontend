@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 // NotesheetForm.js
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup"; // Import Yup for validation
 import { Button } from "@/components/ui/button";
 
 const NotesheetForm = ({ initialValues, onSubmit }) => {
@@ -36,9 +37,24 @@ const NotesheetForm = ({ initialValues, onSubmit }) => {
         </div>
     );
 
+    // Validation schema using Yup
+    const validationSchema = Yup.object({
+        userName: Yup.string().required("Name is required"),
+        contact_number: Yup.string()
+            .matches(/^\d{11}$/, "Contact number must be a valid 10-digit number")
+            .required("Contact number is required"),
+        userEmail: Yup.string()
+            .email("Invalid email address")
+            .required("Email is required"),
+        subject: Yup.string().required("Subject is required"),
+        description: Yup.string().required("Description is required"),
+        file: Yup.mixed().required("File is required"),
+    });
+
     return (
         <Formik
             initialValues={initialValues}
+            validationSchema={validationSchema} // Pass the validation schema
             onSubmit={onSubmit}
         >
             {({ isSubmitting, setFieldValue }) => (
