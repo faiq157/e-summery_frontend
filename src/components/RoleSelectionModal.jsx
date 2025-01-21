@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button } from "@/components/ui/button";
 import { AiOutlineClose } from 'react-icons/ai';
+import { toast } from 'react-toastify';  // Import toast from react-toastify
 
-const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, userRole }) => {
+const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, userRole, closeParentModal, refetchData }) => {
     const [roles, setRoles] = useState([]);
     const [selectedRole, setSelectedRole] = useState('');
     const [loading, setLoading] = useState(false);
@@ -26,13 +27,14 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, userRole 
         if (isOpen) {
             fetchRoles();
         }
-    }, [isOpen, storedToken]);
+    }, [isOpen, storedToken, refetchData]);
 
     const sendNotification = (userId) => {
         axios.post(`${base_URL}/send-notification`, {
             title: `Notesheet received from ${userRole}`,
             body: "Hello, you've received a new notesheet.",
             userId: userId, // Send the user ID for the selected role
+            link: "https://e-summery.netlify.app/received"
         }, {
             headers: {
                 'Content-Type': 'application/json',
@@ -69,16 +71,16 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, userRole 
             );
 
             console.log('Send response:', response.data);
-
+            toast.success("Notesheet sent successfully!");
+            setLoading(false);
+            onClose();
+            closeParentModal();
             // Find the selected role's object based on role name
             const selectedRoleObj = roles.find(role => role.role === selectedRole);
             if (selectedRoleObj) {
-                // Send notification using the user ID (role.id)
                 sendNotification(selectedRoleObj.id);  // Send the user ID for the selected role
             }
 
-            setLoading(false);
-            onClose();
         } catch (error) {
             console.error('Error sending data:', error);
             setErrorMessage('Failed to send data.');
@@ -89,6 +91,9 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, userRole 
     if (!isOpen) {
         return null;
     }
+
+    // Filter out the current userRole from the available roles
+    const filteredRoles = roles.filter(role => role.role !== userRole);
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -108,9 +113,9 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, userRole 
                         className="w-full border border-gray-300 p-2 rounded-md"
                     >
                         <option value="">Select a role</option>
-                        {roles.map((role) => (
-                            <option key={role.id} value={role.role}> {/* Use role.role as value */}
-                                {role.role} {/* Display the role name */}
+                        {filteredRoles.map((role) => (
+                            <option key={role.id} value={role.role}>
+                                {role.role}
                             </option>
                         ))}
                     </select>
