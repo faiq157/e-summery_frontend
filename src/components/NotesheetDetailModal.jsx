@@ -5,11 +5,11 @@ import { Button } from "@/components/ui/button";
 import { AiOutlineClose } from 'react-icons/ai';
 import RoleSelectionModal from './RoleSelectionModal';
 import { addComment, fetchComments } from '@/constant/notesheetAPI';
+import { toast } from 'react-toastify';
 
-const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToken }) => {
+const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToken, refetchData, status }) => {
     const [comment, setComment] = useState('');
     const [loading, setLoading] = useState(false);
-    const [successMessage, setSuccessMessage] = useState(null);
     const [rolesData, setRolesData] = useState([]);
     const [isRoleModalOpen, setRoleModalOpen] = useState(false);
     const [commentsUpdated, setCommentsUpdated] = useState(false);
@@ -36,19 +36,14 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
         try {
             const newComment = await addComment(notesheet._id, comment, userRole, storedToken);
 
-            setSuccessMessage('Comment added successfully!');
+            toast.success('Comment added successfully!');
             setComment('');
             setRolesData(prevData => [...prevData, newComment]);
-
-            setTimeout(() => {
-                setSuccessMessage(null);
-            }, 2000);
-
             setCommentsUpdated(prev => !prev); // Toggle to trigger useEffect
 
         } catch (error) {
             console.error(error);
-            setSuccessMessage('Failed to add comment.');
+            toast.error('Failed to add comment.');
         } finally {
             setLoading(false);
         }
@@ -110,14 +105,18 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                     />
                 </div>
 
-                {successMessage && <p className="text-green-500 mb-2">{successMessage}</p>}
-
                 <div className="mt-6 flex justify-between">
-                    <Button onClick={handleAddComment} disabled={loading}>
-                        {loading ? 'Adding...' : 'Add Comment'}
-                    </Button>
 
-                    <Button onClick={handleSendClick}>Send</Button>
+
+                    {status !== "In Progress" && (
+                        <div className='flex justify-between w-full'>
+                            <Button onClick={handleAddComment} disabled={loading}>
+                                {loading ? 'Adding...' : 'Add Comment'}
+                            </Button>
+                            <Button onClick={handleSendClick}>Send</Button>
+                        </div>
+                    )}
+
                 </div>
 
             </div>
@@ -127,6 +126,8 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                 onClose={() => setRoleModalOpen(false)}
                 notesheet={notesheet}
                 storedToken={storedToken}
+                closeParentModal={onClose}
+                refetchData={refetchData}
             />
         </div>
     );

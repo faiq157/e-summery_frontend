@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import { FaHome, FaRegCheckCircle, FaTractor, FaBell } from 'react-icons/fa';
-import { IoSettingsOutline } from 'react-icons/io5';
+import { IoNewspaper, IoSettingsOutline } from 'react-icons/io5';
 import { RiProgress2Fill } from 'react-icons/ri';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import axios from 'axios';
@@ -67,6 +67,7 @@ const Header = () => {
   const firstLetter = userData?.fullname?.charAt(0) || userData?.name?.charAt(0) || '';
   const items = [
     { title: 'Home', url: '/', icon: FaHome },
+    { title: 'New', url: '/new', icon: IoNewspaper },
     { title: 'Progress', url: '/progress', icon: RiProgress2Fill },
     { title: 'Received', url: '/received', icon: FaRegCheckCircle },
     { title: 'Completed', url: '/completed', icon: FaRegCheckCircle },

@@ -9,6 +9,7 @@ import { fetchNotesheets } from '@/constant/notesheetAPI';
 import { deleteNotesheet } from '@/constant/notesheetAPI'; // Import delete function
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel } from "@/components/ui/alert-dialog"; // Import alert dialog components
 import EditApplication from '../pages/createApp/EditeApplication'; // Assuming this is the edit component
+import { Player } from '@lottiefiles/react-lottie-player';
 
 const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
     const [notesheets, setNotesheets] = useState([]);
@@ -116,43 +117,58 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredNotesheets.map((notesheet) => (
-                <Card key={notesheet._id} className="w-full">
-                    <CardHeader>
-                        <CardTitle className="text-xl font-semibold">{notesheet.subject}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p><strong>Description:</strong> {notesheet.description}</p>
-                        <p><strong>Status:</strong> {notesheet.status}</p>
-                        <p><strong>Created by:</strong> {notesheet.userName}</p>
-                        <p><strong>Created at:</strong> {new Date(notesheet.timestamps.createdAt).toLocaleDateString('en-us', { weekday: "long", year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric", hour12: true })}</p>
+            {
+                filteredNotesheets.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center w-[100vw] h-screen space-y-4">
+                        <Player
+                            autoplay
+                            loop
+                            src="https://lottie.host/7881658b-10eb-4e1d-9424-661cf3bb1665/xne07bwaFH.json" // Example Lottie animation URL
+                            style={{ height: '500px', width: '500px' }}
+                        />
+                        <p className="text-xl font-semibold mt-4">Please add an application.</p>
+                    </div>
+                ) : (
+                    filteredNotesheets.map((notesheet) => (
+                        <Card key={notesheet._id} className="w-full">
+                            <CardHeader>
+                                <CardTitle className="text-xl font-semibold">{notesheet.subject}</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p><strong>Description:</strong> {notesheet.description}</p>
+                                <p><strong>Status:</strong> {notesheet.status}</p>
+                                <p><strong>Created by:</strong> {notesheet.userName}</p>
+                                <p><strong>Created at:</strong> {new Date(notesheet.timestamps.createdAt).toLocaleDateString('en-us', { weekday: "long", year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric", hour12: true })}</p>
 
-                        <div className='flex justify-between mt-2'>
-                            <Button className="" onClick={() => handleViewDetails(notesheet)}>View Details</Button>
-                            {status === 'New' && (
-                                <div className="">
-                                    <Button className="mr-2" onClick={() => handleEdit(notesheet)}>Edit</Button>
-                                    <AlertDialog>
-                                        <AlertDialogTrigger asChild>
-                                            <Button className="bg-red-500 text-white" onClick={() => handleOpenDeleteDialog(notesheet)}>Delete</Button>
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent>
-                                            <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
-                                            <AlertDialogDescription>
-                                                Are you sure you want to delete this notesheet? This action cannot be undone.
-                                            </AlertDialogDescription>
-                                            <div className="flex justify-end space-x-2">
-                                                <AlertDialogCancel onClick={handleCloseDeleteDialog}>Cancel</AlertDialogCancel>
-                                                <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
-                                            </div>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
+                                <div className='flex justify-between mt-2'>
+                                    <Button className="" onClick={() => handleViewDetails(notesheet)}>View Details</Button>
+                                    {status === 'New' && (
+                                        <div className="">
+                                            <Button className="mr-2" onClick={() => handleEdit(notesheet)}>Edit</Button>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button className="bg-red-500 text-white" onClick={() => handleOpenDeleteDialog(notesheet)}>Delete</Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        Are you sure you want to delete this notesheet? This action cannot be undone.
+                                                    </AlertDialogDescription>
+                                                    <div className="flex justify-end space-x-2">
+                                                        <AlertDialogCancel onClick={handleCloseDeleteDialog}>Cancel</AlertDialogCancel>
+                                                        <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+                                                    </div>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </div>
+                                    )}
                                 </div>
-                            )}
-                        </div>
-                    </CardContent>
-                </Card>
-            ))}
+                            </CardContent>
+                        </Card>
+                    ))
+                )
+            }
+
 
             <NotesheetDetailModal
                 userRole={userRole}
@@ -160,6 +176,7 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
                 storedToken={storedToken}
                 onClose={() => setIsModalOpen(false)}
                 notesheet={selectedNotesheet}
+                status={status}
             />
 
             {isEditModalOpen && (

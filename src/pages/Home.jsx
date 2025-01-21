@@ -1,31 +1,21 @@
-import { IoIosAddCircle } from "react-icons/io";
 import Dashboardlayout from './../layout/Dashboardlayout'
-import ApplicationCard from "@/components/ui/ApplicationCard";
-import { FaCheckCircle } from "react-icons/fa";
-import { RiDraftFill } from "react-icons/ri";
+import ApplicationSummary from "@/components/ui/ApplicationSummary";
+
 const Home = () => {
+  const newApplicationsCount = 10; // Replace 0 with the count of new applications
+  const inProgressApplicationsCount = 30; // Replace 0 with the count of in-progress applications
+  const completedApplicationsCount = 40; // Replace 0 with the count of completed
   return (
     <div>
       <Dashboardlayout>
         <h1 className='text-3xl font-bold p-4'>Dashboard</h1>
-        <div className="grid grid-cols-1 p-8 md:grid-cols-2 lg:grid-cols-3 gap-4"> 
-          <ApplicationCard 
-            icon={<IoIosAddCircle className="h-14 w-14" />} 
-            title="Create New" 
-            linkTo="/create" 
-          />
-            <ApplicationCard 
-            icon={<RiDraftFill className="h-14 w-14" />} 
-            title="Draft" 
-            linkTo="/draft" // Update with your actual draft route
-          />
-          <ApplicationCard 
-            icon={<FaCheckCircle className="h-14 w-14" />} 
-            title="Completed" 
-            linkTo="/completed" // Update with your actual completed route
-          />
+        <div className="grid grid-cols-1 p-8 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <ApplicationSummary title="New Applications" count={newApplicationsCount} />
+          <ApplicationSummary title="In Progress" count={inProgressApplicationsCount} />
+          <ApplicationSummary title="Completed" count={completedApplicationsCount} />
         </div>
       </Dashboardlayout>
+
     </div>
   )
 }

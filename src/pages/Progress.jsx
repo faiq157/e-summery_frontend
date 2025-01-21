@@ -14,7 +14,7 @@ const Progress = () => {
     if (storedUser) {
       const userObject = JSON.parse(storedUser);
       setStoredEmail(userObject.email || ''); // Set the email if it exists
-      setUserRole(userObject._id || '');
+      setUserRole(userObject.role || '');
     }
   }, [storedUser]);
   console.log("this is user role id", userRole)
@@ -40,10 +40,7 @@ const Progress = () => {
             />
           </div>
         </div>
-
-        {/* Show the list of created notesheets (could be fetched from an API or static data) */}
         <div className="mt-8">
-          <h2 className="text-xl font-semibold mb-4">Created Notesheets</h2>
           <NotesheetCardList status={"In Progress"} searchQuery={searchQuery} userRole={userRole} />
         </div>
       </div>

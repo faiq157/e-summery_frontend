@@ -1,10 +1,16 @@
+import { Player } from "@lottiefiles/react-lottie-player"
+
 const Loader = () => {
   return (
-       <div className="flex items-center justify-center ">
-      <div className="relative w-6 h-6">
-        <div className="absolute inset-0 w-full h-full border-8 border-t-transparent border-gradient-r from-blue-500 via-indigo-500 to-purple-500 rounded-full animate-spin"></div>
-        <div className="absolute inset-0 w-full h-full border-8 border-t-transparent border-gradient-r from-red-500 via-yellow-500 to-orange-500 rounded-full animate-spin slower"></div>
-        <div className="absolute inset-0 w-full h-full border-8 border-t-transparent border-gradient-r from-green-500 via-teal-500 to-cyan-500 rounded-full animate-spin fastest"></div>
+    <div className="flex items-center justify-center ">
+      <div className="text-center py-6">
+        <Player
+          autoplay
+          loop
+          src="https://lottie.host/a15973f9-71ff-4478-991f-e347980735b9/wzjT4bRVfW.json" // Example Lottie animation URL
+          style={{ height: '200px', width: '200px' }}
+        />
+        <p className="text-xl font-semibold mt-4">Please add an application.</p>
       </div>
     </div>
   )
