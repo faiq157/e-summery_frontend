@@ -2,14 +2,16 @@
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
 import { saveTokenToBackend } from "./saveTokenToBackend";
+const base_VAPKEY = import.meta.env.VITE_APP_VAPIDKEY;
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDe66omLs9tSAPjP43hiXBpfnYnzh7aJjA",
-  authDomain: "eighth-jigsaw-410408.firebaseapp.com",
-  projectId: "eighth-jigsaw-410408",
-  storageBucket: "eighth-jigsaw-410408.appspot.com", 
-  messagingSenderId: "657295362911",
-  appId: "1:657295362911:web:9d1670d014a96a5c9344ea",
-  measurementId: "G-L6NPFZW981"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
@@ -23,7 +25,7 @@ export const generatToken = async () => {
     if (permission === "granted") {
       try {
         const token = await getToken(messaging, {
-          vapidKey: "BGG-kSzdks0FDsI9i9d_WWN3f24Bu8YNeDualbqciiDCGRvrJ_iwKMmpu5wam7KhG0dKL8FgM7TXiwn7AKnidlg"
+          vapidKey: base_VAPKEY
         });
 
         if (token) {
