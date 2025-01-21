@@ -1,4 +1,3 @@
-// CreateApplication.js
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { AiOutlineClose } from "react-icons/ai";
@@ -26,13 +25,30 @@ const CreateApplication = () => {
       setUserRole(userObject?.role || '');
     }
   }, [storedUser]);
-
+  console.log(userRole)
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
 
   const handleRefetchData = () => {
     setRefetchData((prev) => !prev);
+  };
+  const userData = JSON.parse(storedUser);
+
+  // Get the userId from _id
+  const userId = userData._id;
+  const sendNotification = (userId) => {
+    axios.post(`${base_URL}/send-notification`, {
+      title: "Notesheet Created",
+      body: "A new notesheet has been successfully created.",
+      userId: userId, // Replace with dynamic userId if needed
+    })
+      .then(() => {
+        console.log("Notification sent successfully.");
+      })
+      .catch((error) => {
+        console.error("Error sending notification:", error);
+      });
   };
 
   const handleCreateSubmit = (values, { setSubmitting, resetForm }) => {
@@ -58,6 +74,9 @@ const CreateApplication = () => {
         setSubmittedData(values);
         closeModal();
         handleRefetchData();
+
+
+        sendNotification(userId);
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -92,7 +111,7 @@ const CreateApplication = () => {
             <div className="bg-white p-4 rounded-lg shadow-lg w-[60vw] h-[90vh] overflow-auto">
               <div className='flex justify-between'>
                 <h2 className="text-2xl font-bold mb-4">Create New Application</h2>
-                <AiOutlineClose onClick={closeModal} />
+                <AiOutlineClose className='text-2xl cursor-pointer' onClick={closeModal} />
               </div>
 
               <NotesheetForm

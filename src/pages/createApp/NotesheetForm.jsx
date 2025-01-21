@@ -1,8 +1,9 @@
+/* eslint-disable react/prop-types */
 // NotesheetForm.js
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Button } from "@/components/ui/button";
 
-const NotesheetForm = ({ initialValues, onSubmit, isSubmitting }) => {
+const NotesheetForm = ({ initialValues, onSubmit }) => {
     const TextInput = ({ label, name, type = "text", ...rest }) => (
         <div className="mb-2">
             <label htmlFor={name} className="block text-gray-700 font-bold mb-2">

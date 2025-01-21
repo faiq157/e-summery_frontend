@@ -14,10 +14,10 @@ const Progress = () => {
     if (storedUser) {
       const userObject = JSON.parse(storedUser);
       setStoredEmail(userObject.email || ''); // Set the email if it exists
-      setUserRole(userObject.role || '');
+      setUserRole(userObject._id || '');
     }
   }, [storedUser]);
-
+  console.log("this is user role id", userRole)
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);

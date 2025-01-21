@@ -29,7 +29,7 @@ const Received = () => {
             <div className="p-8">
                 {/* Create Button */}
                 <div className="flex justify-between items-center mb-4">
-                    <h1 className="text-3xl font-bold mb-6">Progress Application</h1>
+                    <h1 className="text-3xl font-bold mb-6">Received Application</h1>
                     <div className='flex justify-end gap-4 items-center'>
                         <input
                             type="text"
@@ -43,7 +43,6 @@ const Received = () => {
 
                 {/* Show the list of created notesheets (could be fetched from an API or static data) */}
                 <div className="mt-8">
-                    <h2 className="text-xl font-semibold mb-4">Created Notesheets</h2>
                     <NotesheetCardList status={"Received"} searchQuery={searchQuery} userRole={userRole} />
                 </div>
             </div>
