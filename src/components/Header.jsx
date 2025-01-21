@@ -13,7 +13,7 @@ const Header = () => {
   const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false); // New state for the red dot
   const [isModalOpen, setIsModalOpen] = useState(false); // Handle modal state locally
   const [loading, setLoading] = useState(false);
-
+  const base_URL = import.meta.env.VITE_APP_API_URL;
   const storedUser = localStorage.getItem('user');
   const userData = JSON.parse(storedUser);
 
@@ -24,7 +24,7 @@ const Header = () => {
   const fetchNotifications = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:5000/api/get-notifications/${userId}`);
+      const response = await axios.get(`${base_URL}/get-notifications/${userId}`);
       const fetchedNotifications = response.data.notifications || [];
       setNotifications(fetchedNotifications);
 
@@ -55,7 +55,7 @@ const Header = () => {
   const deleteAllNotifications = async () => {
     setLoading(true);
     try {
-      await axios.delete(`http://localhost:5000/api/delete-notifications/${userId}`);
+      await axios.delete(`${base_URL}/delete-notifications/${userId}`);
       setNotifications([]);
     } catch (error) {
       console.error('Error deleting notifications:', error);
