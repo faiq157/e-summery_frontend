@@ -17,9 +17,18 @@ import AdminDashboard from "./pages/AdminDashboard";
 import { NonAdminRoute } from "./constant/Non-AdminRoute";
 import { AdminRoute } from "./constant/AdminRoute";
 import Received from "./pages/Received";
+import { useEffect } from "react";
+import { generatToken, messaging } from "./notification/firebase-config";
+import { onMessage } from "firebase/messaging";
 
 
 function App() {
+  useEffect(() => {
+    generatToken();
+    onMessage(messaging, (payload) => {
+      console.log(payload)
+    })
+  }, [])
   return (
     <BrowserRouter>
       <Routes>

@@ -28,8 +28,12 @@ export const AuthProvider = ({ children }) => {
       setToken(token);
       setIsAuthenticated(true);
       setUserData(userData);
+
+      // Store the token and user data in localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(userData));
+
+
       console.log("User logged in:", userData);
     } catch (error) {
       console.error("Error during login:", error);

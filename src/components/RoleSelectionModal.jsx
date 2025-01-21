@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button } from "@/components/ui/button";
@@ -15,9 +14,8 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, userRole 
         const fetchRoles = async () => {
             try {
                 const response = await axios.get(`${base_URL}/auth/roles`, {
-                    headers: { Authorization: `${storedToken}` },
+                    headers: { Authorization: ` ${storedToken}` },
                 });
-                console.log('Roles fetched:', response.data);
                 setRoles(response.data);
             } catch (error) {
                 console.error('Error fetching roles:', error);
@@ -30,6 +28,24 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, userRole 
         }
     }, [isOpen, storedToken]);
 
+    const sendNotification = (userId) => {
+        axios.post(`${base_URL}/send-notification`, {
+            title: `Notesheet received from ${userRole}`,
+            body: "Hello, you've received a new notesheet.",
+            userId: userId, // Send the user ID for the selected role
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(() => {
+                console.log("Notification sent successfully.");
+            })
+            .catch((error) => {
+                console.error("Error sending notification:", error);
+            });
+    };
+
     const handleSend = async () => {
         if (!selectedRole) {
             return;
@@ -37,21 +53,30 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, userRole 
 
         setLoading(true);
         try {
+            // Sending the notesheet to the selected role
             const response = await axios.post(
                 `${base_URL}/notesheet/send/${notesheet._id}`,
                 {
-                    currentRole: userRole,  // Send the userRole directly as a string
-                    toSendRole: selectedRole,
+                    currentRole: userRole,
+                    toSendRole: selectedRole,  // Send the selected role (role name)
                 },
                 {
                     headers: {
-                        Authorization: `${storedToken}`,
+                        Authorization: ` ${storedToken}`,
                         'Content-Type': 'application/json',
                     },
                 }
             );
 
             console.log('Send response:', response.data);
+
+            // Find the selected role's object based on role name
+            const selectedRoleObj = roles.find(role => role.role === selectedRole);
+            if (selectedRoleObj) {
+                // Send notification using the user ID (role.id)
+                sendNotification(selectedRoleObj.id);  // Send the user ID for the selected role
+            }
+
             setLoading(false);
             onClose();
         } catch (error) {
@@ -83,9 +108,9 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, userRole 
                         className="w-full border border-gray-300 p-2 rounded-md"
                     >
                         <option value="">Select a role</option>
-                        {roles.map((role, index) => (
-                            <option key={index} value={role}>
-                                {role}
+                        {roles.map((role) => (
+                            <option key={role.id} value={role.role}> {/* Use role.role as value */}
+                                {role.role} {/* Display the role name */}
                             </option>
                         ))}
                     </select>

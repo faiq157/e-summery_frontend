@@ -19,10 +19,9 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [notesheetToDelete, setNotesheetToDelete] = useState(null);
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false); // State to control Edit Application modal
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const base_URL = import.meta.env.VITE_APP_API_URL;
 
-    // Fetch notesheets and sort by createdAt
     useEffect(() => {
         const getNotesheets = async () => {
             try {
@@ -38,20 +37,18 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
         getNotesheets();
     }, [userRole, status, storedToken, refetchData]);
 
-    // Handle deleting the notesheet
     const handleDelete = async () => {
         try {
-            const result = await deleteNotesheet(notesheetToDelete._id, storedToken); // Use the imported function
-            console.log(result.message); // Optionally log success message
-            // After deleting, refetch the notesheets
+            const result = await deleteNotesheet(notesheetToDelete._id, storedToken);
             const updatedNotesheets = notesheets.filter(notesheet => notesheet._id !== notesheetToDelete._id);
             setNotesheets(updatedNotesheets);
-            setIsDeleteDialogOpen(false); // Close the confirmation dialog
+            setIsDeleteDialogOpen(false);
         } catch (error) {
             setError("Error deleting notesheet");
         }
     };
-    const onEditSave = async (updatedValues, resetForm) => {
+
+    const onEditSave = async (updatedValues) => {
         try {
             const formData = new FormData();
             formData.append('description', updatedValues.description);
@@ -74,9 +71,6 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
                 }
             );
 
-            console.log(response.data.message); // Log success message if needed
-
-            // Update the state to reflect the changes
             const updatedNotesheets = notesheets.map((notesheet) =>
                 notesheet._id === selectedNotesheet._id ? { ...notesheet, ...updatedValues } : notesheet
             );
@@ -88,9 +82,8 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
     };
 
     const handleEdit = (notesheet) => {
-        // Set selected notesheet for editing or open modal
         setSelectedNotesheet(notesheet);
-        setIsEditModalOpen(true); // Open the Edit Application modal
+        setIsEditModalOpen(true);
     };
 
     const handleOpenDeleteDialog = (notesheet) => {
@@ -103,6 +96,16 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
         setNotesheetToDelete(null);
     };
 
+    const handleViewDetails = (notesheet) => {
+        setSelectedNotesheet(notesheet);
+        setIsModalOpen(true);
+    };
+
+    // Filter notesheets by subject based on searchQuery
+    const filteredNotesheets = notesheets.filter((notesheet) =>
+        notesheet.userName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     if (loading) {
         return <div className='flex items-center justify-center h-screen'><Loader /></div>;
     }
@@ -111,14 +114,9 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
         return <div>{error}</div>;
     }
 
-    const handleViewDetails = (notesheet) => {
-        setSelectedNotesheet(notesheet);
-        setIsModalOpen(true);
-    };
-
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {notesheets.map((notesheet) => (
+            {filteredNotesheets.map((notesheet) => (
                 <Card key={notesheet._id} className="w-full">
                     <CardHeader>
                         <CardTitle className="text-xl font-semibold">{notesheet.subject}</CardTitle>
@@ -133,7 +131,6 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
                             <Button className="" onClick={() => handleViewDetails(notesheet)}>View Details</Button>
                             {status === 'New' && (
                                 <div className="">
-
                                     <Button className="mr-2" onClick={() => handleEdit(notesheet)}>Edit</Button>
                                     <AlertDialog>
                                         <AlertDialogTrigger asChild>
@@ -150,10 +147,9 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
                                             </div>
                                         </AlertDialogContent>
                                     </AlertDialog>
-                                </div>)
-                            }
+                                </div>
+                            )}
                         </div>
-
                     </CardContent>
                 </Card>
             ))}
@@ -166,7 +162,6 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
                 notesheet={selectedNotesheet}
             />
 
-            {/* Add EditApplication Modal */}
             {isEditModalOpen && (
                 <EditApplication
                     isOpen={isEditModalOpen}
