@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import axiosInstance from "@/utils/http";
 
 const EditUserModal = ({ isOpen, onClose, user, onUpdate }) => {
     const [fullname, setFullname] = useState("");
@@ -22,7 +23,7 @@ const EditUserModal = ({ isOpen, onClose, user, onUpdate }) => {
         e.preventDefault();
         try {
             const updatedUser = { fullname, email, password, role, department };
-            const response = await axios.put(
+            const response = await axiosInstance.put(
                 `${base_URL}/auth/edit/${user._id}`,
                 updatedUser
             );

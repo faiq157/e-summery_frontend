@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Button } from "@/components/ui/button";
 import { AiOutlineClose } from 'react-icons/ai';
 import { toast } from 'react-toastify';  // Import toast from react-toastify
+import axiosInstance from '@/utils/http';
 
 const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, userRole, closeParentModal, refetchData }) => {
     const [roles, setRoles] = useState([]);
@@ -14,7 +15,7 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, userRole,
     useEffect(() => {
         const fetchRoles = async () => {
             try {
-                const response = await axios.get(`${base_URL}/auth/roles`, {
+                const response = await axiosInstance.get(`${base_URL}/auth/roles`, {
                     headers: { Authorization: ` ${storedToken}` },
                 });
                 setRoles(response.data);
@@ -30,7 +31,7 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, userRole,
     }, [isOpen, storedToken, refetchData]);
 
     const sendNotification = (userId) => {
-        axios.post(`${base_URL}/send-notification`, {
+        axiosInstance.post(`${base_URL}/send-notification`, {
             title: `Notesheet received from ${userRole}`,
             body: "Hello, you've received a new notesheet.",
             userId: userId, // Send the user ID for the selected role
@@ -56,7 +57,7 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, userRole,
         setLoading(true);
         try {
             // Sending the notesheet to the selected role
-            const response = await axios.post(
+            const response = await axiosInstance.post(
                 `${base_URL}/notesheet/send/${notesheet._id}`,
                 {
                     currentRole: userRole,

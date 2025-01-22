@@ -1,10 +1,11 @@
+import axiosInstance from "@/utils/http";
 import axios from "axios";
 
 const base_URL = import.meta.env.VITE_APP_API_URL;
 
 export const fetchUsers = async () => {
     try {
-        const response = await axios.get(`${base_URL}/auth/users`);
+        const response = await axiosInstance.get(`${base_URL}/auth/users`);
         if (Array.isArray(response.data)) {
             return response.data;
         } else {
@@ -17,7 +18,7 @@ export const fetchUsers = async () => {
 
 export const deleteUser = async (userId) => {
     try {
-        const response = await axios.delete(`${base_URL}/auth/delete/${userId}`);
+        const response = await axiosInstance.delete(`${base_URL}/auth/delete/${userId}`);
         if (response.status === 200) {
             return userId; // Return the user ID for deletion confirmation
         } else {

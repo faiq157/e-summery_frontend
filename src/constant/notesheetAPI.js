@@ -1,11 +1,13 @@
-import axios from "axios";
+import axiosInstance from "@/utils/http";
+
+
 
 const base_URL = import.meta.env.VITE_APP_API_URL;
 
 export const fetchNotesheets = async (userRole, status, storedToken) => {
     
     try {
-        const response = await axios.get(`${base_URL}/notesheet/notesheets`, {
+        const response = await axiosInstance.get(`${base_URL}/notesheet/notesheets`, {
             params: { role: { $in: [userRole] }, status: status },
             headers: {
                 Authorization: ` ${storedToken}`,
@@ -29,7 +31,7 @@ export const fetchNotesheets = async (userRole, status, storedToken) => {
 
 export const fetchComments = async (notesheetId, storedToken) => {
     try {
-        const response = await axios.get(`${base_URL}/notesheet/comments/${notesheetId}`, {
+        const response = await axiosInstance.get(`${base_URL}/notesheet/comments/${notesheetId}`, {
             headers: {
                 'Authorization': ` ${storedToken}`,
             },
@@ -48,7 +50,7 @@ export const addComment = async (notesheetId, comment, userRole, storedToken) =>
         formData.append('role', userRole);
         formData.append('comment', comment);
 
-        const response = await axios.post(
+        const response = await axiosInstance.post(
             `${base_URL}/notesheet/add-comment/${notesheetId}`,
             formData,
             {
@@ -68,7 +70,7 @@ export const addComment = async (notesheetId, comment, userRole, storedToken) =>
 
 export const deleteNotesheet =async (notesheetId, storedToken) => {
     try {
-        const response = await axios.delete(`${base_URL}/notesheet/delete/${notesheetId}`, {
+        const response = await axiosInstance.delete(`${base_URL}/notesheet/delete/${notesheetId}`, {
         headers:{
             Authorization:`${storedToken}`
         }
@@ -87,7 +89,7 @@ export const editNotesheet = async (id, updatedData, storedToken) => {
       if (updatedData[key]) formData.append(key, updatedData[key]);
     });
 
-    const response = await axios.put(`${base_URL}/notesheet/edit/${id}`, formData, {
+    const response = await axiosInstance.put(`${base_URL}/notesheet/edit/${id}`, formData, {
       headers: {
         Authorization: `${storedToken}`,
         'Content-Type': 'multipart/form-data',

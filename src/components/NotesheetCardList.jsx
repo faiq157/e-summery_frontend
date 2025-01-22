@@ -4,12 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import NotesheetDetailModal from './NotesheetDetailModal';
 import Loader from './Loader';
-import AuthContext from '@/context/AuthContext';
 import { fetchNotesheets } from '@/constant/notesheetAPI';
 import { deleteNotesheet } from '@/constant/notesheetAPI'; // Import delete function
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel } from "@/components/ui/alert-dialog"; // Import alert dialog components
 import EditApplication from '../pages/createApp/EditeApplication'; // Assuming this is the edit component
 import { Player } from '@lottiefiles/react-lottie-player';
+import axiosInstance from '@/utils/http';
 
 const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
     const [notesheets, setNotesheets] = useState([]);
@@ -61,7 +61,7 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
             formData.append('status', updatedValues.status);
             if (updatedValues.file) formData.append('image', updatedValues.file);
 
-            const response = await axios.put(
+            const response = await axiosInstance.put(
                 `${base_URL}/notesheet/edit/${selectedNotesheet._id}`,
                 formData,
                 {
@@ -136,8 +136,7 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
                             </CardHeader>
                             <CardContent>
                                 <p><strong>Description:</strong> {notesheet.description}</p>
-                                <p><strong>Status:</strong> {notesheet.status}</p>
-                                <p><strong>Created by:</strong> {notesheet.userName}</p>
+                                <p><strong>Application User:</strong> {notesheet.userName}</p>
                                 <p><strong>Created at:</strong> {new Date(notesheet.timestamps.createdAt).toLocaleDateString('en-us', { weekday: "long", year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric", hour12: true })}</p>
 
                                 <div className='flex justify-between mt-2'>

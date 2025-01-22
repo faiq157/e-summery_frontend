@@ -3,10 +3,11 @@ import { Button } from "@/components/ui/button";
 import { AiOutlineClose } from "react-icons/ai";
 import NotesheetCardList from '@/components/NotesheetCardList';
 import { useModal } from '@/context/ModalContext';
-import axios from 'axios';
 import Dashboardlayout from '@/layout/Dashboardlayout';
 import NotesheetForm from './createApp/NotesheetForm';
 import { toast } from 'react-toastify';
+import axiosInstance from '@/utils/http';
+
 
 const New = () => {
     const { isModalOpen, openModal, closeModal } = useModal();
@@ -39,7 +40,7 @@ const New = () => {
     // Get the userId from _id
     const userId = userData._id;
     const sendNotification = (userId) => {
-        axios.post(`${base_URL}/send-notification`, {
+        axiosInstance.post(`${base_URL}/send-notification`, {
             title: "Notesheet Created",
             body: "A new notesheet has been successfully created.",
             userId: userId, // Replace with dynamic userId if needed
@@ -64,7 +65,7 @@ const New = () => {
         formData.append('status', values.status);
         formData.append('image', values.file);
 
-        axios.post(`${base_URL}/notesheet/create`, formData, {
+        axiosInstance.post(`${base_URL}/notesheet/create`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 Authorization: ` ${storedToken}`,
@@ -127,7 +128,7 @@ const New = () => {
                                     file: null,
                                 }}
                                 onSubmit={handleCreateSubmit}
-                                isSubmitting={false} // Update with the correct state as necessary
+                                isSubmitting={false}
                             />
                         </div>
                     </div>
