@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-// NotesheetDetailModal.js
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { AiOutlineClose } from 'react-icons/ai';
@@ -10,11 +9,12 @@ import FullScreenImageViewer from './FullScreenImageViewer ';
 
 const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToken, refetchData, status }) => {
     const [comment, setComment] = useState('');
+    const [file, setFile] = useState(null); // State for file
     const [loading, setLoading] = useState(false);
     const [rolesData, setRolesData] = useState([]);
     const [isRoleModalOpen, setRoleModalOpen] = useState(false);
     const [commentsUpdated, setCommentsUpdated] = useState(false);
-    console.log(storedToken)
+    console.log("this is user role id", userRole)
     useEffect(() => {
         const loadComments = async () => {
             try {
@@ -31,24 +31,37 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
     }, [notesheet?._id, storedToken, commentsUpdated]);
 
     const handleAddComment = async () => {
-        if (!comment) return;
+        if (!comment && !file) {
+            toast.error('Please add a comment or upload a file.');
+            return;
+        }
 
         setLoading(true);
         try {
-            const newComment = await addComment(notesheet._id, comment, userRole, storedToken);
+            const formData = new FormData();
+            formData.append('comment', comment);
+            if (file) {
+                formData.append('document', file);
+            }
+            formData.append('role', userRole);
+
+            console.log("FormData being sent:", Array.from(formData.entries()));
+
+            const newComment = await addComment(notesheet._id, formData, storedToken);
 
             toast.success('Comment added successfully!');
             setComment('');
-            setRolesData(prevData => [...prevData, newComment]);
-            setCommentsUpdated(prev => !prev); // Toggle to trigger useEffect
-
+            setFile(null);
+            setRolesData((prevData) => [...prevData, newComment]);
+            setCommentsUpdated((prev) => !prev);
         } catch (error) {
-            console.error(error);
+            console.error("Error adding comment:", error);
             toast.error('Failed to add comment.');
         } finally {
             setLoading(false);
         }
     };
+
 
     if (!isOpen) return null;
 
@@ -56,7 +69,9 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
         setRoleModalOpen(true);
     };
 
-    console.log("image url", notesheet?.image)
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]); // Set selected file
+    };
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -89,6 +104,16 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                                     <div key={commentData._id} className="p-4 border border-gray-200 rounded-lg bg-white shadow-md mb-4">
                                         <p className="font-medium">{commentData.user || 'Unknown User'}:</p>
                                         <p className="text-gray-700">{commentData.comment}</p>
+                                        {commentData.document && (
+                                            <a
+                                                href={commentData.document}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-blue-500 underline"
+                                            >
+                                                View Uploaded File
+                                            </a>
+                                        )}
                                         <p className="text-sm text-gray-500">{new Date(commentData.timestamp).toLocaleString()}</p>
                                     </div>
                                 ) : null
@@ -111,7 +136,17 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                                 rows={4}
                             />
                         </div>
-
+                        {userRole === "establishment" || userRole === "Establishment" && (
+                            <div className="mb-4">
+                                <label htmlFor="file" className="block text-gray-700 font-bold mb-2">Upload File</label>
+                                <input
+                                    id="file"
+                                    type="file"
+                                    onChange={handleFileChange}
+                                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border file:border-gray-300 file:rounded file:bg-gray-50 file:text-gray-700"
+                                />
+                            </div>)
+                        }
                         <div className="mt-6 flex justify-between">
                             <div className="flex justify-between w-full">
                                 <Button onClick={handleAddComment} disabled={loading}>
@@ -122,8 +157,6 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                         </div>
                     </>
                 )}
-
-
             </div>
             <RoleSelectionModal
                 userRole={userRole}
