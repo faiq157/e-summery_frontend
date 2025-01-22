@@ -44,12 +44,9 @@ export const fetchComments = async (notesheetId, storedToken) => {
     }
 };
 
-export const addComment = async (notesheetId, comment, userRole, storedToken) => {
+export const addComment = async (notesheetId,formData, storedToken) => {
     try {
-        const formData = new FormData();
-        formData.append('role', userRole);
-        formData.append('comment', comment);
-
+    
         const response = await axiosInstance.post(
             `${base_URL}/notesheet/add-comment/${notesheetId}`,
             formData,

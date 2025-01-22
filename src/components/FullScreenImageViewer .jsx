@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { AiOutlineClose, AiOutlineEye, AiOutlineDownload } from 'react-icons/ai';
+import { Button } from './ui/button';
 
 const FullScreenImageViewer = ({ imageUrl }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isHovered, setIsHovered] = useState(false);  // Track hover state
 
     // Handle opening the modal
     const handleImageClick = () => {
@@ -16,27 +16,9 @@ const FullScreenImageViewer = ({ imageUrl }) => {
     };
 
     return (
-        <div>
+        <div className='mt-4'>
             {/* Thumbnail image with hover effect */}
-            <div
-                className="relative w-20 h-20 border rounded-lg cursor-pointer"
-                onClick={handleImageClick}
-                onMouseEnter={() => setIsHovered(true)}  // Hover effect
-                onMouseLeave={() => setIsHovered(false)}  // Hover effect
-            >
-                <img
-                    src={imageUrl}
-                    alt="Thumbnail"
-                    className="w-full h-full border rounded-md object-cover"
-                />
-
-                {/* Eye icon visible only when hovered */}
-                {isHovered && (
-                    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-                        <AiOutlineEye className="text-white text-3xl" />
-                    </div>
-                )}
-            </div>
+            <Button onClick={handleImageClick} >View Attachment</Button>
 
             {/* Full-screen modal for the image */}
             {isModalOpen && (
