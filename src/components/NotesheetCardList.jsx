@@ -10,6 +10,8 @@ import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, 
 import EditApplication from '../pages/createApp/EditeApplication'; // Assuming this is the edit component
 import { Player } from '@lottiefiles/react-lottie-player';
 import axiosInstance from '@/utils/http';
+import { AiOutlineCopy } from 'react-icons/ai';
+import { toast } from 'react-toastify';
 
 const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
     const [notesheets, setNotesheets] = useState([]);
@@ -22,8 +24,10 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
     const [notesheetToDelete, setNotesheetToDelete] = useState(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const base_URL = import.meta.env.VITE_APP_API_URL;
+    const [isCopied, setIsCopied] = useState(false);
 
     useEffect(() => {
+        setLoading(true);
         const getNotesheets = async () => {
             try {
                 const fetchedNotesheets = await fetchNotesheets(userRole, status, storedToken);
@@ -101,6 +105,13 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
         setSelectedNotesheet(notesheet);
         setIsModalOpen(true);
     };
+    const handleCopy = (trackingId) => {
+        navigator.clipboard.writeText(trackingId).then(() => {
+            setIsCopied(true);
+            toast.success('Tracking ID copied to clipboard');
+            setTimeout(() => setIsCopied(false), 2000); // Reset copy state after 2 seconds
+        });
+    };
 
     // Filter notesheets by subject based on searchQuery
     const filteredNotesheets = notesheets.filter((notesheet) =>
@@ -138,6 +149,15 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
                                 <p><strong>Description:</strong> {notesheet.description}</p>
                                 <p><strong>Application User:</strong> {notesheet.userName}</p>
                                 <p><strong>Created at:</strong> {new Date(notesheet.timestamps.createdAt).toLocaleDateString('en-us', { weekday: "long", year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric", hour12: true })}</p>
+                                <p className="flex items-center space-x-2">
+                                    <strong>Tracking Id:</strong> {notesheet.trackingId}
+                                    <AiOutlineCopy
+                                        className="text-blue-600 cursor-pointer hover:text-blue-800"
+                                        size={20}
+                                        onClick={() => handleCopy(notesheet.trackingId)}
+                                        title="Copy Tracking ID"
+                                    />
+                                </p>
 
                                 <div className='flex justify-between mt-2'>
                                     <Button className="" onClick={() => handleViewDetails(notesheet)}>View Details</Button>

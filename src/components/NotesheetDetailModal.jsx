@@ -61,8 +61,8 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-[60vw]">
-                <div className="flex justify-between items-center">
-                    <h2 className="text-2xl font-bold mb-4">Notesheet Details</h2>
+                <div className="flex justify-between mb-4 items-center">
+                    <h2 className="text-2xl font-bold ">Notesheet Details</h2>
                     <AiOutlineClose className="text-2xl cursor-pointer" onClick={onClose} />
                 </div>
 
@@ -70,7 +70,7 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                     <div className="w-1/2 mb-4">
                         <p><strong>Subject:</strong> {notesheet?.subject}</p>
                         <p><strong>Description:</strong> {notesheet?.description}</p>
-                        <p><strong>Created by:</strong> {notesheet?.userName}</p>
+                        <p><strong>Application User:</strong> {notesheet?.userName}</p>
                         <p><strong>Email:</strong> {notesheet?.email}</p>
                         <p><strong>Contact Number:</strong> {notesheet?.contact_number}</p>
                         <p><strong>Created at:</strong> {new Date(notesheet?.timestamps.createdAt).toLocaleString()}</p>
@@ -98,32 +98,31 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                         )}
                     </div>
                 </div>
-
-                <div className="mb-4">
-                    <label htmlFor="comment" className="block text-gray-700 font-bold mb-2">Add a Comment</label>
-                    <textarea
-                        id="comment"
-                        name="comment"
-                        value={comment}
-                        onChange={(e) => setComment(e.target.value)}
-                        className="shadow appearance-none bg-transparent border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        rows={4}
-                    />
-                </div>
-
-                <div className="mt-6 flex justify-between">
-
-
-                    {status !== "In Progress" && (
-                        <div className='flex justify-between w-full'>
-                            <Button onClick={handleAddComment} disabled={loading}>
-                                {loading ? 'Adding...' : 'Add Comment'}
-                            </Button>
-                            <Button onClick={handleSendClick}>Send</Button>
+                {status !== "In Progress" && (
+                    <>
+                        <div className="mb-4">
+                            <label htmlFor="comment" className="block text-gray-700 font-bold mb-2">Add a Comment</label>
+                            <textarea
+                                id="comment"
+                                name="comment"
+                                value={comment}
+                                onChange={(e) => setComment(e.target.value)}
+                                className="shadow appearance-none bg-transparent border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                rows={4}
+                            />
                         </div>
-                    )}
 
-                </div>
+                        <div className="mt-6 flex justify-between">
+                            <div className="flex justify-between w-full">
+                                <Button onClick={handleAddComment} disabled={loading}>
+                                    {loading ? 'Adding...' : 'Add Comment'}
+                                </Button>
+                                <Button onClick={handleSendClick}>Send</Button>
+                            </div>
+                        </div>
+                    </>
+                )}
+
 
             </div>
             <RoleSelectionModal

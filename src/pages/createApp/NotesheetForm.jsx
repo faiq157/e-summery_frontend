@@ -66,7 +66,7 @@ const NotesheetForm = ({ initialValues, onSubmit }) => {
                     <TextInput label="Description" name="description" as="textarea" />
                     <FileInput label="Upload File" name="file" setFieldValue={setFieldValue} />
                     <div className="mt-6 flex justify-end">
-                        <Button type="submit" disabled={isSubmitting}>Submit</Button>
+                        <Button type="submit" disabled={isSubmitting}> {isSubmitting ? "Submitting..." : "Submit"} </Button>
                     </div>
                 </Form>
             )}

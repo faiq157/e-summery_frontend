@@ -26,7 +26,7 @@ const New = () => {
             setStoredEmail(userObject?.email || '');
             setUserRole(userObject?.role || '');
         }
-    }, [storedUser]);
+    }, []);
     console.log(userRole)
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);

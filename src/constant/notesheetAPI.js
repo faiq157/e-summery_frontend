@@ -102,3 +102,18 @@ export const editNotesheet = async (id, updatedData, storedToken) => {
     throw new Error('Failed to edit notesheet');
   }
 };
+
+export const fetchNotesheetTracking = async (trackingId, storedToken) => {
+    try {
+        const response = await axiosInstance.get(`${base_URL}/track/${trackingId}`, {
+            headers: {
+                Authorization: ` ${storedToken}`,
+            },
+        });
+
+        return response.data.data; 
+    } catch (error) {
+        console.error("Error fetching notesheet tracking data:", error);
+        throw new Error("Failed to fetch notesheet tracking data");
+    }
+};
