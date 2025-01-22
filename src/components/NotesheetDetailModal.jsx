@@ -125,7 +125,7 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                 </div>
                 {status !== "In Progress" && (
                     <>
-                        <div className="mb-4">
+                        <div className="mb-2">
                             <label htmlFor="comment" className="block text-gray-700 font-bold mb-2">Add a Comment</label>
                             <textarea
                                 id="comment"
@@ -136,17 +136,40 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                                 rows={4}
                             />
                         </div>
-                        {userRole === "establishment" || userRole === "Establishment" && (
-                            <div className="mb-4">
-                                <label htmlFor="file" className="block text-gray-700 font-bold mb-2">Upload File</label>
-                                <input
-                                    id="file"
-                                    type="file"
-                                    onChange={handleFileChange}
-                                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border file:border-gray-300 file:rounded file:bg-gray-50 file:text-gray-700"
-                                />
-                            </div>)
-                        }
+                        {userRole.toLowerCase() === 'establishment' && (
+                            <div className="mb-2">
+                                <label htmlFor="file" className="block text-lg font-semibold text-gray-800 mb-3">Upload File</label>
+
+                                <div className="flex items-center justify-center w-full bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 py-2 px-6 hover:border-blue-500 hover:bg-gray-50 transition-all duration-300">
+                                    <input
+                                        id="file"
+                                        type="file"
+                                        onChange={handleFileChange}
+                                        className="hidden"
+                                        accept=".pdf"  // Restrict to PDF files
+                                    />
+                                    <label
+                                        htmlFor="file"
+                                        className="cursor-pointer text-center text-gray-600 font-medium text-sm">
+                                        <span className="block mb-2">Drag & Drop your file here</span>
+                                        <span className="text-blue-500 underline">or click to browse</span>
+                                    </label>
+                                </div>
+
+                                {file && (
+                                    <div className="mt-4 text-sm text-gray-600">
+                                        <p className="font-medium">Selected File:</p>
+                                        <p>{file.name}</p>
+                                    </div>
+                                )}
+
+                            </div>
+                        )}
+
+
+
+
+
                         <div className="mt-6 flex justify-between">
                             <div className="flex justify-between w-full">
                                 <Button onClick={handleAddComment} disabled={loading}>
