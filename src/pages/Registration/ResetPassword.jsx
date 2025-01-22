@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { resetPasswordValidationSchema } from "../../utils/authValidation";
+import axiosInstance from "@/utils/http";
 const base_URL = import.meta.env.VITE_APP_API_URL;
 const ResetPassword = () => {
   const { token } = useParams();
@@ -18,7 +19,7 @@ const ResetPassword = () => {
     }
 
     try {
-      const res = await axios.post(`${base_URL}/auth/reset-password/${token}`, {
+      const res = await axiosInstance.post(`${base_URL}/auth/reset-password/${token}`, {
         password: values.password,
       });
       setMessage(res.data.msg);
@@ -50,9 +51,8 @@ const ResetPassword = () => {
             <Form className="flex flex-col gap-4">
               <label htmlFor="password">New Password:</label>
               <Field
-                className={`py-1 border w-80 border-[#D9D9D9] ${
-                  touched.password && "border-red-500"
-                }   rounded-md px-2`}
+                className={`py-1 border w-80 border-[#D9D9D9] ${touched.password && "border-red-500"
+                  }   rounded-md px-2`}
                 type="password"
                 id="password"
                 name="password"
@@ -66,9 +66,8 @@ const ResetPassword = () => {
 
               <label htmlFor="confirmPassword">Confirm Password:</label>
               <Field
-                className={`py-1 border w-80 border-[#D9D9D9] ${
-                  touched.confirmPassword && "border-red-500"
-                }   rounded-md px-2`}
+                className={`py-1 border w-80 border-[#D9D9D9] ${touched.confirmPassword && "border-red-500"
+                  }   rounded-md px-2`}
                 type="password"
                 id="confirmPassword"
                 name="confirmPassword"

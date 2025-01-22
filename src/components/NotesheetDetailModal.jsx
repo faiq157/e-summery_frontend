@@ -6,6 +6,7 @@ import { AiOutlineClose } from 'react-icons/ai';
 import RoleSelectionModal from './RoleSelectionModal';
 import { addComment, fetchComments } from '@/constant/notesheetAPI';
 import { toast } from 'react-toastify';
+import FullScreenImageViewer from './FullScreenImageViewer ';
 
 const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToken, refetchData, status }) => {
     const [comment, setComment] = useState('');
@@ -55,6 +56,8 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
         setRoleModalOpen(true);
     };
 
+    console.log("image url", notesheet?.image)
+
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-[60vw]">
@@ -67,12 +70,15 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                     <div className="w-1/2 mb-4">
                         <p><strong>Subject:</strong> {notesheet?.subject}</p>
                         <p><strong>Description:</strong> {notesheet?.description}</p>
-                        <p><strong>Status:</strong> {notesheet?.status}</p>
-                        <p><strong>Flow Status:</strong> {notesheet?.flowStatus}</p>
                         <p><strong>Created by:</strong> {notesheet?.userName}</p>
                         <p><strong>Email:</strong> {notesheet?.email}</p>
                         <p><strong>Contact Number:</strong> {notesheet?.contact_number}</p>
                         <p><strong>Created at:</strong> {new Date(notesheet?.timestamps.createdAt).toLocaleString()}</p>
+                        {notesheet?.image && (
+                            <div>
+                                <FullScreenImageViewer imageUrl={notesheet?.image} />
+                            </div>
+                        )}
                     </div>
 
                     <div className="w-1/2 mt-4 h-72 overflow-y-auto p-4 border border-gray-200 rounded-lg bg-gray-50">

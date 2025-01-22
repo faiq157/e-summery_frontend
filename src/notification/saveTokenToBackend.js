@@ -1,3 +1,4 @@
+import axiosInstance from "@/utils/http";
 import axios from "axios";
 const base_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -10,7 +11,7 @@ export const saveTokenToBackend = async (token) => {
     console.log(userId)
 
   try {
-    const response = await axios.post(`${base_URL}/save-token`, { token,userId });
+    const response = await axiosInstance.post(`${base_URL}/save-token`, { token,userId });
     console.log(response.data)
     return response.data.message; 
   } catch (err) {

@@ -6,6 +6,7 @@ import { RiProgress2Fill } from 'react-icons/ri';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import axios from 'axios';
 import AuthContext from '@/context/AuthContext';
+import axiosInstance from '@/utils/http';
 
 const Header = () => {
   const { logout } = useContext(AuthContext);
@@ -24,7 +25,7 @@ const Header = () => {
   const fetchNotifications = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${base_URL}/get-notifications/${userId}`);
+      const response = await axiosInstance.get(`${base_URL}/get-notifications/${userId}`);
       const fetchedNotifications = response.data.notifications || [];
       setNotifications(fetchedNotifications);
 
@@ -55,7 +56,7 @@ const Header = () => {
   const deleteAllNotifications = async () => {
     setLoading(true);
     try {
-      await axios.delete(`${base_URL}/delete-notifications/${userId}`);
+      await axiosInstance.delete(`${base_URL}/delete-notifications/${userId}`);
       setNotifications([]);
     } catch (error) {
       console.error('Error deleting notifications:', error);

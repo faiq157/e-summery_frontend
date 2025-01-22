@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { loginValidationSchema } from "../../utils/authValidation";
 import { AuthContext } from "../../context/AuthContext";
 import Loader from "@/components/Loader";
+import axiosInstance from "@/utils/http";
 
 const base_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -17,7 +18,7 @@ const Login = () => {
   const handleSubmit = async (values) => {
     setIsLoading(true);
     try {
-      const response = await axios.post(`${base_URL}/auth/login`, values);
+      const response = await axiosInstance.post(`${base_URL}/auth/login`, values);
       const { token, user } = response.data;
 
       login(token, user);

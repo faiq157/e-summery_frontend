@@ -56,7 +56,6 @@ function App() {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
 
-      {/* Toast Container for global toast messages */}
       <ToastContainer
         position="top-right"
         autoClose={5000}
