@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
@@ -12,11 +13,9 @@ import { Player } from '@lottiefiles/react-lottie-player';
 import axiosInstance from '@/utils/http';
 import { AiOutlineCopy } from 'react-icons/ai';
 import { toast } from 'react-toastify';
+import { useNotesheetContext } from '@/context/NotesheetContext';
 
 const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
-    const [notesheets, setNotesheets] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const storedToken = localStorage.getItem('token');
     const [selectedNotesheet, setSelectedNotesheet] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,37 +24,17 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const base_URL = import.meta.env.VITE_APP_API_URL;
     const [isCopied, setIsCopied] = useState(false);
+    const { notesheets, fetchNotesheets, deleteNotesheet, loading, error } = useNotesheetContext();
 
     useEffect(() => {
-        setLoading(true);
-
-        const getNotesheets = async () => {
-            if (!userRole) {
-                setLoading(false);
-                return;
-            }
-            try {
-                const fetchedNotesheets = await fetchNotesheets(userRole, status, storedToken);
-                setNotesheets(fetchedNotesheets);
-                setLoading(false);
-            } catch (err) {
-                setError("Error fetching notesheets");
-                setLoading(false);
-            }
-        };
-
-        getNotesheets();
-    }, [status, storedToken, refetchData, userRole]);
+        if (userRole) {
+            fetchNotesheets(userRole, status, storedToken);
+        }
+    }, [userRole, status, storedToken, refetchData]);
 
     const handleDelete = async () => {
-        try {
-            const result = await deleteNotesheet(notesheetToDelete._id, storedToken);
-            const updatedNotesheets = notesheets.filter(notesheet => notesheet._id !== notesheetToDelete._id);
-            setNotesheets(updatedNotesheets);
-            setIsDeleteDialogOpen(false);
-        } catch (error) {
-            setError("Error deleting notesheet");
-        }
+        await deleteNotesheet(notesheetToDelete._id, storedToken);
+        setIsDeleteDialogOpen(false);
     };
 
     const onEditSave = async (updatedValues) => {
@@ -118,7 +97,6 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
         });
     };
 
-    // Filter notesheets by subject based on searchQuery
     const filteredNotesheets = notesheets.filter((notesheet) =>
         notesheet.userName.toLowerCase().includes(searchQuery.toLowerCase())
     );

@@ -4,18 +4,18 @@ import axiosInstance from "@/utils/http";
 
 const base_URL = import.meta.env.VITE_APP_API_URL;
 
-export const fetchNotesheets = async (userRole, status, storedToken) => {
+export const fetchNotesheets = async (userRole, status,storedToken) => {
     
     try {
         const response = await axiosInstance.get(`${base_URL}/notesheet/notesheets`, {
             params: { role: { $in: [userRole] }, status: status },
-            headers: {
-                Authorization: ` ${storedToken}`,
-            },
+            headers:{
+                Authorization:`${storedToken}`
+            }
+          
         });
 
         if (Array.isArray(response.data)) {
-            // Sort the notesheets based on the createdAt timestamp
             const sortedNotesheets = response.data.sort((a, b) => {
                 return new Date(b.timestamps.createdAt) - new Date(a.timestamps.createdAt);
             });

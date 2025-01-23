@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Button } from "@/components/ui/button";
 import { AiOutlineClose } from 'react-icons/ai';
 import { toast } from 'react-toastify';  // Import toast from react-toastify

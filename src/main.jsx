@@ -4,11 +4,14 @@ import App from "./App.jsx";
 import "./index.css";
 import { AuthProvider } from "./context/AuthContext";
 import { ModalProvider } from "./context/ModalContext.jsx";
+import { NotesheetProvider } from "./context/NotesheetContext.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <ModalProvider>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
-  </ModalProvider>
+  <NotesheetProvider>
+    <ModalProvider>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </ModalProvider>
+  </NotesheetProvider>
 );

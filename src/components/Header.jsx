@@ -4,34 +4,30 @@ import { FaHome, FaRegCheckCircle, FaTractor, FaBell } from 'react-icons/fa';
 import { IoNewspaper, IoSettingsOutline } from 'react-icons/io5';
 import { RiProgress2Fill } from 'react-icons/ri';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
-import axios from 'axios';
 import AuthContext from '@/context/AuthContext';
 import axiosInstance from '@/utils/http';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   const { logout } = useContext(AuthContext);
   const [notifications, setNotifications] = useState([]);
-  const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false); // New state for the red dot
-  const [isModalOpen, setIsModalOpen] = useState(false); // Handle modal state locally
+  const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const base_URL = import.meta.env.VITE_APP_API_URL;
   const storedUser = localStorage.getItem('user');
   const userData = JSON.parse(storedUser);
 
-  // Get the userId from _id
   const userId = userData?._id;
 
-  // Fetch notifications
   const fetchNotifications = async () => {
     setLoading(true);
     try {
       const response = await axiosInstance.get(`${base_URL}/get-notifications/${userId}`);
       const fetchedNotifications = response.data.notifications || [];
       setNotifications(fetchedNotifications);
-
-      // Check if there are any new/unread notifications
       if (fetchedNotifications.length > 0) {
-        setHasUnreadNotifications(true); // Show the red dot
+        setHasUnreadNotifications(true);
       }
     } catch (error) {
       console.error('Error fetching notifications:', error);
@@ -117,18 +113,9 @@ const Header = () => {
               </button>
             </DropdownMenuTrigger>
             {/* Dropdown Menu Content */}
-            <DropdownMenuContent className=" bg-secondary cursor-pointer dark:bg-boxdark rounded-lg p-2 mt-3">
+            <DropdownMenuContent className=" bg-secondary cursor-pointer  dark:bg-boxdark rounded-lg p-2 mt-3">
               <DropdownMenuItem className="focus:outline-none px-2 py-1 rounded hover:bg-gray-200">
-                {userData?.email}
-              </DropdownMenuItem>
-              <DropdownMenuItem className="focus:outline-none px-2 py-1 rounded hover:bg-gray-200">
-                {userData?.role}
-              </DropdownMenuItem>
-              <DropdownMenuItem className="focus:outline-none px-2 py-1 rounded hover:bg-gray-200">
-                Profile
-              </DropdownMenuItem>
-              <DropdownMenuItem className="focus:outline-none px-2 py-1 rounded hover:bg-gray-200">
-                Settings
+                <Link to="/setting">Settings</Link>
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-red-500 hover:bg-red-100 focus:outline-none cursor-pointer rounded px-2 py-1 transition-colors"
