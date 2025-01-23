@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { fetchUsers, deleteUser } from "../constant/userAPI";
+import { fetchUsers, deleteUser } from "@/constant/userAPI";
 import AdminLayout from "@/layout/AdminLayout";
-import EditUserModal from "../components/EditUserModal ";
+import EditUserModal from "@/components/EditUserModal ";
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel } from "@/components/ui/alert-dialog"; // Import alert dialog components
 import Loader from "@/components/Loader";

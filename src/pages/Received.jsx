@@ -8,22 +8,21 @@ const Received = () => {
     const [userRole, setUserRole] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
 
-
     useEffect(() => {
         // Fetch the email from the stored user object
         if (storedUser) {
             const userObject = JSON.parse(storedUser);
             setStoredEmail(userObject.email || ''); // Set the email if it exists
-            setUserRole(userObject.role || '');
+            setUserRole(userObject.role || ''); // Set the user role if it exists
         }
-    }, [storedUser]);
-
+    }, [storedUser]);  // Run this effect only when `storedUser` changes
 
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
     };
 
-    console.log(userRole)
+
+
     return (
         <Dashboardlayout>
             <div className="p-8">
@@ -43,12 +42,15 @@ const Received = () => {
 
                 {/* Show the list of created notesheets (could be fetched from an API or static data) */}
                 <div className="mt-8">
-                    <NotesheetCardList status={"Received"} searchQuery={searchQuery} userRole={userRole} />
+                    <NotesheetCardList
+                        status={"Received"}
+                        searchQuery={searchQuery}
+                        userRole={userRole}
+                    />
                 </div>
             </div>
 
             {/* Modal for the form */}
-
         </Dashboardlayout>
     );
 };
