@@ -103,7 +103,7 @@ const AdminRoles = () => {
                         <Dialog.Title className="text-xl font-bold">Assign Users to Role</Dialog.Title>
                         <p className="text-gray-500 mb-4">Role: {selectedRole?.role}</p>
 
-                        <div className="mb-4">
+                        <div className="mb-4 h-40 overflow-y-auto">
                             {/* Filter out the selected role from the dropdown */}
                             {roles
                                 .filter((role) => role.role !== selectedRole?.role && role.role !== "admin")
