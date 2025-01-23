@@ -10,7 +10,7 @@ import Tracking from "./pages/Tracking";
 import Setting from "./pages/Setting";
 import NotFoundPage from "./pages/NotFoundPage";
 import Register from "./pages/Registration/Register";
-import AdminDashboard from "./pages/AdminDashboard";
+
 import { NonAdminRoute } from "./constant/Non-AdminRoute";
 import { AdminRoute } from "./constant/AdminRoute";
 import Received from "./pages/Received";
@@ -19,6 +19,8 @@ import { generatToken, messaging } from "./notification/firebase-config";
 import { onMessage } from "firebase/messaging";
 import New from "./pages/New";
 import { Bounce, ToastContainer, Zoom } from "react-toastify";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
+import AdminRoles from "./pages/Admin/AdminRoles";
 
 
 function App() {
@@ -46,6 +48,7 @@ function App() {
         {/* Admin Routes - Accessible only for Admin users */}
         <Route path="/adminDashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
         <Route path="/register" element={<AdminRoute><Register /></AdminRoute>} />
+        <Route path="/adminRoles" element={<AdminRoute><AdminRoles /></AdminRoute>} />
 
         {/* Authentication Routes */}
         <Route path="/login" element={<Login />} />

@@ -28,7 +28,12 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
 
     useEffect(() => {
         setLoading(true);
+
         const getNotesheets = async () => {
+            if (!userRole) {
+                setLoading(false);
+                return;
+            }
             try {
                 const fetchedNotesheets = await fetchNotesheets(userRole, status, storedToken);
                 setNotesheets(fetchedNotesheets);
@@ -40,7 +45,7 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
         };
 
         getNotesheets();
-    }, [userRole, status, storedToken, refetchData]);
+    }, [status, storedToken, refetchData, userRole]);
 
     const handleDelete = async () => {
         try {
@@ -109,7 +114,7 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
         navigator.clipboard.writeText(trackingId).then(() => {
             setIsCopied(true);
             toast.success('Tracking ID copied to clipboard');
-            setTimeout(() => setIsCopied(false), 2000); // Reset copy state after 2 seconds
+            setTimeout(() => setIsCopied(false), 2000);
         });
     };
 

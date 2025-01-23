@@ -1,7 +1,8 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import AuthContext from "@/context/AuthContext"; // Assuming AuthContext is used for user management
 import { Button } from "@/components/ui/button";
+import AdminRoles from "@/pages/Admin/AdminRoles";
 
 const AdminLayout = ({ children, onSearchChange, searchQuery }) => {
     const navigate = useNavigate();
@@ -26,6 +27,8 @@ const AdminLayout = ({ children, onSearchChange, searchQuery }) => {
                         placeholder="Search users..."
                         className="px-4 py-2 rounded-md w-64 text-black"
                     />
+                    <Link className="bg-white px-6 py-2 rounded-md text-black hover:bg-gray-200" to="/adminRoles">Assign Role</Link>
+
                     <Link to="/register">
                         <button className="bg-white px-6 py-2 rounded-md text-black hover:bg-gray-200">
                             Create User

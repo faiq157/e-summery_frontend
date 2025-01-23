@@ -15,10 +15,17 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, userRole,
     useEffect(() => {
         const fetchRoles = async () => {
             try {
-                const response = await axiosInstance.get(`${base_URL}/auth/roles`, {
+                const response = await axiosInstance.get(`${base_URL}/get-role`, {
                     headers: { Authorization: ` ${storedToken}` },
                 });
-                setRoles(response.data);
+                const allRoles = [];
+                response.data.data.forEach(role => {
+                    // Push the selected roles from each role object
+                    role.selectedRole.forEach(selected => {
+                        allRoles.push(selected);
+                    });
+                });
+                setRoles(allRoles); // Set all selected roles to the state
             } catch (error) {
                 console.error('Error fetching roles:', error);
                 setErrorMessage('Failed to load roles.');

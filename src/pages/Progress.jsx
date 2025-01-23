@@ -16,7 +16,7 @@ const Progress = () => {
       setStoredEmail(userObject.email || ''); // Set the email if it exists
       setUserRole(userObject.role || '');
     }
-  }, [storedUser]);
+  }, []);
   console.log("this is user role id", userRole)
 
   const handleSearchChange = (event) => {
