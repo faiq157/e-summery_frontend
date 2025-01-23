@@ -19,7 +19,6 @@ const New = () => {
     const [userRole, setUserRole] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const [refetchData, setRefetchData] = useState(false);
-
     useEffect(() => {
         if (storedUser) {
             const userObject = JSON.parse(storedUser);
@@ -35,6 +34,11 @@ const New = () => {
     const handleRefetchData = () => {
         setRefetchData((prev) => !prev);
     };
+    useEffect(() => {
+        if (!isModalOpen) {
+            handleRefetchData(); // Trigger refetch when modal closes
+        }
+    }, [isModalOpen]);
     const userData = JSON.parse(storedUser);
 
     // Get the userId from _id

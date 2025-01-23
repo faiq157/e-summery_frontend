@@ -6,10 +6,11 @@ import RoleSelectionModal from './RoleSelectionModal';
 import { addComment, fetchComments } from '@/constant/notesheetAPI';
 import { toast } from 'react-toastify';
 import FullScreenImageViewer from './FullScreenImageViewer ';
+import axiosInstance from '@/utils/http';
 
 const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToken, refetchData, status }) => {
     const [comment, setComment] = useState('');
-    const [file, setFile] = useState(null); // State for file
+    const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [rolesData, setRolesData] = useState([]);
     const [isRoleModalOpen, setRoleModalOpen] = useState(false);
@@ -29,6 +30,40 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
             loadComments();
         }
     }, [notesheet?._id, storedToken, commentsUpdated]);
+
+    const handleComplete = async () => {
+        if (!notesheet?._id) {
+            toast.error("Notesheet ID is missing.");
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const response = await axiosInstance.put(
+                `http://localhost:5000/api/notesheet/complete/${notesheet._id}`,
+                {},
+                {
+                    headers: {
+                        Authorization: ` ${storedToken}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            if (response.status === 200) {
+                toast.success("Notesheet marked as complete!");
+                onClose();
+            } else {
+                toast.error("Failed to mark as complete. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error marking notesheet as complete:", error);
+            toast.error("An error occurred while marking as complete.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     const handleAddComment = async () => {
         if (!comment && !file) {
@@ -70,7 +105,7 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
     };
 
     const handleFileChange = (e) => {
-        setFile(e.target.files[0]); // Set selected file
+        setFile(e.target.files[0]);
     };
 
     return (
@@ -123,7 +158,7 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                         )}
                     </div>
                 </div>
-                {status !== "In Progress" && (
+                {status !== "In Progress" && status !== "Completed" && (
                     <>
                         <div className="mb-2">
                             <label htmlFor="comment" className="block text-gray-700 font-bold mb-2">Add a Comment</label>
@@ -166,16 +201,21 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                             </div>
                         )}
 
-
-
-
-
                         <div className="mt-6 flex justify-between">
                             <div className="flex justify-between w-full">
                                 <Button onClick={handleAddComment} disabled={loading}>
                                     {loading ? 'Adding...' : 'Add Comment'}
                                 </Button>
-                                <Button onClick={handleSendClick}>Send</Button>
+                                <div className='flex gap-4'>
+                                    <Button onClick={handleSendClick}>Send</Button>
+                                    {
+                                        userRole.toLowerCase() === "establishment" && status !== "New" && (
+                                            <Button className="bg-green-500" onClick={handleComplete} disabled={loading}>
+                                                {loading ? 'Completing...' : 'Mark as Complete'} </Button>
+                                        )
+                                    }
+                                </div>
+
                             </div>
                         </div>
                     </>
