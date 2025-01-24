@@ -28,6 +28,13 @@ const FullScreenImageViewer = ({ imageUrl }) => {
                             src={imageUrl}
                             alt="Full Screen"
                             className="max-w-[90%] max-h-[90%] object-contain"
+                            onError={(e) => {
+                                e.target.style.display = "none";
+                                const fallbackText = document.createElement("div");
+                                fallbackText.textContent = "Your image is not available";
+                                fallbackText.className = "text-white text-lg text-center";
+                                e.target.parentNode.appendChild(fallbackText);
+                            }}
                         />
 
                         {/* Close button */}

@@ -36,7 +36,7 @@ const New = () => {
     };
     useEffect(() => {
         if (!isModalOpen) {
-            handleRefetchData(); // Trigger refetch when modal closes
+            handleRefetchData();
         }
     }, [isModalOpen]);
     const userData = JSON.parse(storedUser);
@@ -94,19 +94,26 @@ const New = () => {
     return (
         <Dashboardlayout>
             <div className="p-8">
-                <div className="flex justify-between items-center mb-4">
-                    <h1 className="text-3xl font-bold mb-6">Create Application</h1>
-                    <div className='flex justify-end gap-4 items-center'>
+                <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
+                    {/* Title */}
+                    <h1 className="text-2xl md:text-3xl font-bold text-center md:text-left mb-4 md:mb-0">
+                        Create Application
+                    </h1>
+                    {/* Search and Button */}
+                    <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto items-center">
                         <input
                             type="text"
                             value={searchQuery}
                             onChange={handleSearchChange}
                             placeholder="Search notesheets by subject..."
-                            className="w-96 p-2 border rounded-md shadow-sm focus:outline-none"
+                            className="w-full md:w-96 p-2 border rounded-md shadow-sm focus:outline-none"
                         />
-                        <Button onClick={openModal}>Create</Button>
+                        <Button onClick={openModal} className="w-full md:w-auto">
+                            Create
+                        </Button>
                     </div>
                 </div>
+
 
                 <div className="mt-8">
                     <NotesheetCardList userRole={userRole} status={"New"} searchQuery={searchQuery} refetchData={refetchData} />
@@ -138,7 +145,7 @@ const New = () => {
                     </div>
                 )}
             </div>
-        </Dashboardlayout>
+        </Dashboardlayout >
     );
 };
 

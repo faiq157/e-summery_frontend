@@ -116,11 +116,11 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
     };
 
     const handleCompleteConfirmation = () => {
-        setIsCompleteDialogOpen(true);  // Open confirmation dialog
+        setIsCompleteDialogOpen(true);
     };
 
     const handleCompleteClose = () => {
-        setIsCompleteDialogOpen(false);  // Close dialog without action
+        setIsCompleteDialogOpen(false);
         fetchNotesheets(userRole, status, storedToken);
     };
 
@@ -187,8 +187,8 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
 
                 {status !== "In Progress" && status !== "Completed" && (
                     <>
-                        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                            <div className="mb-2">
+                        <div className='grid grid-cols-1 gap-2'>
+                            <div className="">
                                 <label htmlFor="comment" className="block text-gray-700 font-bold mb-2">Add a Comment</label>
                                 <textarea
                                     id="comment"
@@ -202,15 +202,15 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                             </div>
 
                             {userRole.toLowerCase() === 'establishment' && (
-                                <div className="mb-2">
-                                    <label htmlFor="file" className="block text-lg font-semibold text-gray-800 mb-3">Upload File</label>
+                                <div className="">
+                                    <label htmlFor="file" className="block text-lg font-semibold text-gray-800 mb-1">Upload File</label>
                                     <div className="flex items-center justify-center w-full bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 py-4 px-6 hover:border-blue-500 hover:bg-gray-50 transition-all duration-300">
                                         <input
                                             id="file"
                                             type="file"
                                             onChange={handleFileChange}
                                             className="hidden"
-                                            accept=".pdf"  // Restrict to PDF files
+                                            accept=".pdf"
                                         />
                                         <label
                                             htmlFor="file"
@@ -229,7 +229,7 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                                 </div>
                             )}
                         </div>
-                        <div className="mt-6 flex justify-between">
+                        <div className="mt-4 flex justify-between">
                             <div className="flex justify-between w-full">
                                 <Button onClick={handleAddComment} disabled={loading}>
                                     {loading ? 'Adding...' : 'Add Comment'}

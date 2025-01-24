@@ -21,6 +21,7 @@ import New from "./pages/New";
 import { Bounce, ToastContainer, Zoom } from "react-toastify";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminRoles from "./pages/Admin/AdminRoles";
+import Approval from "./pages/Approval";
 
 
 function App() {
@@ -42,7 +43,9 @@ function App() {
           <Route path="received" element={<NonAdminRoute><Received /></NonAdminRoute>} />
           <Route path="completed" element={<NonAdminRoute><Completed /></NonAdminRoute>} />
           <Route path="tracking" element={<NonAdminRoute><Tracking /></NonAdminRoute>} />
+          <Route path="approval" element={<NonAdminRoute><Approval /></NonAdminRoute>} />
           <Route path="setting" element={<NonAdminRoute><Setting /></NonAdminRoute>} />
+
         </Route>
 
         {/* Admin Routes - Accessible only for Admin users */}
