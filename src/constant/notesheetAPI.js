@@ -80,6 +80,7 @@ export const deleteNotesheet =async (notesheetId, storedToken) => {
     }
 }
 export const editNotesheet = async (id, updatedData, storedToken) => {
+    console.log("id",id,"This is Formdata",updatedData)
   try {
     const formData = new FormData();
     Object.keys(updatedData).forEach((key) => {

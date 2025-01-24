@@ -3,13 +3,15 @@ import { Button } from "@/components/ui/button";
 import { AiOutlineClose } from 'react-icons/ai';
 import { toast } from 'react-toastify';  // Import toast from react-toastify
 import axiosInstance from '@/utils/http';
+import { useNotesheetContext } from '@/context/NotesheetContext';
 
-const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, userRole, closeParentModal, refetchData }) => {
+const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, status, userRole, closeParentModal, refetchData }) => {
     const [roles, setRoles] = useState([]);
     const [selectedRole, setSelectedRole] = useState('');
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const base_URL = import.meta.env.VITE_APP_API_URL;
+    const { fetchNotesheets } = useNotesheetContext();
 
     useEffect(() => {
         const fetchRoles = async () => {
@@ -24,7 +26,15 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, userRole,
                         allRoles.push(selected);
                     });
                 });
-                setRoles(allRoles); // Set all selected roles to the state
+
+                // Remove duplicates based on role name
+                const uniqueRoles = [
+                    ...new Map(allRoles.map(role => [role.role, role])).values(),
+                ];
+
+                const filteredRoles = uniqueRoles.filter(role => role.role !== 'admin');
+
+                setRoles(filteredRoles);
             } catch (error) {
                 console.error('Error fetching roles:', error);
                 setErrorMessage('Failed to load roles.');
@@ -80,6 +90,7 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, userRole,
             console.log('Send response:', response.data);
             toast.success("Notesheet sent successfully!");
             setLoading(false);
+            fetchNotesheets(userRole, status, storedToken);
             onClose();
             closeParentModal();
             // Find the selected role's object based on role name

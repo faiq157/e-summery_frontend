@@ -59,11 +59,7 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
                     },
                 }
             );
-
-            const updatedNotesheets = notesheets.map((notesheet) =>
-                notesheet._id === selectedNotesheet._id ? { ...notesheet, ...updatedValues } : notesheet
-            );
-            setNotesheets(updatedNotesheets);
+            fetchNotesheets(userRole, status, storedToken);
             setIsEditModalOpen(false);
         } catch (error) {
             console.error('Error updating notesheet:', error);
@@ -157,8 +153,9 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
                                                         Are you sure you want to delete this notesheet? This action cannot be undone.
                                                     </AlertDialogDescription>
                                                     <div className="flex justify-end space-x-2">
-                                                        <AlertDialogCancel onClick={handleCloseDeleteDialog}>Cancel</AlertDialogCancel>
                                                         <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+                                                        <AlertDialogCancel onClick={handleCloseDeleteDialog}>Cancel</AlertDialogCancel>
+
                                                     </div>
                                                 </AlertDialogContent>
                                             </AlertDialog>
