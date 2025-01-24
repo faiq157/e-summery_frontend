@@ -7,6 +7,8 @@ import { addComment, fetchComments } from '@/constant/notesheetAPI';
 import { toast } from 'react-toastify';
 import FullScreenImageViewer from './FullScreenImageViewer ';
 import axiosInstance from '@/utils/http';
+
+const base_URL = import.meta.env.VITE_APP_API_URL;
 import { useNotesheetContext } from '@/context/NotesheetContext';
 import {
     AlertDialog,
@@ -17,6 +19,7 @@ import {
     AlertDialogAction,
     AlertDialogCancel
 } from "@/components/ui/alert-dialog";
+
 
 const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToken, refetchData, status }) => {
     const [comment, setComment] = useState('');
@@ -54,7 +57,7 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
         setLoading(true);
         try {
             const response = await axiosInstance.put(
-                `http://localhost:5000/api/notesheet/complete/${notesheet._id}`,
+                `${base_URL}/notesheet/complete/${notesheet._id}`,
                 {},
                 {
                     headers: {
