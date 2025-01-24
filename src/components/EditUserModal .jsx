@@ -27,8 +27,8 @@ const EditUserModal = ({ isOpen, onClose, user, onUpdate }) => {
                 `${base_URL}/auth/edit/${user._id}`,
                 updatedUser
             );
-            onUpdate(response.data); // Notify the parent component that the user has been updated
-            onClose(); // Close the modal
+            onUpdate(response.data);
+            onClose();
         } catch (err) {
             console.error("Error updating user:", err);
         }

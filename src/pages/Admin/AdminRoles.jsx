@@ -4,6 +4,8 @@ import { Dialog } from "@headlessui/react";
 import { Link } from 'react-router-dom';
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
+import { toast } from "react-toastify";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const base_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -32,8 +34,16 @@ const AdminRoles = () => {
         fetchRoles();
     }, []);
 
-    const openModal = (role) => {
+    const openModal = async (role) => {
         setSelectedRole(role);
+        try {
+            // Fetch already assigned users for the selected role
+            const response = await axios.get(`${base_URL}/assigned-users/${role.role}`);
+            setSelectedUsers(response.data); // Assume the API returns an array of user objects
+        } catch (err) {
+            toast.error("Failed to fetch assigned users.", err);
+            setSelectedUsers([]);
+        }
         setIsModalOpen(true);
     };
 
@@ -47,7 +57,6 @@ const AdminRoles = () => {
         });
     };
 
-
     const handleSave = async () => {
         if (selectedUsers.length === 0) return;
         try {
@@ -55,17 +64,17 @@ const AdminRoles = () => {
                 role: selectedRole.role,
                 selectedRole: selectedUsers,
             });
-            alert("Users assigned successfully!");
+            toast.success("Users assigned successfully!");
             setIsModalOpen(false);
             setSelectedUsers([]);
         } catch (err) {
-            console.error("Failed to assign roles.", err);
+            toast.error("Failed to assign roles.", err);
         }
     };
 
     return (
         <div className="p-6 bg-gray-100 min-h-screen">
-            <div className="flex items-center mb-6 gap-7 ">
+            <div className="flex items-center mb-6 gap-7">
                 <Link to="/AdminDashboard" className="text-black">
                     <IoArrowBackCircleSharp className="text-3xl" />
                 </Link>
@@ -104,35 +113,30 @@ const AdminRoles = () => {
                         <p className="text-gray-500 mb-4">Role: {selectedRole?.role}</p>
 
                         <div className="mb-4 h-40 overflow-y-auto">
-                            {/* Filter out the selected role from the dropdown */}
                             {roles
                                 .filter((role) => role.role !== selectedRole?.role && role.role !== "admin")
                                 .map((role) => (
-                                    <label
-                                        key={role.id}
-                                        className="flex items-center gap-2 mb-2"
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            className="form-checkbox h-5 w-5 text-blue-600"
-                                            checked={selectedUsers.some(user => user.id === role.id)}
-                                            onChange={() => toggleUserSelection(role.id, role.role)}
+                                    <div key={role.id} className="flex items-center gap-2 mb-2">
+                                        <Checkbox
+                                            checked={selectedUsers.some((user) => user.id === role.id)}
+                                            onCheckedChange={() => toggleUserSelection(role.id, role.role)}
+                                            id={`checkbox-${role.id}`}
                                         />
-                                        {role.role}
-                                    </label>
+                                        <label htmlFor={`checkbox-${role.id}`} className="text-gray-700">
+                                            {role.role}
+                                        </label>
+                                    </div>
                                 ))}
                         </div>
 
                         <div className="flex justify-end gap-2">
                             <Button
                                 variant="danger"
-
                                 onClick={() => setIsModalOpen(false)}
                             >
                                 Cancel
                             </Button>
                             <Button
-
                                 onClick={handleSave}
                             >
                                 Save

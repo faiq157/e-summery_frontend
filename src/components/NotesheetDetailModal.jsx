@@ -7,6 +7,16 @@ import { addComment, fetchComments } from '@/constant/notesheetAPI';
 import { toast } from 'react-toastify';
 import FullScreenImageViewer from './FullScreenImageViewer ';
 import axiosInstance from '@/utils/http';
+import { useNotesheetContext } from '@/context/NotesheetContext';
+import {
+    AlertDialog,
+    AlertDialogTrigger,
+    AlertDialogContent,
+    AlertDialogTitle,
+    AlertDialogDescription,
+    AlertDialogAction,
+    AlertDialogCancel
+} from "@/components/ui/alert-dialog";
 
 const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToken, refetchData, status }) => {
     const [comment, setComment] = useState('');
@@ -15,7 +25,11 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
     const [rolesData, setRolesData] = useState([]);
     const [isRoleModalOpen, setRoleModalOpen] = useState(false);
     const [commentsUpdated, setCommentsUpdated] = useState(false);
+    const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false);  // state for dialog visibility
+    const { fetchNotesheets } = useNotesheetContext();
+
     console.log("this is user role id", userRole)
+
     useEffect(() => {
         const loadComments = async () => {
             try {
@@ -52,7 +66,9 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
 
             if (response.status === 200) {
                 toast.success("Notesheet marked as complete!");
+                fetchNotesheets(userRole, status, storedToken);
                 onClose();
+
             } else {
                 toast.error("Failed to mark as complete. Please try again.");
             }
@@ -63,7 +79,6 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
             setLoading(false);
         }
     };
-
 
     const handleAddComment = async () => {
         if (!comment && !file) {
@@ -97,6 +112,14 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
         }
     };
 
+    const handleCompleteConfirmation = () => {
+        setIsCompleteDialogOpen(true);  // Open confirmation dialog
+    };
+
+    const handleCompleteClose = () => {
+        setIsCompleteDialogOpen(false);  // Close dialog without action
+        fetchNotesheets(userRole, status, storedToken);
+    };
 
     if (!isOpen) return null;
 
@@ -158,49 +181,51 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                         )}
                     </div>
                 </div>
+
                 {status !== "In Progress" && status !== "Completed" && (
                     <>
-                        <div className="mb-2">
-                            <label htmlFor="comment" className="block text-gray-700 font-bold mb-2">Add a Comment</label>
-                            <textarea
-                                id="comment"
-                                name="comment"
-                                value={comment}
-                                onChange={(e) => setComment(e.target.value)}
-                                className="shadow appearance-none bg-transparent border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                rows={4}
-                            />
-                        </div>
-                        {userRole.toLowerCase() === 'establishment' && (
+                        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                             <div className="mb-2">
-                                <label htmlFor="file" className="block text-lg font-semibold text-gray-800 mb-3">Upload File</label>
-
-                                <div className="flex items-center justify-center w-full bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 py-2 px-6 hover:border-blue-500 hover:bg-gray-50 transition-all duration-300">
-                                    <input
-                                        id="file"
-                                        type="file"
-                                        onChange={handleFileChange}
-                                        className="hidden"
-                                        accept=".pdf"  // Restrict to PDF files
-                                    />
-                                    <label
-                                        htmlFor="file"
-                                        className="cursor-pointer text-center text-gray-600 font-medium text-sm">
-                                        <span className="block mb-2">Drag & Drop your file here</span>
-                                        <span className="text-blue-500 underline">or click to browse</span>
-                                    </label>
-                                </div>
-
-                                {file && (
-                                    <div className="mt-4 text-sm text-gray-600">
-                                        <p className="font-medium">Selected File:</p>
-                                        <p>{file.name}</p>
-                                    </div>
-                                )}
-
+                                <label htmlFor="comment" className="block text-gray-700 font-bold mb-2">Add a Comment</label>
+                                <textarea
+                                    id="comment"
+                                    name="comment"
+                                    value={comment}
+                                    onChange={(e) => setComment(e.target.value)}
+                                    className="shadow appearance-none bg-transparent border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    rows={4}
+                                    required
+                                />
                             </div>
-                        )}
 
+                            {userRole.toLowerCase() === 'establishment' && (
+                                <div className="mb-2">
+                                    <label htmlFor="file" className="block text-lg font-semibold text-gray-800 mb-3">Upload File</label>
+                                    <div className="flex items-center justify-center w-full bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 py-4 px-6 hover:border-blue-500 hover:bg-gray-50 transition-all duration-300">
+                                        <input
+                                            id="file"
+                                            type="file"
+                                            onChange={handleFileChange}
+                                            className="hidden"
+                                            accept=".pdf"  // Restrict to PDF files
+                                        />
+                                        <label
+                                            htmlFor="file"
+                                            className="cursor-pointer text-center text-gray-600 font-medium text-sm">
+                                            <span className="block mb-2">Drag & Drop your file here</span>
+                                            <span className="text-blue-500 underline">or click to browse</span>
+                                        </label>
+                                    </div>
+
+                                    {file && (
+                                        <div className="mt-4 text-sm text-gray-600">
+                                            <p className="font-medium">Selected File:</p>
+                                            <p>{file.name}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                         <div className="mt-6 flex justify-between">
                             <div className="flex justify-between w-full">
                                 <Button onClick={handleAddComment} disabled={loading}>
@@ -210,12 +235,32 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                                     <Button onClick={handleSendClick}>Send</Button>
                                     {
                                         userRole.toLowerCase() === "establishment" && status !== "New" && (
-                                            <Button className="bg-green-500" onClick={handleComplete} disabled={loading}>
-                                                {loading ? 'Completing...' : 'Mark as Complete'} </Button>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger>
+                                                    <Button
+                                                        className="bg-green-500"
+                                                        disabled={loading}
+                                                        onClick={handleCompleteConfirmation}
+                                                    >
+                                                        {loading ? 'Completing...' : 'Mark as Complete'}
+                                                    </Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        This action will mark the notesheet as complete.
+                                                    </AlertDialogDescription>
+                                                    <div className='flex justify-end space-x-2'>
+                                                        <AlertDialogCancel onClick={handleCompleteClose}>Cancel</AlertDialogCancel>
+                                                        <AlertDialogAction onClick={handleComplete}>Yes, Mark as Complete</AlertDialogAction>
+
+                                                    </div>
+
+                                                </AlertDialogContent>
+                                            </AlertDialog>
                                         )
                                     }
                                 </div>
-
                             </div>
                         </div>
                     </>
@@ -229,6 +274,7 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                 storedToken={storedToken}
                 closeParentModal={onClose}
                 refetchData={refetchData}
+                status={status}
             />
         </div>
     );
