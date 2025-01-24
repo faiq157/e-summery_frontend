@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import { FaHome, FaRegCheckCircle, FaTractor, FaBell } from 'react-icons/fa';
-import { IoNewspaper, IoSettingsOutline } from 'react-icons/io5';
+import { IoCheckmarkDoneCircleSharp, IoNewspaper, IoSettingsOutline } from 'react-icons/io5';
 import { RiProgress2Fill } from 'react-icons/ri';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import AuthContext from '@/context/AuthContext';
 import axiosInstance from '@/utils/http';
 import { Link } from 'react-router-dom';
-
+import { VscSortPrecedence } from "react-icons/vsc";
+import { CgTrack } from "react-icons/cg";
 const Header = () => {
   const { logout } = useContext(AuthContext);
   const [notifications, setNotifications] = useState([]);
@@ -66,15 +67,16 @@ const Header = () => {
     { title: 'Home', url: '/', icon: FaHome },
     { title: 'New', url: '/new', icon: IoNewspaper },
     { title: 'Progress', url: '/progress', icon: RiProgress2Fill },
-    { title: 'Received', url: '/received', icon: FaRegCheckCircle },
+    { title: 'Received', url: '/received', icon: VscSortPrecedence },
     { title: 'Completed', url: '/completed', icon: FaRegCheckCircle },
-    { title: 'Tracking', url: '/tracking', icon: FaTractor },
+    { title: 'Tracking', url: '/tracking', icon: CgTrack },
+    { title: 'Approval', url: '/approval', icon: IoCheckmarkDoneCircleSharp },
     { title: 'Settings', url: '/setting', icon: IoSettingsOutline },
   ];
 
   return (
     <>
-      <header className="sticky top-0 z-999 flex w-full bg-background border-b-2 dark:border-border h-20 drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
+      <header className="sticky top-0 z-50 flex w-full bg-background border-b-2 dark:border-border h-20 drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
         <nav className="flex items-center gap-6 px-8">
           {items.map((item) => (
             <a
