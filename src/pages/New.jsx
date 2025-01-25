@@ -93,7 +93,7 @@ const New = () => {
 
     return (
         <Dashboardlayout>
-            <div className="p-8">
+            <div className="p-8 ">
                 <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
                     {/* Title */}
                     <h1 className="text-2xl md:text-3xl font-bold text-center md:text-left mb-4 md:mb-0">
@@ -106,9 +106,9 @@ const New = () => {
                             value={searchQuery}
                             onChange={handleSearchChange}
                             placeholder="Search notesheets by subject..."
-                            className="w-full md:w-96 p-2 border rounded-md shadow-sm focus:outline-none"
+                            className="w-full md:w-96 p-2 border rounded-full shadow-sm focus:outline-none"
                         />
-                        <Button onClick={openModal} className="w-full md:w-auto">
+                        <Button onClick={openModal} className="w-full md:w-auto rounded-full">
                             Create
                         </Button>
                     </div>

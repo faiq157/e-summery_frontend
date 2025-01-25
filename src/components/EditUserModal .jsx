@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import axiosInstance from "@/utils/http";
+import { Button } from "./ui/button";
 
 const EditUserModal = ({ isOpen, onClose, user, onUpdate }) => {
     const [fullname, setFullname] = useState("");
@@ -72,7 +73,7 @@ const EditUserModal = ({ isOpen, onClose, user, onUpdate }) => {
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-700">Role</label>
-                        <input type="text" value={role} onChange={(e) => setRole(e.target.value)} className="w-full p-2 border rounded-md" required />
+                        <input type="text" readOnly value={role} onChange={(e) => setRole(e.target.value)} className="w-full p-2 border rounded-md" required />
 
                     </div>
                     <div className="mb-4">
@@ -81,19 +82,19 @@ const EditUserModal = ({ isOpen, onClose, user, onUpdate }) => {
 
                     </div>
                     <div className="flex justify-between mt-6">
-                        <button
+                        <Button
                             type="button"
                             onClick={onClose}
-                            className="bg-gray-500 text-white px-4 py-2 rounded-md"
+                            className="bg-gray-500 text-white px-4 py-2 rounded-full"
                         >
                             Cancel
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                             type="submit"
-                            className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                            className=" px-4 py-2 rounded-full"
                         >
                             Save Changes
-                        </button>
+                        </Button>
                     </div>
                 </form>
             </div>

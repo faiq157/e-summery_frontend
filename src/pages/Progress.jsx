@@ -36,7 +36,7 @@ const Progress = () => {
               value={searchQuery}
               onChange={handleSearchChange}
               placeholder="Search notesheets by subject..."
-              className="w-96 p-2 border rounded-md shadow-sm focus:outline-none"
+              className="w-96 p-2 border rounded-full shadow-sm focus:outline-none"
             />
           </div>
         </div>

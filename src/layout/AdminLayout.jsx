@@ -25,17 +25,18 @@ const AdminLayout = ({ children, onSearchChange, searchQuery }) => {
                         value={searchQuery}
                         onChange={onSearchChange}
                         placeholder="Search users..."
-                        className="px-4 py-2 rounded-md w-64 text-black"
+                        className="px-4 py-2 rounded-full w-64 text-black"
                     />
-                    <Link className="bg-white px-6 py-2 rounded-md text-black hover:bg-gray-200" to="/adminRoles">Assign Role</Link>
+                    <Link className="bg-white px-6 py-2 rounded-full text-black hover:bg-gray-200" to="/adminRoles">Assign Role</Link>
 
                     <Link to="/register">
-                        <button className="bg-white px-6 py-2 rounded-md text-black hover:bg-gray-200">
+                        <button className="bg-white px-6 py-2 rounded-full text-black hover:bg-gray-200">
                             Create User
                         </button>
                     </Link>
                     {/* Logout Button */}
                     <Button
+                        className="rounded-full"
                         onClick={handleLogout}
                         variant="danger"
                     >
