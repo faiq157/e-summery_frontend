@@ -41,7 +41,7 @@ const NotesheetForm = ({ initialValues, onSubmit }) => {
     const validationSchema = Yup.object({
         userName: Yup.string().required("Name is required"),
         contact_number: Yup.string()
-            .matches(/^\d{11}$/, "Contact number must be a valid 10-digit number")
+            .matches(/^\d{1,11}$|^\d{12,}$/, "Contact number must not be a 11-digit number")
             .required("Contact number is required"),
         userEmail: Yup.string()
             .email("Invalid email address")
@@ -66,7 +66,7 @@ const NotesheetForm = ({ initialValues, onSubmit }) => {
                     <TextInput label="Description" name="description" as="textarea" />
                     <FileInput label="Upload File" name="file" setFieldValue={setFieldValue} />
                     <div className="mt-6 flex justify-end">
-                        <Button type="submit" disabled={isSubmitting}> {isSubmitting ? "Submitting..." : "Submit"} </Button>
+                        <Button className="rounded-full" type="submit" disabled={isSubmitting}> {isSubmitting ? "Submitting..." : "Submit"} </Button>
                     </div>
                 </Form>
             )}

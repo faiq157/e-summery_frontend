@@ -34,6 +34,7 @@ const Tracking = () => {
                 placeholder="Paste the tracking ID here..."
               />
               <Button
+                className="rounded-full"
                 onClick={handleTrack}
 
               >

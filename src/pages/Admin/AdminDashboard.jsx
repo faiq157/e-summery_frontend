@@ -40,7 +40,9 @@ const AdminDashboard = () => {
         const fullname = user.fullname ? user.fullname.toLowerCase() : "";
         const email = user.email ? user.email.toLowerCase() : "";
         const role = user.role ? user.role.toLowerCase() : "";
-
+        if (role === "admin") {
+            return false;
+        }
         return (
             fullname.includes(searchQuery.toLowerCase()) ||
             email.includes(searchQuery.toLowerCase()) ||
@@ -107,13 +109,13 @@ const AdminDashboard = () => {
                             <div className="mt-4 flex justify-between">
                                 <Button
                                     onClick={() => openEditModal(user)} // Edit button
-                                    className="px-4 py-2 rounded-md"
+                                    className="px-4 py-2 rounded-full"
                                 >
                                     Edit
                                 </Button>
                                 <Button
                                     variant="danger"
-                                    className="px-4 py-2 rounded-md"
+                                    className="px-4 py-2 rounded-full"
                                     onClick={() => openDeleteDialog(user)} // Open confirmation dialog for delete
                                 >
                                     Delete
@@ -146,13 +148,13 @@ const AdminDashboard = () => {
                     <AlertDialogDescription>
                         Are you sure you want to delete this user? This action cannot be undone.
                     </AlertDialogDescription>
-                    <div className="flex justify-end gap-4 p-2">
+                    <div className="flex justify-end gap-4 p-2 rounded-full">
                         <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
                             Cancel
                         </AlertDialogCancel>
                         <AlertDialogAction
                             onClick={() => userToDelete && handleDelete(userToDelete._id)}
-                            className="bg-red-600 text-white px-4 py-2 rounded-md"
+                            className="bg-red-600 text-white px-4 py-2 rounded-full"
                         >
                             Delete
                         </AlertDialogAction>

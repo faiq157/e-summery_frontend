@@ -75,21 +75,40 @@ const NotesheetTracker = ({ trackingId }) => {
               <div className="relative flex flex-col items-center">
                 {notesheetData.workflow && notesheetData.workflow.length > 0 ? (
                   notesheetData.workflow.map((step, index) => (
-                    <div key={step._id} className="relative flex  items-center w-full">
+                    <div key={step._id} className="relative flex   items-center w-full">
                       {/* Line Connector */}
-                      <div className="absolute h-full border-l-2 border-gray-300  left-6"></div>
+                      <div className="absolute h-full border-l-2  border-gray-300  left-6"></div>
                       {/* Status Indicator */}
                       <div
                         className={`z-10 flex-shrink-0 w-12 h-12 rounded-full text-white flex items-center justify-center shadow-md ${[
-                          'bg-blue-500', // Step 1
-                          'bg-green-500', // Step 2
-                          'bg-yellow-500', // Step 3
-                          'bg-red-500', // Step 4
-                          'bg-purple-500', // Step 5
+                          'bg-gradient-to-r from-blue-400 to-blue-600', // Gradient 1
+                          'bg-gradient-to-r from-green-400 to-green-600', // Gradient 2
+                          'bg-gradient-to-r from-yellow-400 to-yellow-600', // Gradient 3
+                          'bg-gradient-to-r from-red-400 to-red-600', // Gradient 4
+                          'bg-gradient-to-r from-purple-400 to-purple-600', // Gradient 5
                         ][index % 5]}`}
                       >
-                        {index + 1}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-6 h-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 14c3.866 0 7-1.79 7-4V7a7 7 0 10-14 0v3c0 2.21 3.134 4 7 4z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 14c-4.418 0-8 1.79-8 4v1a2 2 0 002 2h12a2 2 0 002-2v-1c0-2.21-3.582-4-8-4z"
+                          />
+                        </svg>
                       </div>
+
 
                       {/* Step Details */}
                       <div className="ml-6 my-5">
@@ -131,14 +150,27 @@ const NotesheetTracker = ({ trackingId }) => {
                       <div className="absolute h-full border-l-2 border-gray-300 left-5 top-0 transform translate-x-1/2"></div>
                       <div
                         className={`z-10 flex-shrink-0 w-12 h-12 rounded-full text-white flex items-center justify-center shadow-md ${[
-                          'bg-blue-500',
-                          'bg-green-500',
-                          'bg-yellow-500',
-                          'bg-red-500',
-                          'bg-purple-500',
+                          'bg-gradient-to-r from-blue-400 to-blue-600', // Gradient 1
+                          'bg-gradient-to-r from-green-400 to-green-600', // Gradient 2
+                          'bg-gradient-to-r from-yellow-400 to-yellow-600', // Gradient 3
+                          'bg-gradient-to-r from-red-400 to-red-600', // Gradient 4
+                          'bg-gradient-to-r from-purple-400 to-purple-600', // Gradient 5
                         ][index % 5]}`}
                       >
-                        {index + 1}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-6 h-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 8v4l3 3M12 4c4.418 0 8 3.582 8 8s-3.582 8-8 8-8-3.582-8-8 3.582-8 8-8z"
+                          />
+                        </svg>
                       </div>
 
                       {/* History Details */}

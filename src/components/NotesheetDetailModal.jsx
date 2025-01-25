@@ -135,7 +135,7 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
     };
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0  flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-[60vw]">
                 <div className="flex justify-between mb-4 items-center">
                     <h2 className="text-2xl font-bold ">Notesheet Details</h2>
@@ -231,17 +231,17 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                         </div>
                         <div className="mt-4 flex justify-between">
                             <div className="flex justify-between w-full">
-                                <Button onClick={handleAddComment} disabled={loading}>
+                                <Button className="rounded-full" onClick={handleAddComment} disabled={loading}>
                                     {loading ? 'Adding...' : 'Add Comment'}
                                 </Button>
                                 <div className='flex gap-4'>
-                                    <Button onClick={handleSendClick}>Send</Button>
+                                    <Button className="rounded-full" onClick={handleSendClick}>Send</Button>
                                     {
                                         userRole.toLowerCase() === "establishment" && status !== "New" && (
                                             <AlertDialog>
                                                 <AlertDialogTrigger>
                                                     <Button
-                                                        className="bg-green-500"
+                                                        className="bg-green-500 rounded-full"
                                                         disabled={loading}
                                                         onClick={handleCompleteConfirmation}
                                                     >

@@ -105,6 +105,8 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
         return <div>{error}</div>;
     }
 
+    const history = notesheets[0]?.history?.[0];
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {
@@ -120,14 +122,20 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
                     </div>
                 ) : (
                     filteredNotesheets.map((notesheet) => (
-                        <Card key={notesheet._id} className="w-full">
+                        <Card key={notesheet._id} className="w-full border-none shadow-lg hover:shadow-inner hover:scale-105 transition-transform">
                             <CardHeader>
                                 <CardTitle className="text-xl font-semibold">{notesheet.subject}</CardTitle>
                             </CardHeader>
-                            <CardContent>
-                                <p><strong>Description:</strong> {notesheet.description}</p>
+                            <CardContent className="space-y-2">
                                 <p><strong>Application User:</strong> {notesheet.userName}</p>
+                                <p>
+                                    <strong>Created By:</strong>
+                                    <span className="bg-gradient-to-r ml-3 from-green-400 to-green-600 text-white rounded-full px-3 py-1 font-medium">
+                                        {history?.role || "No role available"}
+                                    </span>
+                                </p>
                                 <p><strong>Created at:</strong> {new Date(notesheet.timestamps.createdAt).toLocaleDateString('en-us', { weekday: "long", year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric", hour12: true })}</p>
+
                                 <p className="flex items-center space-x-2">
                                     <strong>Tracking Id:</strong> {notesheet.trackingId}
                                     <AiOutlineCopy
@@ -139,13 +147,13 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
                                 </p>
 
                                 <div className='flex justify-between mt-2'>
-                                    <Button className="" onClick={() => handleViewDetails(notesheet)}>View Details</Button>
+                                    <Button className="rounded-full" onClick={() => handleViewDetails(notesheet)}>View Details</Button>
                                     {status === 'New' && (
                                         <div className="">
-                                            <Button className="mr-2" onClick={() => handleEdit(notesheet)}>Edit</Button>
+                                            <Button className="mr-2 rounded-full" onClick={() => handleEdit(notesheet)}>Edit</Button>
                                             <AlertDialog>
                                                 <AlertDialogTrigger asChild>
-                                                    <Button className="bg-red-500 text-white" onClick={() => handleOpenDeleteDialog(notesheet)}>Delete</Button>
+                                                    <Button className="bg-red-500 text-white rounded-full" onClick={() => handleOpenDeleteDialog(notesheet)}>Delete</Button>
                                                 </AlertDialogTrigger>
                                                 <AlertDialogContent>
                                                     <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>

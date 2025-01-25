@@ -152,7 +152,7 @@ const Register = () => {
                 component="div"
               />
               <button
-                className="bg-[#2C2C2C] mb-10 mt-3 rounded py-2 text-white"
+                className="bg-[#2C2C2C] mb-10 mt-3 rounded-full py-2 text-white"
                 type="submit"
                 disabled={isSubmitting || isLoading}
               >
