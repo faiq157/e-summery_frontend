@@ -1,11 +1,24 @@
 import { useState, useEffect } from "react";
-import { FaEye, FaTrashAlt, FaPaperPlane } from "react-icons/fa";
+import { FaEye, FaTrashAlt } from "react-icons/fa";
 import axiosInstance from "@/utils/http";
 import { toast } from "react-toastify";
+import { Button } from "./ui/button";
+import { Checkbox } from "./ui/checkbox";
+import {
+    AlertDialog,
+    AlertDialogTrigger,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogCancel,
+    AlertDialogAction,
+} from "./ui/alert-dialog"; // Ensure you have the AlertDialog components in your project
 
 const base_URL = import.meta.env.VITE_APP_API_URL;
 
-const ApprovalCard = () => {
+const ApprovalCard = ({ searchQuery, refetchData }) => {
     const [approvals, setApprovals] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -44,7 +57,7 @@ const ApprovalCard = () => {
 
         fetchApprovals();
         fetchRoles();
-    }, []);
+    }, [refetchData]);
 
     const openPdf = (pdfUrl) => {
         if (pdfUrl) {
@@ -57,18 +70,16 @@ const ApprovalCard = () => {
     const deleteApproval = async (approvalId) => {
         try {
             const response = await axiosInstance.delete(`${base_URL}/approval/${approvalId}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { "Content-Type": "application/json" },
             });
 
             if (response.status === 200) {
                 setApprovals((prevApprovals) => prevApprovals.filter((approval) => approval._id !== approvalId));
-                toast.success('Approval deleted successfully');
+                toast.success("Approval deleted successfully");
             }
         } catch (error) {
-            console.error('Error deleting approval:', error);
-            toast.error('Failed to delete approval. Please try again.');
+            console.error("Error deleting approval:", error);
+            toast.error("Failed to delete approval. Please try again.");
         }
     };
 
@@ -111,51 +122,72 @@ const ApprovalCard = () => {
         );
     };
 
+    const filteredApprovals = approvals.filter((approval) =>
+        approval.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return (
         <div className="p-8">
-            <h2 className="text-2xl font-bold mb-4">Approval</h2>
 
             {loading ? (
                 <p>Loading...</p>
             ) : error ? (
                 <p className="text-red-600">{error}</p>
-            ) : approvals.length === 0 ? (
+            ) : filteredApprovals.length === 0 ? (
                 <p>No approvals found</p>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {approvals.map((approval) => (
+                    {filteredApprovals.map((approval) => (
                         <div key={approval._id} className="bg-white shadow-lg rounded-lg overflow-hidden">
                             <div className="p-6">
                                 <h3 className="text-xl font-semibold text-gray-900">{approval.title}</h3>
-                                <p className="text-sm text-gray-600 mt-2">PDF Link:</p>
+
                                 <div className="flex items-center space-x-2 mt-2">
                                     <button
                                         onClick={() => openPdf(approval.pdfUrl)}
-                                        className="text-blue-600 hover:text-blue-800"
+                                        className="text-blue-600 flex justify-center items-center gap-2 hover:text-blue-800"
                                     >
-                                        <FaEye size={20} />
+                                        <FaEye size={20} /> View Approval
                                     </button>
-                                    <span className="text-blue-600">{approval.pdfUrl || "N/A"}</span>
                                 </div>
                                 <p className="text-sm text-gray-500 mt-1">
-                                    {new Date(approval.createdAt).toLocaleDateString()}
+                                    Created on: {new Date(approval.createdAt).toLocaleDateString()}
                                 </p>
                                 <div className="mt-4 flex space-x-4">
-                                    <button
-                                        onClick={() => deleteApproval(approval._id)}
-                                        className="text-red-600 hover:text-red-800"
-                                    >
-                                        <FaTrashAlt size={20} />
-                                    </button>
-                                    <button
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button variant="destructive" className="rounded-full">
+                                                Delete
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>Delete Approval</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    Are you sure you want to delete this approval? This action cannot be
+                                                    undone.
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+                                                <AlertDialogAction
+                                                    className="bg-red-500 hover:bg-red-600 text-white rounded-full px-4 py-2"
+                                                    onClick={() => deleteApproval(approval._id)}
+                                                >
+                                                    Delete
+                                                </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                    <Button
                                         onClick={() => {
                                             setIsModalOpen(true);
                                             setCurrentApprovalId(approval._id);
                                         }}
-                                        className="text-blue-600 hover:text-blue-800"
+                                        className="rounded-full"
                                     >
-                                        <FaPaperPlane size={20} />
-                                    </button>
+                                        Send
+                                    </Button>
                                 </div>
                             </div>
                         </div>
@@ -165,20 +197,18 @@ const ApprovalCard = () => {
 
             {isModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-[60vw] h-[90vh] overflow-auto">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-[40vw] overflow-auto">
                         <h2 className="text-xl font-bold mb-4">Send Approval</h2>
                         <div className="mb-4">
                             <p className="text-lg mb-2">Select Users:</p>
-                            <div className="space-y-2">
+                            <div className="space-y-2 h-48 overflow-auto">
                                 {roles.length > 0 ? (
                                     roles.map((role) => (
-                                        <div key={role.id} className="flex items-center">
-                                            <input
-                                                type="checkbox"
+                                        <div key={role.id} className="flex gap-3 items-center">
+                                            <Checkbox
                                                 id={role.id}
                                                 checked={selectedUsers.includes(role.id)}
-                                                onChange={() => handleUserSelection(role.id)}
-                                                className="mr-2"
+                                                onCheckedChange={() => handleUserSelection(role.id)}
                                             />
                                             <label htmlFor={role.id} className="text-lg">
                                                 {role.role}
@@ -191,18 +221,19 @@ const ApprovalCard = () => {
                             </div>
                         </div>
                         <div className="flex justify-end space-x-4">
-                            <button
+                            <Button
+                                variant="outline"
                                 onClick={() => setIsModalOpen(false)}
-                                className="px-4 py-2 bg-gray-300 rounded-lg"
+                                className="rounded-full"
                             >
                                 Cancel
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                                 onClick={() => sendApproval(currentApprovalId)}
-                                className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+                                className="rounded-full"
                             >
                                 Send
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </div>
