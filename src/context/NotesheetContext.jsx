@@ -10,32 +10,43 @@ export const NotesheetProvider = ({ children }) => {
     const [notesheets, setNotesheets] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const fetchNotesheets = async (userRole, status, storedToken) => {
+    const fetchNotesheets = async (userRole, status, storedToken, page, limit, setTotalPages) => {
         setLoading(true);
         setError(null);
+
         try {
             const response = await axiosInstance.get(`${base_URL}/notesheet/notesheets`, {
-                params: { role: { $in: [userRole] }, status },
+                params: {
+                    role: { $in: [userRole] },
+                    status,
+                    page,
+                    limit,
+                },
                 headers: {
-                    Authorization: `${storedToken}`,
+                    Authorization: ` ${storedToken}`,
                 },
             });
 
-            if (Array.isArray(response.data)) {
-                const sortedNotesheets = response.data.sort((a, b) => {
+            // Check if the response contains notesheets and totalPages
+            if (Array.isArray(response.data.notesheets)) {
+                // Sort notesheets by creation date (most recent first)
+                const sortedNotesheets = response.data.notesheets.sort((a, b) => {
                     return new Date(b.timestamps.createdAt) - new Date(a.timestamps.createdAt);
                 });
                 setNotesheets(sortedNotesheets);
+                setTotalPages(response.data.pagination.totalPages);
             } else {
-                throw new Error('Invalid data format');
+                throw new Error('Invalid data format: Expected an array');
             }
         } catch (err) {
             console.error('Failed to fetch notesheets:', err);
-            setError('Failed to fetch notesheets');
+            const errorMessage = err.response?.data?.message || 'Failed to fetch notesheets';
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
     };
+
     const deleteNotesheets = async (notesheetId, storedToken) => {
         try {
             await deleteNotesheet(notesheetId, storedToken);
