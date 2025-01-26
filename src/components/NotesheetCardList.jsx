@@ -26,11 +26,7 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
     const [isCopied, setIsCopied] = useState(false);
     const { notesheets, fetchNotesheets, deleteNotesheet, loading, error } = useNotesheetContext();
 
-    useEffect(() => {
-        if (userRole) {
-            fetchNotesheets(userRole, status, storedToken);
-        }
-    }, [userRole, status, storedToken, refetchData]);
+
 
     const handleDelete = async () => {
         await deleteNotesheet(notesheetToDelete._id, storedToken);

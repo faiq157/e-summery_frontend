@@ -1,12 +1,19 @@
 import { useState, useEffect } from 'react';
 import Dashboardlayout from '@/layout/Dashboardlayout';
 import NotesheetCardList from '@/components/NotesheetCardList';
+import { useNotesheetContext } from '@/context/NotesheetContext';
+import PaginationUI from '@/components/PaginationUI';
 
 const Completed = () => {
   const [storedEmail, setStoredEmail] = useState('');
   const storedUser = localStorage.getItem('user');
   const [userRole, setUserRole] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const { fetchNotesheets } = useNotesheetContext();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [limit] = useState(10);
+  const storedToken = localStorage.getItem('token');
 
 
   useEffect(() => {
@@ -17,6 +24,11 @@ const Completed = () => {
       setUserRole(userObject.role || '');
     }
   }, [storedUser]);
+  useEffect(() => {
+    if (userRole || limit || currentPage) {
+      fetchNotesheets(userRole, "New", storedToken, currentPage, limit, setTotalPages);
+    }
+  }, [userRole, storedToken, currentPage, limit]);
 
 
   const handleSearchChange = (event) => {
@@ -44,6 +56,13 @@ const Completed = () => {
         {/* Show the list of created notesheets (could be fetched from an API or static data) */}
         <div className="mt-8">
           <NotesheetCardList status={"Completed"} searchQuery={searchQuery} userRole={userRole} />
+          <div className='mt-5'>
+            <PaginationUI
+              currentPage={currentPage}
+              totalPages={totalPages}
+              setCurrentPage={setCurrentPage}
+            />
+          </div>
         </div>
       </div>
 

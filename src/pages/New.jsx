@@ -7,6 +7,9 @@ import Dashboardlayout from '@/layout/Dashboardlayout';
 import NotesheetForm from './createApp/NotesheetForm';
 import { toast } from 'react-toastify';
 import axiosInstance from '@/utils/http';
+import { useNotesheetContext } from '@/context/NotesheetContext';
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
+import PaginationUI from '@/components/PaginationUI';
 
 
 const New = () => {
@@ -19,6 +22,12 @@ const New = () => {
     const [userRole, setUserRole] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const [refetchData, setRefetchData] = useState(false);
+    const { fetchNotesheets } = useNotesheetContext();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [limit] = useState(10);
+
+
     useEffect(() => {
         if (storedUser) {
             const userObject = JSON.parse(storedUser);
@@ -27,6 +36,13 @@ const New = () => {
         }
     }, []);
     console.log(userRole)
+    useEffect(() => {
+        if (userRole || limit || currentPage) {
+            fetchNotesheets(userRole, "New", storedToken, currentPage, limit, setTotalPages);
+        }
+    }, [userRole, storedToken, currentPage, limit]);
+
+
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
     };
@@ -47,7 +63,7 @@ const New = () => {
         axiosInstance.post(`${base_URL}/send-notification`, {
             title: "Notesheet Created",
             body: "A new notesheet has been successfully created.",
-            userId: userId, // Replace with dynamic userId if needed
+            userId: userId,
         })
             .then(() => {
                 console.log("Notification sent successfully.");
@@ -117,33 +133,39 @@ const New = () => {
 
                 <div className="mt-8">
                     <NotesheetCardList userRole={userRole} status={"New"} searchQuery={searchQuery} refetchData={refetchData} />
-                </div>
-
-                {isModalOpen && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="bg-white p-4 rounded-lg shadow-lg w-[60vw] h-[90vh] overflow-auto">
-                            <div className='flex justify-between'>
-                                <h2 className="text-2xl font-bold mb-4">Create New Application</h2>
-                                <AiOutlineClose className='text-2xl cursor-pointer' onClick={closeModal} />
-                            </div>
-
-                            <NotesheetForm
-                                initialValues={{
-                                    description: '',
-                                    subject: '',
-                                    userName: '',
-                                    email: storedEmail,
-                                    contact_number: '',
-                                    userEmail: '',
-                                    status: '',
-                                    file: null,
-                                }}
-                                onSubmit={handleCreateSubmit}
-                                isSubmitting={false}
-                            />
-                        </div>
+                    <div className='mt-5'>
+                        <PaginationUI
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            setCurrentPage={setCurrentPage}
+                        />
                     </div>
-                )}
+                    {isModalOpen && (
+                        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                            <div className="bg-white p-4 rounded-lg shadow-lg w-[60vw] h-[90vh] overflow-auto">
+                                <div className='flex justify-between'>
+                                    <h2 className="text-2xl font-bold mb-4">Create New Application</h2>
+                                    <AiOutlineClose className='text-2xl cursor-pointer' onClick={closeModal} />
+                                </div>
+
+                                <NotesheetForm
+                                    initialValues={{
+                                        description: '',
+                                        subject: '',
+                                        userName: '',
+                                        email: storedEmail,
+                                        contact_number: '',
+                                        userEmail: '',
+                                        status: '',
+                                        file: null,
+                                    }}
+                                    onSubmit={handleCreateSubmit}
+                                    isSubmitting={false}
+                                />
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
         </Dashboardlayout >
     );
