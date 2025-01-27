@@ -96,7 +96,7 @@ const New = () => {
                 setSubmitting(false);
                 setSubmittedData(values);
                 closeModal();
-                handleRefetchData();
+                fetchNotesheets(userRole, "New", storedToken, 1, 10, setTotalPages);
 
 
                 sendNotification(userId);
@@ -132,7 +132,7 @@ const New = () => {
 
 
                 <div className="mt-8">
-                    <NotesheetCardList userRole={userRole} status={"New"} searchQuery={searchQuery} refetchData={refetchData} />
+                    <NotesheetCardList userRole={userRole} status={"New"} searchQuery={searchQuery} />
                     <div className='mt-5'>
                         <PaginationUI
                             currentPage={currentPage}

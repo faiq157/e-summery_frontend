@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 
-const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToken, refetchData, status }) => {
+const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToken, status }) => {
     const [comment, setComment] = useState('');
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -69,7 +69,7 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
 
             if (response.status === 200) {
                 toast.success("Notesheet marked as complete!");
-                fetchNotesheets(userRole, status, storedToken);
+                fetchNotesheets(userRole, status, storedToken, 1, 10);
                 onClose();
 
             } else {
@@ -121,7 +121,7 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
 
     const handleCompleteClose = () => {
         setIsCompleteDialogOpen(false);
-        fetchNotesheets(userRole, status, storedToken);
+        fetchNotesheets(userRole, status, storedToken, 1, 10);
     };
 
     if (!isOpen) return null;
@@ -142,7 +142,7 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                     <AiOutlineClose className="text-2xl cursor-pointer" onClick={onClose} />
                 </div>
 
-                <div className="flex space-x-8">
+                <div className="flex justify-between ">
                     <div className="w-1/2 mb-4">
                         <p><strong>Subject:</strong> {notesheet?.subject}</p>
                         <p><strong>Description:</strong> {notesheet?.description}</p>
@@ -157,7 +157,7 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                         )}
                     </div>
 
-                    <div className="w-1/2 mt-4 h-72 overflow-y-auto p-4 border border-gray-200 rounded-lg bg-gray-50">
+                    <div className="w-[50%]  h-72 overflow-y-auto  ">
                         <h3 className="text-xl font-bold mb-2">Comments:</h3>
                         {rolesData.length > 0 ? (
                             rolesData.map((commentData) => (
@@ -184,7 +184,6 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                         )}
                     </div>
                 </div>
-
                 {status !== "In Progress" && status !== "Completed" && (
                     <>
                         <div className='grid grid-cols-1 gap-2'>
@@ -276,7 +275,6 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                 notesheet={notesheet}
                 storedToken={storedToken}
                 closeParentModal={onClose}
-                refetchData={refetchData}
                 status={status}
             />
         </div>

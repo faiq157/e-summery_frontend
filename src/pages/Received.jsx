@@ -29,7 +29,7 @@ const Received = () => {
     };
     useEffect(() => {
         if (userRole && limit && currentPage) {
-            fetchNotesheets(userRole, "New", storedToken, currentPage, limit, setTotalPages);
+            fetchNotesheets(userRole, "Received", storedToken, currentPage, limit, setTotalPages);
         }
     }, [userRole, storedToken, currentPage, limit]);
 

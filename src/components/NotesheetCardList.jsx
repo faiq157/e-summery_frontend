@@ -15,7 +15,7 @@ import { AiOutlineCopy } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import { useNotesheetContext } from '@/context/NotesheetContext';
 
-const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
+const NotesheetCardList = ({ userRole, status, searchQuery }) => {
     const storedToken = localStorage.getItem('token');
     const [selectedNotesheet, setSelectedNotesheet] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,6 +25,7 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
     const base_URL = import.meta.env.VITE_APP_API_URL;
     const [isCopied, setIsCopied] = useState(false);
     const { notesheets, fetchNotesheets, deleteNotesheet, loading, error } = useNotesheetContext();
+    const [totalPages, setTotalPages] = useState(1);
 
 
 
@@ -55,7 +56,7 @@ const NotesheetCardList = ({ userRole, status, searchQuery, refetchData }) => {
                     },
                 }
             );
-            fetchNotesheets(userRole, status, storedToken);
+            fetchNotesheets(userRole, status, storedToken, 1, 10, setTotalPages);
             setIsEditModalOpen(false);
         } catch (error) {
             console.error('Error updating notesheet:', error);
