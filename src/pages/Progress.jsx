@@ -27,7 +27,7 @@ const Progress = () => {
   console.log("this is user role id", userRole)
 
   useEffect(() => {
-    if (userRole || limit || currentPage) {
+    if (userRole && limit && currentPage) {
       fetchNotesheets(userRole, "New", storedToken, currentPage, limit, setTotalPages);
     }
   }, [userRole, storedToken, currentPage, limit]);
