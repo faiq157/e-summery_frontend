@@ -56,13 +56,15 @@ const Completed = () => {
         {/* Show the list of created notesheets (could be fetched from an API or static data) */}
         <div className="mt-8">
           <NotesheetCardList searchQuery={searchQuery} status={"Completed"} userRole={userRole} />
-          <div className='mt-5'>
-            <PaginationUI
-              currentPage={currentPage}
-              totalPages={totalPages}
-              setCurrentPage={setCurrentPage}
-            />
-          </div>
+          {totalPages > 1 && (
+            <div className='mt-5'>
+              <PaginationUI
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setCurrentPage={setCurrentPage}
+              />
+            </div>
+          )}
         </div>
       </div>
 

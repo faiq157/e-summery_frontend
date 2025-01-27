@@ -133,13 +133,15 @@ const New = () => {
 
                 <div className="mt-8">
                     <NotesheetCardList userRole={userRole} status={"New"} searchQuery={searchQuery} />
-                    <div className='mt-5'>
-                        <PaginationUI
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            setCurrentPage={setCurrentPage}
-                        />
-                    </div>
+                    {totalPages > 1 && (
+                        <div className='mt-5'>
+                            <PaginationUI
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                setCurrentPage={setCurrentPage}
+                            />
+                        </div>
+                    )}
                     {isModalOpen && (
                         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                             <div className="bg-white p-4 rounded-lg shadow-lg w-[60vw] h-[90vh] overflow-auto">

@@ -12,7 +12,7 @@ const Progress = () => {
   const { fetchNotesheets } = useNotesheetContext();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [limit] = useState(10);
+  const [limit] = useState(9);
   const storedToken = localStorage.getItem('token');
 
 
@@ -55,13 +55,15 @@ const Progress = () => {
         </div>
         <div className="mt-8">
           <NotesheetCardList searchQuery={searchQuery} status={"In Progress"} userRole={userRole} />
-          <div className='mt-5'>
-            <PaginationUI
-              currentPage={currentPage}
-              totalPages={totalPages}
-              setCurrentPage={setCurrentPage}
-            />
-          </div>
+          {totalPages > 1 && (
+            <div className='mt-5'>
+              <PaginationUI
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setCurrentPage={setCurrentPage}
+              />
+            </div>
+          )}
         </div>
       </div>
 
