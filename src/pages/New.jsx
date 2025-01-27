@@ -37,7 +37,7 @@ const New = () => {
     }, []);
     console.log(userRole)
     useEffect(() => {
-        if (userRole || limit || currentPage) {
+        if (userRole && limit && currentPage) {
             fetchNotesheets(userRole, "New", storedToken, currentPage, limit, setTotalPages);
         }
     }, [userRole, storedToken, currentPage, limit]);
