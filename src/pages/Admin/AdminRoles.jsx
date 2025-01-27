@@ -17,6 +17,41 @@ const AdminRoles = () => {
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const [searchQuery, setSearchQuery] = useState(""); // Search query
+    const [areAllSelected, setAreAllSelected] = useState(false); // "Select All" state
+
+    // Filter roles based on search query
+    const filteredRoles = roles.filter((role) =>
+        role.role.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    // Toggle "Select All" functionality
+    const toggleSelectAll = (checked) => {
+        if (checked) {
+            const allRoleIds = filteredRoles.map((role) => role.id);
+            setSelectedUsers(
+                roles.filter((role) => allRoleIds.includes(role.id))
+            );
+            setAreAllSelected(true);
+        } else {
+            const deselectIds = filteredRoles.map((role) => role.id);
+            setSelectedUsers((prev) =>
+                prev.filter((user) => !deselectIds.includes(user.id))
+            );
+            setAreAllSelected(false);
+        }
+    };
+
+    // Update "Select All" state when roles are selected/deselected
+    useEffect(() => {
+        setAreAllSelected(
+            filteredRoles.every((role) =>
+                selectedUsers.some((user) => user.id === role.id)
+            )
+        );
+    }, [selectedUsers, filteredRoles]);
+
+
     useEffect(() => {
         const fetchRoles = async () => {
             try {
@@ -109,13 +144,34 @@ const AdminRoles = () => {
             <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center">
                     <div className="bg-white p-6 rounded-md shadow-md w-full max-w-md">
-                        <Dialog.Title className="text-xl font-bold">Assign Users to Role</Dialog.Title>
+                        <Dialog.Title className="text-xl font-bold">Assign Roles To User </Dialog.Title>
                         <p className="text-gray-500 mb-4">Role: {selectedRole?.role}</p>
 
-                        <div className="mb-4 h-40 overflow-y-auto">
-                            {roles
-                                .filter((role) => role.role !== selectedRole?.role && role.role !== "admin")
-                                .map((role) => (
+                        {/* Search Input */}
+                        <input
+                            type="text"
+                            placeholder="Search roles..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full border border-gray-300 p-2 rounded-md mb-4"
+                        />
+
+                        {/* Select All Checkbox */}
+                        <div className="flex items-center mb-4">
+                            <Checkbox
+                                checked={areAllSelected}
+                                onCheckedChange={toggleSelectAll}
+                                id="select-all-checkbox"
+                            />
+                            <label htmlFor="select-all-checkbox" className="ml-2 text-gray-700 font-medium">
+                                Select All
+                            </label>
+                        </div>
+
+                        {/* Role List */}
+                        <div className="mb-4 h-40 overflow-y-auto border rounded-md p-2">
+                            {filteredRoles.length > 0 ? (
+                                filteredRoles.map((role) => (
                                     <div key={role.id} className="flex items-center gap-2 mb-2">
                                         <Checkbox
                                             checked={selectedUsers.some((user) => user.id === role.id)}
@@ -126,7 +182,10 @@ const AdminRoles = () => {
                                             {role.role}
                                         </label>
                                     </div>
-                                ))}
+                                ))
+                            ) : (
+                                <p className="text-center text-gray-500 mt-2">Nothing exists</p>
+                            )}
                         </div>
 
                         <div className="flex justify-end gap-2">
@@ -147,6 +206,7 @@ const AdminRoles = () => {
                     </div>
                 </div>
             </Dialog>
+
         </div>
     );
 };

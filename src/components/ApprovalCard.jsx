@@ -15,6 +15,8 @@ import {
     AlertDialogCancel,
     AlertDialogAction,
 } from "./ui/alert-dialog"; // Ensure you have the AlertDialog components in your project
+import { Player } from "@lottiefiles/react-lottie-player";
+import Loader from "./Loader";
 
 const base_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -160,13 +162,20 @@ const ApprovalCard = ({ searchQuery, refetchData }) => {
 
     return (
         <div className="p-8">
-
             {loading ? (
-                <p>Loading...</p>
+                <Loader />
             ) : error ? (
                 <p className="text-red-600">{error}</p>
             ) : filteredApprovals.length === 0 ? (
-                <p>No approvals found</p>
+                <div className="flex flex-col items-center justify-center w-[100vw] h-screen ">
+                    <Player
+                        autoplay
+                        loop
+                        src="https://lottie.host/7881658b-10eb-4e1d-9424-661cf3bb1665/xne07bwaFH.json" // Lottie animation URL
+                        style={{ height: '300px', width: '300px' }}
+                    />
+                    <p className="text-xl font-semibold mt-4">Please add an application.</p>
+                </div>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredApprovals.map((approval) => (
