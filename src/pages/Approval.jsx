@@ -74,7 +74,7 @@ const Approval = () => {
             .post(`${base_URL}/approval`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
-                    Authorization: `Bearer ${storedToken}`,
+                    Authorization: ` ${storedToken}`,
                 },
             })
             .then(() => {

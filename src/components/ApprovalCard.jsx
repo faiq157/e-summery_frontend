@@ -54,7 +54,7 @@ const ApprovalCard = ({ searchQuery, refetchData }) => {
         const fetchSpecificApprovals = async () => {
             try {
                 setLoading(true);
-                const response = await axiosInstance.get(`${base_URL}/approvals/${userObject._id}`, {
+                const response = await axiosInstance.get(`${base_URL}/approvals`, {
                     headers: { "Content-Type": "application/json" },
                 });
                 setApprovals(response.data.data || []);
