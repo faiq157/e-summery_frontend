@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { AiOutlineClose } from 'react-icons/ai';
@@ -13,36 +14,43 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, status, u
     const base_URL = import.meta.env.VITE_APP_API_URL;
     const { fetchNotesheets } = useNotesheetContext();
     const [totalPages, setTotalPages] = useState(1);
-
+    const storedUser = localStorage.getItem('user');
+    const userData = JSON.parse(storedUser);
 
     useEffect(() => {
         const fetchRoles = async () => {
             try {
-                const response = await axiosInstance.get(`${base_URL}/get-role`, {
+                const response = await axiosInstance.get(`${base_URL}/assigned-users/${userData?.role}`, {
                     headers: { Authorization: ` ${storedToken}` },
                 });
-                const allRoles = [];
-                response.data.data.forEach(role => {
-                    // Push the selected roles from each role object
-                    role.selectedRole.forEach(selected => {
-                        allRoles.push(selected);
-                    });
-                });
 
-                // Remove duplicates based on role name
-                const uniqueRoles = [
-                    ...new Map(allRoles.map(role => [role.role, role])).values(),
-                ];
+                console.log('Roles response:', response.data);
 
-                const filteredRoles = uniqueRoles.filter(role => role.role !== 'admin');
+                // Ensure response.data is an array
+                if (Array.isArray(response.data)) {
+                    const allRoles = response.data.map((role) => ({
+                        id: role.id,
+                        role: role.role,
+                    }));
 
-                setRoles(filteredRoles);
+                    console.log('All roles:', allRoles);
+
+                    // Remove duplicates (if any) and filter out 'admin'
+                    const uniqueRoles = [
+                        ...new Map(allRoles.map(role => [role.role, role])).values(),
+                    ];
+
+                    const filteredRoles = uniqueRoles.filter(role => role.role !== 'admin');
+                    setRoles(filteredRoles);
+                } else {
+                    console.error('Unexpected response format:', response);
+                    setErrorMessage('Failed to load roles due to unexpected response format.');
+                }
             } catch (error) {
                 console.error('Error fetching roles:', error);
                 setErrorMessage('Failed to load roles.');
             }
         };
-
         if (isOpen) {
             fetchRoles();
         }

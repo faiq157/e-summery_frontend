@@ -38,7 +38,7 @@ const AdminLayout = ({ children, onSearchChange, searchQuery }) => {
                     <Button
                         className="rounded-full"
                         onClick={handleLogout}
-                        variant="danger"
+                        variant="destructive"
                     >
                         Logout
                     </Button>

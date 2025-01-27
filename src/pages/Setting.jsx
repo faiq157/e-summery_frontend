@@ -41,7 +41,7 @@ const Setting = () => {
             <p className="text-gray-700 mb-12">
               <span className="font-medium">Department:</span> {userData?.department}
             </p>
-            <Button className="rounded-full" variant="danger" onClick={logout}>logout</Button>
+            <Button className="rounded-full" variant="destructive" onClick={logout}>logout</Button>
           </div>
         </div>
       </div>
