@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FaEye, FaTrashAlt } from "react-icons/fa";
+import { FaCheckCircle, FaEye, FaTrashAlt } from "react-icons/fa";
 import axiosInstance from "@/utils/http";
 import { toast } from "react-toastify";
 import { Button } from "./ui/button";
@@ -18,7 +18,7 @@ import {
 
 const base_URL = import.meta.env.VITE_APP_API_URL;
 
-const ApprovalCard = ({ searchQuery, refetchData }) => {
+const ApprovalCard = ({ searchQuery }) => {
     const [approvals, setApprovals] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -29,6 +29,7 @@ const ApprovalCard = ({ searchQuery, refetchData }) => {
     const [userRole, setUserRole] = useState("");
     const storedUser = localStorage.getItem('user');
     const userObject = JSON.parse(storedUser);
+    const [refetchData, setRefetchData] = useState(false);
     useEffect(() => {
         if (storedUser) {
             setUserRole(userObject?.role || '');
@@ -108,6 +109,7 @@ const ApprovalCard = ({ searchQuery, refetchData }) => {
             if (response.status === 200) {
                 setApprovals((prevApprovals) => prevApprovals.filter((approval) => approval._id !== approvalId));
                 toast.success("Approval deleted successfully");
+                setRefetchData((prev) => !prev);
             }
         } catch (error) {
             console.error("Error deleting approval:", error);
@@ -136,6 +138,8 @@ const ApprovalCard = ({ searchQuery, refetchData }) => {
 
             if (response.status === 200) {
                 toast.success("Approval sent successfully!");
+                setRefetchData((prev) => !prev);
+
             }
         } catch (error) {
             console.error("Error sending approval:", error);
@@ -160,7 +164,6 @@ const ApprovalCard = ({ searchQuery, refetchData }) => {
 
     return (
         <div className="p-8">
-
             {loading ? (
                 <p>Loading...</p>
             ) : error ? (
@@ -185,41 +188,55 @@ const ApprovalCard = ({ searchQuery, refetchData }) => {
                                 <p className="text-sm text-gray-500 mt-1">
                                     Created on: {new Date(approval.createdAt).toLocaleDateString()}
                                 </p>
-                                <div className="mt-4 flex space-x-4">
-                                    <AlertDialog>
-                                        <AlertDialogTrigger asChild>
-                                            {userRole.toLocaleLowerCase() === "establishment" && (<Button variant="destructive" className="rounded-full">
-                                                Delete
-                                            </Button>)}
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent>
-                                            <AlertDialogHeader>
-                                                <AlertDialogTitle>Delete Approval</AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                    Are you sure you want to delete this approval? This action cannot be
-                                                    undone.
-                                                </AlertDialogDescription>
-                                            </AlertDialogHeader>
-                                            <AlertDialogFooter>
-                                                <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
-                                                <AlertDialogAction
-                                                    className="bg-red-500 hover:bg-red-600 text-white rounded-full px-4 py-2"
-                                                    onClick={() => deleteApproval(approval._id)}
+
+                                <div className="mt-4 flex space-x-4 items-center">
+
+                                    {approval.sended && userRole.toLocaleLowerCase() === "establishment" ? (
+                                        <div className="flex items-center gap-2">
+                                            <FaCheckCircle className="text-green-500" size={20} />
+                                            <span className="text-green-600 font-medium">Approval Sent</span>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            {userRole.toLocaleLowerCase() === "establishment" && (
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <Button variant="destructive" className="rounded-full">
+                                                            Delete
+                                                        </Button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>Delete Approval</AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                Are you sure you want to delete this approval? This action cannot be undone.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+                                                            <AlertDialogAction
+                                                                className="bg-red-500 hover:bg-red-600 text-white rounded-full px-4 py-2"
+                                                                onClick={() => deleteApproval(approval._id)}
+                                                            >
+                                                                Delete
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
+                                            )}
+                                            {userRole.toLocaleLowerCase() === "establishment" && (
+                                                <Button
+                                                    onClick={() => {
+                                                        setIsModalOpen(true);
+                                                        setCurrentApprovalId(approval._id);
+                                                    }}
+                                                    className="rounded-full"
                                                 >
-                                                    Delete
-                                                </AlertDialogAction>
-                                            </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
-                                    {userRole.toLocaleLowerCase() === "establishment" && (<Button
-                                        onClick={() => {
-                                            setIsModalOpen(true);
-                                            setCurrentApprovalId(approval._id);
-                                        }}
-                                        className="rounded-full"
-                                    >
-                                        Send
-                                    </Button>)}
+                                                    Send
+                                                </Button>
+                                            )}
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -272,6 +289,7 @@ const ApprovalCard = ({ searchQuery, refetchData }) => {
             )}
         </div>
     );
+
 };
 
 export default ApprovalCard;
