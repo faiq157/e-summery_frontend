@@ -113,9 +113,14 @@ const Approval = () => {
                             placeholder="Search notesheets by title..."
                             className="w-full md:w-96 p-2 border rounded-full shadow-sm focus:outline-none"
                         />
-                        <Button onClick={openModal} className="w-full md:w-auto rounded-full">
-                            Create
-                        </Button>
+                        {userRole.toLocaleLowerCase() === "establishment" && (
+                            <Button onClick={openModal} className="w-full md:w-auto rounded-full">
+                                Create
+                            </Button>
+                        )}
+
+
+
                     </div>
                 </div>
 
