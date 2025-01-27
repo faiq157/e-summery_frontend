@@ -12,6 +12,8 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, status, u
     const [errorMessage, setErrorMessage] = useState('');
     const base_URL = import.meta.env.VITE_APP_API_URL;
     const { fetchNotesheets } = useNotesheetContext();
+    const [totalPages, setTotalPages] = useState(1);
+
 
     useEffect(() => {
         const fetchRoles = async () => {
@@ -90,7 +92,7 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, status, u
             console.log('Send response:', response.data);
             toast.success("Notesheet sent successfully!");
             setLoading(false);
-            fetchNotesheets(userRole, status, storedToken);
+            fetchNotesheets(userRole, status, storedToken, 1, 10, setTotalPages);
             onClose();
             closeParentModal();
             // Find the selected role's object based on role name

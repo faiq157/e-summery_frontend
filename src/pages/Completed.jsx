@@ -26,7 +26,7 @@ const Completed = () => {
   }, [storedUser]);
   useEffect(() => {
     if (userRole && limit && currentPage) {
-      fetchNotesheets(userRole, "New", storedToken, currentPage, limit, setTotalPages);
+      fetchNotesheets(userRole, "Completed", storedToken, currentPage, limit, setTotalPages);
     }
   }, [userRole, storedToken, currentPage, limit]);
 
@@ -55,7 +55,7 @@ const Completed = () => {
 
         {/* Show the list of created notesheets (could be fetched from an API or static data) */}
         <div className="mt-8">
-          <NotesheetCardList status={"Completed"} searchQuery={searchQuery} userRole={userRole} />
+          <NotesheetCardList searchQuery={searchQuery} status={"Completed"} userRole={userRole} />
           <div className='mt-5'>
             <PaginationUI
               currentPage={currentPage}
