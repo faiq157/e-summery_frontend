@@ -26,12 +26,35 @@ const ApprovalCard = ({ searchQuery, refetchData }) => {
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentApprovalId, setCurrentApprovalId] = useState(null);
+    const [userRole, setUserRole] = useState("");
+    const storedUser = localStorage.getItem('user');
+    const userObject = JSON.parse(storedUser);
+    useEffect(() => {
+        if (storedUser) {
+            setUserRole(userObject?.role || '');
+        }
+    }, []);
 
     useEffect(() => {
         const fetchApprovals = async () => {
             try {
                 setLoading(true);
                 const response = await axiosInstance.get(`${base_URL}/approvals`, {
+                    headers: { "Content-Type": "application/json" },
+                });
+                setApprovals(response.data.data || []);
+            } catch (error) {
+                setError("Error fetching approvals");
+                toast.error("Error fetching approvals");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        const fetchSpecificApprovals = async () => {
+            try {
+                setLoading(true);
+                const response = await axiosInstance.get(`${base_URL}/approvals/${userObject._id}`, {
                     headers: { "Content-Type": "application/json" },
                 });
                 setApprovals(response.data.data || []);
@@ -55,8 +78,17 @@ const ApprovalCard = ({ searchQuery, refetchData }) => {
             }
         };
 
-        fetchApprovals();
-        fetchRoles();
+        const initializeData = async () => {
+            if (userRole.toLocaleLowerCase() === "establishment") {
+                await fetchApprovals();
+                await fetchRoles();
+            } else {
+                await fetchSpecificApprovals();
+                await fetchRoles();
+            }
+        };
+
+        initializeData();
     }, [refetchData]);
 
     const openPdf = (pdfUrl) => {
@@ -156,9 +188,9 @@ const ApprovalCard = ({ searchQuery, refetchData }) => {
                                 <div className="mt-4 flex space-x-4">
                                     <AlertDialog>
                                         <AlertDialogTrigger asChild>
-                                            <Button variant="destructive" className="rounded-full">
+                                            {userRole.toLocaleLowerCase() === "establishment" && (<Button variant="destructive" className="rounded-full">
                                                 Delete
-                                            </Button>
+                                            </Button>)}
                                         </AlertDialogTrigger>
                                         <AlertDialogContent>
                                             <AlertDialogHeader>
@@ -179,7 +211,7 @@ const ApprovalCard = ({ searchQuery, refetchData }) => {
                                             </AlertDialogFooter>
                                         </AlertDialogContent>
                                     </AlertDialog>
-                                    <Button
+                                    {userRole.toLocaleLowerCase() === "establishment" && (<Button
                                         onClick={() => {
                                             setIsModalOpen(true);
                                             setCurrentApprovalId(approval._id);
@@ -187,7 +219,7 @@ const ApprovalCard = ({ searchQuery, refetchData }) => {
                                         className="rounded-full"
                                     >
                                         Send
-                                    </Button>
+                                    </Button>)}
                                 </div>
                             </div>
                         </div>
