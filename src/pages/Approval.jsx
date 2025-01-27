@@ -100,11 +100,9 @@ const Approval = () => {
         <Dashboardlayout>
             <div className="p-8">
                 <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
-                    {/* Title */}
                     <h1 className="text-2xl md:text-3xl font-bold text-center md:text-left mb-4 md:mb-0">
                         Create Approval
                     </h1>
-                    {/* Search and Button */}
                     <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto items-center">
                         <input
                             type="text"

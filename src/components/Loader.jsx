@@ -7,7 +7,7 @@ const Loader = () => {
         <Player
           autoplay
           loop
-          src="https://lottie.host/a15973f9-71ff-4478-991f-e347980735b9/wzjT4bRVfW.json" // Example Lottie animation URL
+          src="https://lottie.host/eb7904f0-e3f7-44d8-84e6-40947912740d/DxhKI09Py7.json" // Example Lottie animation URL
           style={{ height: '200px', width: '200px' }}
         />
       </div>
