@@ -114,7 +114,7 @@ const AdminDashboard = () => {
                                     Edit
                                 </Button>
                                 <Button
-                                    variant="danger"
+                                    variant="destructive"
                                     className="px-4 py-2 rounded-full"
                                     onClick={() => openDeleteDialog(user)} // Open confirmation dialog for delete
                                 >

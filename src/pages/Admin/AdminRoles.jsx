@@ -132,7 +132,7 @@ const AdminRoles = () => {
                         <div className="flex justify-end gap-2">
                             <Button
                                 className="rounded-full"
-                                variant="danger"
+                                variant="destructive"
                                 onClick={() => setIsModalOpen(false)}
                             >
                                 Cancel
