@@ -19,6 +19,7 @@ import {
     AlertDialogAction,
     AlertDialogCancel
 } from "@/components/ui/alert-dialog";
+import CommentsSection from './Comments';
 
 
 const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToken, status }) => {
@@ -157,33 +158,10 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                             </div>
                         )}
                     </div>
+                    <CommentsSection rolesData={rolesData} />
 
-                    <div className="w-[50%]  h-72 overflow-y-auto  ">
-                        <h3 className="text-xl font-bold mb-2">Comments:</h3>
-                        {rolesData.length > 0 ? (
-                            rolesData.map((commentData) => (
-                                commentData ? (
-                                    <div key={commentData._id} className="p-4 border border-gray-200 rounded-lg bg-white shadow-md mb-4">
-                                        <p className="font-medium">{commentData.user || 'Unknown User'}:</p>
-                                        <p className="text-gray-700">{commentData.comment}</p>
-                                        {commentData.document && (
-                                            <a
-                                                href={commentData.document}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-blue-500 underline"
-                                            >
-                                                View Uploaded File
-                                            </a>
-                                        )}
-                                        <p className="text-sm text-gray-500">{new Date(commentData.timestamp).toLocaleString()}</p>
-                                    </div>
-                                ) : null
-                            ))
-                        ) : (
-                            <p>No comments available.</p>
-                        )}
-                    </div>
+
+
                 </div>
                 {status !== "In Progress" && status !== "Completed" && (
                     <>

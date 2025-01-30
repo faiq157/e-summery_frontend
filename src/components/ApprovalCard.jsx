@@ -167,7 +167,7 @@ const ApprovalCard = ({ searchQuery }) => {
     return (
         <div className="p-8">
             {loading ? (
-                <Loader />
+                <Loader width={500} height={500} />
             ) : error ? (
                 <p className="text-red-600">{error}</p>
             ) : filteredApprovals.length === 0 ? (

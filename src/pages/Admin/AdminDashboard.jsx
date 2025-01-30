@@ -84,7 +84,7 @@ const AdminDashboard = () => {
     };
 
     if (loading) {
-        return <div className="flex justify-center items-center h-screen"><Loader /></div>;
+        return <div className="flex justify-center items-center h-screen"><Loader width={500} height={500} /></div>;
     }
 
     if (error) {
