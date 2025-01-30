@@ -4,8 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import NotesheetDetailModal from './NotesheetDetailModal';
 import Loader from './Loader';
-import { fetchNotesheets } from '@/constant/notesheetAPI';
-import { deleteNotesheet } from '@/constant/notesheetAPI'; // Import delete function
+
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel } from "@/components/ui/alert-dialog"; // Import alert dialog components
 import EditApplication from '../pages/createApp/EditeApplication'; // Assuming this is the edit component
 import { Player } from '@lottiefiles/react-lottie-player';
@@ -18,16 +17,16 @@ const NotesheetCardList = ({ userRole, status, sortOrder = 'asc' }) => {
     const storedToken = localStorage.getItem('token');
     const [selectedNotesheet, setSelectedNotesheet] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [setIsDeleteDialogOpen] = useState(false);
+    const [DeleteDialog, setIsDeleteDialogOpen] = useState(false);
     const [notesheetToDelete, setNotesheetToDelete] = useState(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const base_URL = import.meta.env.VITE_APP_API_URL;
-    const [setIsCopied] = useState(false);
-    const { notesheets, fetchNotesheets, deleteNotesheet, loading, error } = useNotesheetContext();
-    const [setTotalPages] = useState(1);
+    const [isCopied, setIsCopied] = useState(false);
+    const { notesheets, fetchNotesheets, deleteNotesheets, loading, error } = useNotesheetContext();
+    const [totalpages, setTotalPages] = useState(1);
 
     const handleDelete = async () => {
-        await deleteNotesheet(notesheetToDelete._id, storedToken);
+        await deleteNotesheets(notesheetToDelete._id, storedToken);
         setIsDeleteDialogOpen(false);
     };
 
