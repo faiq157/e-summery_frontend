@@ -100,7 +100,7 @@ const NotesheetCardList = ({ userRole, status, sortOrder = 'asc' }) => {
         return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
     });
     if (loading) {
-        return <div className='flex items-center justify-center h-screen'><Loader /></div>;
+        return <div className='flex items-center justify-center h-[100vh]'><Loader width={600} height={600} /></div>;
     }
 
     if (error) {

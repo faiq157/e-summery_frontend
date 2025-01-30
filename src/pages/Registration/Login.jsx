@@ -6,6 +6,7 @@ import { loginValidationSchema } from "../../utils/authValidation";
 import { AuthContext } from "../../context/AuthContext";
 import Loader from "@/components/Loader";
 import axiosInstance from "@/utils/http";
+import { FaSpinner } from "react-icons/fa";
 
 const base_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -79,7 +80,11 @@ const Login = () => {
                 type="submit"
                 disabled={isSubmitting || isLoading}
               >
-                {isLoading ? <Loader /> : "Login"}
+                {isLoading ? (
+                  <FaSpinner className="animate-spin text-black" size={24} />
+                ) : (
+                  "Login"
+                )}
               </button>
             </Form>
           )}
