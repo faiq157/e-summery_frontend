@@ -1,15 +1,16 @@
-import React from 'react';
+import React from "react";
 
-// Reusable component for displaying total applications
 const ApplicationSummary = ({ title, count }) => {
   return (
-    <div className="flex items-center justify-between p-6 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow">
-      <div className="flex items-center space-x-4">
-        <div>
-          <h3 className="text-xl font-semibold text-gray-700">{title}</h3>
-        </div>
+    <div className="relative flex flex-col items-center justify-center  w-80 h-40 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/30 shadow-lg hover:shadow-2xl transition-transform hover:scale-105 duration-300">
+      {/* Gradient Overlay for a Glass Effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 rounded-2xl"></div>
+
+      {/* Content */}
+      <div className="relative z-10 text-center">
+        <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
+        <div className="text-4xl font-extrabold text-gray-900 mt-2">{count}</div>
       </div>
-      <div className="text-3xl font-bold text-indigo-600">{count}</div>
     </div>
   );
 };

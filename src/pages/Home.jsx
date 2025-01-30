@@ -44,10 +44,13 @@ const Home = () => {
         ) : error ? (
           <p className="p-4 text-red-500">{error}</p>
         ) : (
-          <div className="grid grid-cols-1 p-8 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 p-8 md:grid-cols-4 lg:grid-cols-5 gap-4">
             <ApplicationSummary title="New Applications" count={statusCounts.New} />
             <ApplicationSummary title="In Progress" count={statusCounts["In Progress"]} />
             <ApplicationSummary title="Completed" count={statusCounts.Completed} />
+            <ApplicationSummary title="Recived" count={statusCounts.Received} />
+            <ApplicationSummary title="Total Applications" count={statusCounts.New + statusCounts["In Progress"] + statusCounts.Completed} />
+
           </div>
         )}
       </Dashboardlayout>
