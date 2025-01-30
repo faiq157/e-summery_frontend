@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
@@ -15,19 +14,17 @@ import { AiOutlineCopy } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import { useNotesheetContext } from '@/context/NotesheetContext';
 
-const NotesheetCardList = ({ userRole, status, searchQuery }) => {
+const NotesheetCardList = ({ userRole, status, sortOrder = 'asc' }) => {
     const storedToken = localStorage.getItem('token');
     const [selectedNotesheet, setSelectedNotesheet] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [setIsDeleteDialogOpen] = useState(false);
     const [notesheetToDelete, setNotesheetToDelete] = useState(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const base_URL = import.meta.env.VITE_APP_API_URL;
-    const [isCopied, setIsCopied] = useState(false);
+    const [setIsCopied] = useState(false);
     const { notesheets, fetchNotesheets, deleteNotesheet, loading, error } = useNotesheetContext();
-    const [totalPages, setTotalPages] = useState(1);
-
-
+    const [setTotalPages] = useState(1);
 
     const handleDelete = async () => {
         await deleteNotesheet(notesheetToDelete._id, storedToken);
@@ -82,18 +79,26 @@ const NotesheetCardList = ({ userRole, status, searchQuery }) => {
         setSelectedNotesheet(notesheet);
         setIsModalOpen(true);
     };
+
     const handleCopy = (trackingId) => {
         navigator.clipboard.writeText(trackingId).then(() => {
             setIsCopied(true);
             toast.success('Tracking ID copied to clipboard');
             setTimeout(() => setIsCopied(false), 2000);
+        }).catch(() => {
+            toast.error('Failed to copy tracking ID');
         });
     };
-
-    const filteredNotesheets = notesheets.filter((notesheet) =>
-        notesheet.userName.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
+    const sortedNotesheets = [...notesheets].sort((a, b) => {
+        // Use the raw date (timestamps.createdAt) for sorting
+        const dateA = new Date(a.timestamps.createdAt);
+        const dateB = new Date(b.timestamps.createdAt);
+        if (isNaN(dateA) || isNaN(dateB)) {
+            console.error("Invalid date format in notesheet:", a.timestamps.createdAt, b.timestamps.createdAt);
+            return 0;
+        }
+        return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+    });
     if (loading) {
         return <div className='flex items-center justify-center h-screen'><Loader /></div>;
     }
@@ -107,7 +112,7 @@ const NotesheetCardList = ({ userRole, status, searchQuery }) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {
-                filteredNotesheets.length === 0 ? (
+                sortedNotesheets.length === 0 ? (
                     <div className="flex flex-col items-center justify-center w-[100vw] h-screen space-y-4">
                         <Player
                             autoplay
@@ -118,7 +123,7 @@ const NotesheetCardList = ({ userRole, status, searchQuery }) => {
                         <p className="text-xl font-semibold mt-4">Please add an application.</p>
                     </div>
                 ) : (
-                    filteredNotesheets.map((notesheet) => (
+                    sortedNotesheets.map((notesheet) => (
                         <Card key={notesheet._id} className="w-full border-none shadow-lg hover:shadow-inner hover:scale-105 transition-transform">
                             <CardHeader>
                                 <CardTitle className="text-xl font-semibold">{notesheet.subject}</CardTitle>
@@ -172,7 +177,6 @@ const NotesheetCardList = ({ userRole, status, searchQuery }) => {
                     ))
                 )
             }
-
 
             <NotesheetDetailModal
                 userRole={userRole}
