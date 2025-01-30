@@ -10,7 +10,7 @@ export const NotesheetProvider = ({ children }) => {
     const [notesheets, setNotesheets] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const fetchNotesheets = async (userRole, status, storedToken, page, limit, setTotalPages) => {
+    const fetchNotesheets = async (userRole, status, storedToken, page, limit, setTotalPages, searchQuery, dateRange) => {
         setLoading(true);
         setError(null);
 
@@ -21,6 +21,8 @@ export const NotesheetProvider = ({ children }) => {
                     status,
                     page,
                     limit,
+                    search: searchQuery,
+                    dateRange,
                 },
                 headers: {
                     Authorization: ` ${storedToken}`,

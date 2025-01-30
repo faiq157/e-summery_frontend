@@ -30,6 +30,7 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
     const [commentsUpdated, setCommentsUpdated] = useState(false);
     const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false);  // state for dialog visibility
     const { fetchNotesheets } = useNotesheetContext();
+    const [totalPages, setTotalPages] = useState(1);
 
     console.log("this is user role id", userRole)
 
@@ -69,7 +70,7 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
 
             if (response.status === 200) {
                 toast.success("Notesheet marked as complete!");
-                fetchNotesheets(userRole, status, storedToken, 1, 10);
+                fetchNotesheets(userRole, status, storedToken, 1, 10, setTotalPages);
                 onClose();
 
             } else {
