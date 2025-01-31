@@ -165,8 +165,8 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                 </div>
                 {status !== "In Progress" && status !== "Completed" && (
                     <>
-                        <div className='grid grid-cols-1 gap-2'>
-                            <div className="">
+                        <div className={`grid ${userRole.toLowerCase() === "establishment" ? "grid-cols-2" : "grid-cols-1"} gap-2`}>
+                            <div className="mt-3">
                                 <label htmlFor="comment" className="block text-gray-700 font-bold mb-2">Add a Comment</label>
                                 <textarea
                                     id="comment"
@@ -174,15 +174,15 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                                     value={comment}
                                     onChange={(e) => setComment(e.target.value)}
                                     className="shadow appearance-none bg-transparent border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    rows={4}
+                                    rows={3}
                                     required
                                 />
                             </div>
 
                             {userRole.toLowerCase() === 'establishment' && (
-                                <div className="">
+                                <div className="mt-3">
                                     <label htmlFor="file" className="block text-lg font-semibold text-gray-800 mb-1">Upload File</label>
-                                    <div className="flex items-center justify-center w-full bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 py-4 px-6 hover:border-blue-500 hover:bg-gray-50 transition-all duration-300">
+                                    <div className="flex items-center justify-center w-full bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 py-3 px-6 hover:border-blue-500 hover:bg-gray-50 transition-all duration-300">
                                         <input
                                             id="file"
                                             type="file"
