@@ -75,7 +75,7 @@ const Completed = () => {
             searchQuery={searchQuery}
             onSearchChange={handleSearchChange}
             dateRange={dateRange}
-            showbutton={true}
+            showbutton={false}
             toggleSortOrder={toggleSortOrder}
             sortOrder={sortOrder}
           />
