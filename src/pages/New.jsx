@@ -21,7 +21,7 @@ const New = () => {
     const [userRole, setUserRole] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const [refetchData, setRefetchData] = useState(false);
-    const [dateRange, setDateRange] = useState("all"); // State to manage the date range
+    const [dateRange, setDateRange] = useState("all");
     const { fetchNotesheets } = useNotesheetContext();
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -53,7 +53,7 @@ const New = () => {
                     limit,
                     setTotalPages,
                     searchQuery,
-                    dateRange || "" // Include dateRange in the API request
+                    dateRange || ""
                 );
             }
         }, 1000);
@@ -121,13 +121,26 @@ const New = () => {
                 },
             })
             .then((response) => {
+                // Assume the response contains a trackingId field
+                const trackingId = response.data.data.trackingId;
+
                 resetForm();
                 setSubmitting(false);
                 setSubmittedData(values);
                 closeModal();
                 fetchNotesheets(userRole, "New", storedToken, 1, 10, setTotalPages);
-
                 sendNotification(userId);
+                axiosInstance
+                    .post(`${base_URL}/notesheet/send-tracking-id`, {
+                        email: values.userEmail,
+                        trackingId: trackingId,
+                    })
+                    .then(() => {
+                        console.log("Approval email sent successfully.");
+                    })
+                    .catch((error) => {
+                        console.error("Error sending approval email:", error);
+                    });
             })
             .catch((error) => {
                 console.error("Error:", error);
@@ -139,7 +152,6 @@ const New = () => {
         <Dashboardlayout>
             <div className="p-8">
                 <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
-
                     <FilterAndSearch
                         title="Create Application"
                         onDateRangeChange={handleDateRangeChange}
@@ -150,9 +162,7 @@ const New = () => {
                         showbutton={true}
                         toggleSortOrder={toggleSortOrder}
                         sortOrder={sortOrder}
-
                     />
-
                 </div>
 
                 <div className="mt-8">
@@ -181,7 +191,6 @@ const New = () => {
                                         onClick={closeModal}
                                     />
                                 </div>
-
                                 <NotesheetForm
                                     initialValues={{
                                         description: "",
