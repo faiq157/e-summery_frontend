@@ -42,7 +42,7 @@ function App() {
           <Route path="progress" element={<NonAdminRoute><Progress /></NonAdminRoute>} />
           <Route path="received" element={<NonAdminRoute><Received /></NonAdminRoute>} />
           <Route path="completed" element={<NonAdminRoute><Completed /></NonAdminRoute>} />
-          <Route path="tracking" element={<NonAdminRoute><Tracking /></NonAdminRoute>} />
+
           <Route path="approval" element={<NonAdminRoute><Approval /></NonAdminRoute>} />
           <Route path="setting" element={<NonAdminRoute><Setting /></NonAdminRoute>} />
 
@@ -57,6 +57,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/forgot" element={<ForgotPass />} />
         <Route path="/resetpassword/:token" element={<ResetPassword />} />
+        <Route path="/tracking" element={<Tracking />} />
 
         {/* Catch-all route for 404 */}
         <Route path="*" element={<NotFoundPage />} />

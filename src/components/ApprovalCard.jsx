@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { FaCheckCircle, FaEye, FaTrashAlt } from "react-icons/fa";
+import { FaCheckCircle, FaEye } from "react-icons/fa";
 import axiosInstance from "@/utils/http";
 import { toast } from "react-toastify";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
+import { AnimatePresence, motion } from "framer-motion";
 import {
     AlertDialog,
     AlertDialogTrigger,
@@ -14,7 +15,7 @@ import {
     AlertDialogFooter,
     AlertDialogCancel,
     AlertDialogAction,
-} from "./ui/alert-dialog"; // Ensure you have the AlertDialog components in your project
+} from "./ui/alert-dialog";
 import { Player } from "@lottiefiles/react-lottie-player";
 import Loader from "./Loader";
 
@@ -28,15 +29,18 @@ const ApprovalCard = ({ searchQuery }) => {
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentApprovalId, setCurrentApprovalId] = useState(null);
+    const [approvalEmail, setApprovalEmail] = useState(""); // new state for email input
     const [userRole, setUserRole] = useState("");
-    const storedUser = localStorage.getItem('user');
-    const userObject = JSON.parse(storedUser);
     const [refetchData, setRefetchData] = useState(false);
+    const [isChecked, setIsChecked] = useState(false);
+    const storedUser = localStorage.getItem("user");
+    const userObject = storedUser ? JSON.parse(storedUser) : null;
+
     useEffect(() => {
         if (storedUser) {
-            setUserRole(userObject?.role || '');
+            setUserRole(userObject?.role || "");
         }
-    }, []);
+    }, [storedUser, userObject]);
 
     useEffect(() => {
         const fetchApprovals = async () => {
@@ -92,7 +96,7 @@ const ApprovalCard = ({ searchQuery }) => {
         };
 
         initializeData();
-    }, [refetchData]);
+    }, [refetchData, userRole]);
 
     const openPdf = (pdfUrl) => {
         if (pdfUrl) {
@@ -109,7 +113,9 @@ const ApprovalCard = ({ searchQuery }) => {
             });
 
             if (response.status === 200) {
-                setApprovals((prevApprovals) => prevApprovals.filter((approval) => approval._id !== approvalId));
+                setApprovals((prevApprovals) =>
+                    prevApprovals.filter((approval) => approval._id !== approvalId)
+                );
                 toast.success("Approval deleted successfully");
                 setRefetchData((prev) => !prev);
             }
@@ -119,6 +125,7 @@ const ApprovalCard = ({ searchQuery }) => {
         }
     };
 
+    // Existing sendApproval function for role-based sending
     const sendApproval = async (approvalId) => {
         if (selectedUsers.length === 0) {
             toast.error("Please select at least one user.");
@@ -141,7 +148,6 @@ const ApprovalCard = ({ searchQuery }) => {
             if (response.status === 200) {
                 toast.success("Approval sent successfully!");
                 setRefetchData((prev) => !prev);
-
             }
         } catch (error) {
             console.error("Error sending approval:", error);
@@ -149,6 +155,45 @@ const ApprovalCard = ({ searchQuery }) => {
         } finally {
             setIsModalOpen(false);
             setSelectedUsers([]);
+        }
+    };
+
+    // New function to send the approval document URL via email using the new route.
+    const sendApprovalByEmail = async (approvalId) => {
+        if (!approvalEmail) {
+            toast.error("Please enter an email address.");
+            return;
+        }
+
+        // Find the current approval to get its document URL
+        const currentApproval = approvals.find((approval) => approval._id === approvalId);
+        if (!currentApproval || !currentApproval.pdfUrl) {
+            toast.error("Approval document URL not found.");
+            return;
+        }
+
+        try {
+            const payload = {
+                email: approvalEmail,
+                Url: currentApproval.pdfUrl,
+            };
+
+            const response = await axiosInstance.post(`${base_URL}/approval/send-other`, payload, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (response.status === 200) {
+                toast.success("Approval document sent successfully via email!");
+                setRefetchData((prev) => !prev);
+            }
+        } catch (error) {
+            console.error("Error sending approval document via email:", error);
+            toast.error("Failed to send document. Please try again.");
+        } finally {
+            setIsModalOpen(false);
+            setApprovalEmail("");
         }
     };
 
@@ -163,6 +208,9 @@ const ApprovalCard = ({ searchQuery }) => {
     const filteredApprovals = approvals.filter((approval) =>
         approval.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
+    const handleCheckboxChange = () => {
+        setIsChecked((prev) => !prev);
+    };
 
     return (
         <div className="p-8">
@@ -176,7 +224,7 @@ const ApprovalCard = ({ searchQuery }) => {
                         autoplay
                         loop
                         src="https://lottie.host/7881658b-10eb-4e1d-9424-661cf3bb1665/xne07bwaFH.json" // Lottie animation URL
-                        style={{ height: '300px', width: '300px' }}
+                        style={{ height: "300px", width: "300px" }}
                     />
                     <p className="text-xl font-semibold mt-4">Please add an application.</p>
                 </div>
@@ -186,7 +234,6 @@ const ApprovalCard = ({ searchQuery }) => {
                         <div key={approval._id} className="bg-white shadow-lg rounded-lg overflow-hidden">
                             <div className="p-6">
                                 <h3 className="text-xl font-semibold text-gray-900">{approval.title}</h3>
-
                                 <div className="flex items-center space-x-2 mt-2">
                                     <button
                                         onClick={() => openPdf(approval.pdfUrl)}
@@ -198,9 +245,7 @@ const ApprovalCard = ({ searchQuery }) => {
                                 <p className="text-sm text-gray-500 mt-1">
                                     Created on: {new Date(approval.createdAt).toLocaleDateString()}
                                 </p>
-
                                 <div className="mt-4 flex space-x-4 items-center">
-
                                     {approval.sended && userRole.toLocaleLowerCase() === "establishment" ? (
                                         <div className="flex items-center gap-2">
                                             <FaCheckCircle className="text-green-500" size={20} />
@@ -279,6 +324,46 @@ const ApprovalCard = ({ searchQuery }) => {
                                 )}
                             </div>
                         </div>
+
+                        {/* New Input Field for Email Approval */}
+
+                        <div className="flex justify-start items-center gap-2">
+                            <Checkbox
+                                id="others"
+                                checked={isChecked}
+                                onCheckedChange={setIsChecked}
+                            />
+                            <label htmlFor="others" className="cursor-pointer text-lg">Others</label>
+                        </div>
+
+
+                        <AnimatePresence>
+                            {isChecked && (
+                                <motion.div
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: "auto" }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                                    className="overflow-hidden"
+                                >
+                                    <div className="mb-4 mt-2">
+                                        <label htmlFor="approvalEmail" className="block text-lg font-medium mb-1">
+                                            Email Address
+                                        </label>
+                                        <input
+                                            type="email"
+                                            id="approvalEmail"
+                                            value={approvalEmail}
+                                            onChange={(e) => setApprovalEmail(e.target.value)}
+                                            placeholder="Enter email to send document URL"
+                                            className="w-full border rounded px-3 py-2 transition-all duration-300 focus:ring-2 focus:ring-blue-500"
+                                        />
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+
                         <div className="flex justify-end space-x-4">
                             <Button
                                 variant="outline"
@@ -287,11 +372,19 @@ const ApprovalCard = ({ searchQuery }) => {
                             >
                                 Cancel
                             </Button>
+                            {/* Button for role-based approval sending */}
                             <Button
                                 onClick={() => sendApproval(currentApprovalId)}
                                 className="rounded-full"
                             >
-                                Send
+                                Send to Selected Roles
+                            </Button>
+                            {/* Button for sending approval document via email */}
+                            <Button
+                                onClick={() => sendApprovalByEmail(currentApprovalId)}
+                                className="rounded-full"
+                            >
+                                Send via Email
                             </Button>
                         </div>
                     </div>
@@ -299,7 +392,6 @@ const ApprovalCard = ({ searchQuery }) => {
             )}
         </div>
     );
-
 };
 
 export default ApprovalCard;
