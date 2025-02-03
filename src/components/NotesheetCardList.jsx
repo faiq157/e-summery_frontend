@@ -5,13 +5,14 @@ import { Button } from './ui/button';
 import NotesheetDetailModal from './NotesheetDetailModal';
 import Loader from './Loader';
 
-import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel } from "@/components/ui/alert-dialog"; // Import alert dialog components
-import EditApplication from '../pages/createApp/EditeApplication'; // Assuming this is the edit component
+import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel } from "@/components/ui/alert-dialog";
+import EditApplication from '../pages/createApp/EditeApplication';
 import { Player } from '@lottiefiles/react-lottie-player';
 import axiosInstance from '@/utils/http';
 import { AiOutlineCopy } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import { useNotesheetContext } from '@/context/NotesheetContext';
+import { motion } from 'framer-motion';  // Import Framer Motion
 
 const NotesheetCardList = ({ userRole, status, sortOrder = 'asc' }) => {
     const storedToken = localStorage.getItem('token');
@@ -88,8 +89,8 @@ const NotesheetCardList = ({ userRole, status, sortOrder = 'asc' }) => {
             toast.error('Failed to copy tracking ID');
         });
     };
+
     const sortedNotesheets = [...notesheets].sort((a, b) => {
-        // Use the raw date (timestamps.createdAt) for sorting
         const dateA = new Date(a.timestamps.createdAt);
         const dateB = new Date(b.timestamps.createdAt);
         if (isNaN(dateA) || isNaN(dateB)) {
@@ -98,6 +99,7 @@ const NotesheetCardList = ({ userRole, status, sortOrder = 'asc' }) => {
         }
         return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
     });
+
     if (loading) {
         return <div className='flex items-center justify-center h-[100vh]'><Loader width={600} height={600} /></div>;
     }
@@ -116,63 +118,70 @@ const NotesheetCardList = ({ userRole, status, sortOrder = 'asc' }) => {
                         <Player
                             autoplay
                             loop
-                            src="https://lottie.host/7881658b-10eb-4e1d-9424-661cf3bb1665/xne07bwaFH.json" // Example Lottie animation URL
+                            src="https://lottie.host/7881658b-10eb-4e1d-9424-661cf3bb1665/xne07bwaFH.json"
                             style={{ height: '500px', width: '500px' }}
                         />
                         <p className="text-xl font-semibold mt-4">Please add an application.</p>
                     </div>
                 ) : (
                     sortedNotesheets.map((notesheet) => (
-                        <Card key={notesheet._id} className="w-full border-none shadow-lg hover:shadow-inner hover:scale-105 transition-transform">
-                            <CardHeader>
-                                <CardTitle className="text-xl font-semibold">{notesheet.subject}</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-2">
-                                <p><strong>Application User:</strong> {notesheet.userName}</p>
-                                <p>
-                                    <strong>Created By:</strong>
-                                    <span className="bg-gradient-to-r ml-3 from-green-200 to-green-400 text-white rounded-full px-3 py-1 font-medium">
-                                        {history?.role || "No role available"}
-                                    </span>
-                                </p>
-                                <p><strong>Created at:</strong> {new Date(notesheet.timestamps.createdAt).toLocaleDateString('en-us', { weekday: "long", year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric", hour12: true })}</p>
+                        <motion.div
+                            key={notesheet._id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 20 }}
+                            transition={{ duration: 0.4 }}
+                        >
+                            <Card className="w-full border-none shadow-lg hover:shadow-inner hover:scale-105 transition-transform">
+                                <CardHeader>
+                                    <CardTitle className="text-xl font-semibold">{notesheet.subject}</CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-2">
+                                    <p><strong>Application User:</strong> {notesheet.userName}</p>
+                                    <p>
+                                        <strong>Created By:</strong>
+                                        <span className="bg-gradient-to-r ml-3 from-green-200 to-green-400 text-white rounded-full px-3 py-1 font-medium">
+                                            {history?.role || "No role available"}
+                                        </span>
+                                    </p>
+                                    <p><strong>Created at:</strong> {new Date(notesheet.timestamps.createdAt).toLocaleDateString('en-us', { weekday: "long", year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric", hour12: true })}</p>
 
-                                <p className="flex items-center space-x-2">
-                                    <strong>Tracking Id:</strong> {notesheet.trackingId}
-                                    <AiOutlineCopy
-                                        className="text-blue-600 cursor-pointer hover:text-blue-800"
-                                        size={20}
-                                        onClick={() => handleCopy(notesheet.trackingId)}
-                                        title="Copy Tracking ID"
-                                    />
-                                </p>
+                                    <p className="flex items-center space-x-2">
+                                        <strong>Tracking Id:</strong> {notesheet.trackingId}
+                                        <AiOutlineCopy
+                                            className="text-blue-600 cursor-pointer hover:text-blue-800"
+                                            size={20}
+                                            onClick={() => handleCopy(notesheet.trackingId)}
+                                            title="Copy Tracking ID"
+                                        />
+                                    </p>
 
-                                <div className='flex justify-between mt-2'>
-                                    <Button className="rounded-full" onClick={() => handleViewDetails(notesheet)}>View Details</Button>
-                                    {status === 'New' && (
-                                        <div className="">
-                                            <Button className="mr-2 rounded-full" onClick={() => handleEdit(notesheet)}>Edit</Button>
-                                            <AlertDialog>
-                                                <AlertDialogTrigger asChild>
-                                                    <Button className="bg-red-500 text-white rounded-full" onClick={() => handleOpenDeleteDialog(notesheet)}>Delete</Button>
-                                                </AlertDialogTrigger>
-                                                <AlertDialogContent>
-                                                    <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
-                                                    <AlertDialogDescription>
-                                                        Are you sure you want to delete this notesheet? This action cannot be undone.
-                                                    </AlertDialogDescription>
-                                                    <div className="flex justify-end space-x-2">
-                                                        <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
-                                                        <AlertDialogCancel onClick={handleCloseDeleteDialog}>Cancel</AlertDialogCancel>
-
-                                                    </div>
-                                                </AlertDialogContent>
-                                            </AlertDialog>
-                                        </div>
-                                    )}
-                                </div>
-                            </CardContent>
-                        </Card>
+                                    <div className='flex justify-between mt-2'>
+                                        <Button className="rounded-full" onClick={() => handleViewDetails(notesheet)}>View Details</Button>
+                                        {status === 'New' && (
+                                            <div className="">
+                                                <Button className="mr-2 rounded-full" onClick={() => handleEdit(notesheet)}>Edit</Button>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <Button className="bg-red-500 text-white rounded-full" onClick={() => handleOpenDeleteDialog(notesheet)}>Delete</Button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            Are you sure you want to delete this notesheet? This action cannot be undone.
+                                                        </AlertDialogDescription>
+                                                        <div className="flex justify-end space-x-2">
+                                                            <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+                                                            <AlertDialogCancel onClick={handleCloseDeleteDialog}>Cancel</AlertDialogCancel>
+                                                        </div>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
+                                            </div>
+                                        )}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
                     ))
                 )
             }

@@ -28,16 +28,14 @@ const AdminRoles = () => {
     // Toggle "Select All" functionality
     const toggleSelectAll = (checked) => {
         if (checked) {
-            const allRoleIds = filteredRoles.map((role) => role.id);
-            setSelectedUsers(
-                roles.filter((role) => allRoleIds.includes(role.id))
-            );
+            setSelectedUsers(filteredRoles.map((role) => ({
+                id: role.id,
+                role: role.role,
+                email: role.email || '' // Ensure to send email if available
+            })));
             setAreAllSelected(true);
         } else {
-            const deselectIds = filteredRoles.map((role) => role.id);
-            setSelectedUsers((prev) =>
-                prev.filter((user) => !deselectIds.includes(user.id))
-            );
+            setSelectedUsers([]); // Deselect all users
             setAreAllSelected(false);
         }
     };
@@ -50,7 +48,6 @@ const AdminRoles = () => {
             )
         );
     }, [selectedUsers, filteredRoles]);
-
 
     useEffect(() => {
         const fetchRoles = async () => {
@@ -74,26 +71,27 @@ const AdminRoles = () => {
         try {
             // Fetch already assigned users for the selected role
             const response = await axios.get(`${base_URL}/assigned-users/${role.role}`);
-            setSelectedUsers(response.data); // Assume the API returns an array of user objects
+            setSelectedUsers(response.data || []);
         } catch (err) {
             toast.error("Failed to fetch assigned users.", err);
-            setSelectedUsers([]);
+            setSelectedUsers([]); // Clear users in case of error
         }
         setIsModalOpen(true);
     };
 
-    const toggleUserSelection = (userId, userRole) => {
+    const toggleUserSelection = (userId, userRole, email) => {
         setSelectedUsers((prev) => {
             const userExists = prev.some(user => user.id === userId);
             if (userExists) {
                 return prev.filter(user => user.id !== userId); // Remove user if already selected
             }
-            return [...prev, { id: userId, role: userRole }]; // Add user if not selected
+            return [...prev, { id: userId, role: userRole, email }]; // Add user if not selected
         });
     };
 
     const handleSave = async () => {
-        if (selectedUsers.length === 0) return;
+        if (selectedUsers.length === 0) return; // Ensure users are selected
+
         try {
             await axios.post(`${base_URL}/assign-role`, {
                 role: selectedRole.role,
@@ -101,7 +99,7 @@ const AdminRoles = () => {
             });
             toast.success("Users assigned successfully!");
             setIsModalOpen(false);
-            setSelectedUsers([]);
+            setSelectedUsers([]); // Clear selection after saving
         } catch (err) {
             toast.error("Failed to assign roles.", err);
         }
@@ -175,7 +173,7 @@ const AdminRoles = () => {
                                     <div key={role.id} className="flex items-center gap-2 mb-2">
                                         <Checkbox
                                             checked={selectedUsers.some((user) => user.id === role.id)}
-                                            onCheckedChange={() => toggleUserSelection(role.id, role.role)}
+                                            onCheckedChange={() => toggleUserSelection(role.id, role.role, role.email)}
                                             id={`checkbox-${role.id}`}
                                         />
                                         <label htmlFor={`checkbox-${role.id}`} className="text-gray-700">
@@ -206,7 +204,6 @@ const AdminRoles = () => {
                     </div>
                 </div>
             </Dialog>
-
         </div>
     );
 };

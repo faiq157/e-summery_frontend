@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { AiOutlineArrowDown, AiOutlineArrowUp, AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose } from "react-icons/ai";
 import NotesheetCardList from "@/components/NotesheetCardList";
 import { useModal } from "@/context/ModalContext";
 import Dashboardlayout from "@/layout/Dashboardlayout";
@@ -9,7 +9,6 @@ import axiosInstance from "@/utils/http";
 import { useNotesheetContext } from "@/context/NotesheetContext";
 import PaginationUI from "@/components/PaginationUI";
 import FilterAndSearch from "@/components/FilterAndSearch";
-import { Button } from "@/components/ui/button";
 
 const New = () => {
     const { isModalOpen, openModal, closeModal } = useModal();
@@ -134,6 +133,15 @@ const New = () => {
                     .post(`${base_URL}/notesheet/send-tracking-id`, {
                         email: values.userEmail,
                         trackingId: trackingId,
+                        subject: "Tracking ID",
+                        text: `Hello,
+                                Your tracking ID is: ${trackingId}. Please use this tracking ID for any further processing or inquiries related to your notesheet.
+                                To track the progress and updates, click on the following link:
+                                ${`https://e-summery.netlify.app/tracking`}
+                                If you need any assistance, feel free to reach out.
+                                Best regards,
+                                UET Mardan
+`
                     })
                     .then(() => {
                         console.log("Approval email sent successfully.");

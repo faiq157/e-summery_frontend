@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { AiOutlineClose } from 'react-icons/ai';
@@ -33,6 +34,7 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, status, u
                     const allRoles = response.data.map((role) => ({
                         id: role.id,
                         role: role.role,
+                        email: role.email,
                     }));
 
                     const uniqueRoles = [
@@ -41,6 +43,7 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, status, u
 
                     const filteredRoles = uniqueRoles.filter(role => role.role !== 'admin');
                     setRoles(filteredRoles);
+
                 } else {
                     console.error('Unexpected response format:', response);
                     setErrorMessage('Failed to load roles due to unexpected response format.');
@@ -65,13 +68,22 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, status, u
             return toast.error('Please select a role.');
         }
 
+        const selectedUser = roles.find(role => role.id === selectedRole);
+
+        if (!selectedUser || !selectedUser.email) {
+            return toast.error('Selected role does not have an email.');
+        }
+
+        const userEmail = selectedUser.email; // Get the email from the selected role
+        console.log("Selected User Email:", userEmail);
+
         setLoading(true);
         try {
             await axiosInstance.post(
                 `${base_URL}/notesheet/send/${notesheet._id}`,
                 {
                     currentRole: userRole,
-                    toSendRole: roles.find(role => role.id === selectedRole)?.role,
+                    toSendRole: selectedUser.role,
                 },
                 {
                     headers: {
@@ -80,8 +92,18 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, status, u
                     },
                 }
             );
+            await axiosInstance.post(`${base_URL}/notesheet/send-tracking-id`, {
+                email: userEmail,
+                subject: `Notesheet Received from ${userRole}`,
+                text: `Hello,You’ve received a new notesheet from  ${userRole}.
+                Please review the details and take necessary actions at your earliest convenience.
+                To access the notesheet,
+                click the link below: https://e-summery.netlify.app/received .
+                If you have any questions or need further assistance, 
+                feel free to reach out.Best regards,
+                UET Mardan`,
+            });
 
-            // Send notification for the selected role
             sendNotification(selectedRole);
 
             toast.success("Notesheet sent successfully!");
