@@ -48,7 +48,7 @@ const Home = () => {
             <ApplicationSummary title="New Applications" count={statusCounts.New} />
             <ApplicationSummary title="In Progress" count={statusCounts["In Progress"]} />
             <ApplicationSummary title="Completed" count={statusCounts.Completed} />
-            <ApplicationSummary title="Recived" count={statusCounts.Received} />
+            <ApplicationSummary title="Received" count={statusCounts.Received} />
             <ApplicationSummary title="Total Applications" count={statusCounts.New + statusCounts["In Progress"] + statusCounts.Completed} />
 
           </div>
