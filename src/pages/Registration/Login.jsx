@@ -6,13 +6,14 @@ import { loginValidationSchema } from "../../utils/authValidation";
 import { AuthContext } from "../../context/AuthContext";
 import Loader from "@/components/Loader";
 import axiosInstance from "@/utils/http";
-import { FaSpinner } from "react-icons/fa";
+import { FaSpinner, FaEye, FaEyeSlash } from "react-icons/fa";
 
 const base_URL = import.meta.env.VITE_APP_API_URL;
 
 const Login = () => {
   const [loginError, setLoginError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false); // State to toggle password visibility
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
@@ -59,20 +60,31 @@ const Login = () => {
             <Form className="flex flex-col gap-2">
               <label>Email</label>
               <Field
-                className={`py-1 border bg-transparent w-80 rounded-md px-2 ${touched.email && errors.email ? "border-red-500" : "border-[#D9D9D9]"
-                  }`}
+                className={`py-1 border bg-transparent w-80 rounded-md px-2 ${touched.email && errors.email ? "border-red-500" : "border-[#D9D9D9]"} `}
                 type="email"
                 name="email"
               />
               <ErrorMessage className="text-red-500 text-xs" name="email" component="div" />
 
               <label htmlFor="password">Password</label>
-              <Field
-                className={`py-1 bg-transparent border w-80 rounded-md px-2 ${touched.password && errors.password ? "border-red-500" : "border-[#D9D9D9]"
-                  }`}
-                type="password"
-                name="password"
-              />
+              <div className="relative">
+                <Field
+                  className={`py-1 bg-transparent border w-80 rounded-md px-2 pr-10 ${touched.password && errors.password ? "border-red-500" : "border-[#D9D9D9]"}`}
+                  type={passwordVisible ? "text" : "password"} // Toggle password visibility
+                  name="password"
+                />
+                {/* Eye Icon */}
+                <div
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                  onClick={() => setPasswordVisible(!passwordVisible)}
+                >
+                  {passwordVisible ? (
+                    <FaEyeSlash className="text-gray-500" />
+                  ) : (
+                    <FaEye className="text-gray-500" />
+                  )}
+                </div>
+              </div>
               <ErrorMessage className="text-xs text-red-500" name="password" component="div" />
 
               <button

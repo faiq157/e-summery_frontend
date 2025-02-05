@@ -38,6 +38,7 @@
     "react-router-dom": "^6.26.1",
     "react-toastify": "^11.0.3",
     "react-window": "^1.8.11",
+    "recharts": "^2.15.1",
     "socket.io-client": "^4.8.0",
     "sonner": "^1.7.0",
     "tailwind-merge": "^2.5.4",
