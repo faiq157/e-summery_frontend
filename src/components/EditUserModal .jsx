@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import axiosInstance from "@/utils/http";
 import { Button } from "./ui/button";
+import { FaEye, FaEyeSlash } from "react-icons/fa";  // Importing the eye icons from react-icons
 
 const EditUserModal = ({ isOpen, onClose, user, onUpdate }) => {
     const [fullname, setFullname] = useState("");
@@ -9,7 +10,9 @@ const EditUserModal = ({ isOpen, onClose, user, onUpdate }) => {
     const [password, setPassword] = useState("");
     const [role, setRole] = useState("");
     const [department, setDepartment] = useState("");
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);  // State to toggle password visibility
     const base_URL = import.meta.env.VITE_APP_API_URL;
+
     useEffect(() => {
         if (user) {
             setFullname(user.fullname || "");
@@ -33,6 +36,10 @@ const EditUserModal = ({ isOpen, onClose, user, onUpdate }) => {
         } catch (err) {
             console.error("Error updating user:", err);
         }
+    };
+
+    const togglePasswordVisibility = () => {
+        setIsPasswordVisible(!isPasswordVisible);  // Toggle the visibility of the password
     };
 
     if (!isOpen) return null;
@@ -62,24 +69,41 @@ const EditUserModal = ({ isOpen, onClose, user, onUpdate }) => {
                             required
                         />
                     </div>
-                    <div className="mb-4">
+                    <div className="mb-4 relative">
                         <label className="block text-gray-700">Password</label>
                         <input
-                            type="password"
+                            type={isPasswordVisible ? "text" : "password"}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="w-full p-2 border rounded-md"
                         />
+                        <button
+                            type="button"
+                            onClick={togglePasswordVisibility}
+                            className="absolute right-3 bottom-1 transform -translate-y-1/2 text-gray-500"
+                        >
+                            {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+                        </button>
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-700">Role</label>
-                        <input type="text" readOnly value={role} onChange={(e) => setRole(e.target.value)} className="w-full p-2 border rounded-md" required />
-
+                        <input
+                            type="text"
+                            value={role}
+                            readOnly
+                            className="w-full p-2 border rounded-md"
+                            required
+                        />
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-700">Department</label>
-                        <input type="text" value={department} onChange={(e) => setDepartment(e.target.value)} className="w-full p-2 border rounded-md" required />
-
+                        <input
+                            type="text"
+                            value={department}
+                            onChange={(e) => setDepartment(e.target.value)}
+                            className="w-full p-2 border rounded-md"
+                            required
+                        />
                     </div>
                     <div className="flex justify-between mt-6">
                         <Button
@@ -91,7 +115,7 @@ const EditUserModal = ({ isOpen, onClose, user, onUpdate }) => {
                         </Button>
                         <Button
                             type="submit"
-                            className=" px-4 py-2 rounded-full"
+                            className="bg-blue-500 text-white px-4 py-2 rounded-full"
                         >
                             Save Changes
                         </Button>

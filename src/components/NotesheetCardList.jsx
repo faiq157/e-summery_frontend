@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
@@ -140,7 +141,7 @@ const NotesheetCardList = ({ userRole, status, sortOrder = 'asc' }) => {
                                     <p><strong>Application User:</strong> {notesheet.userName}</p>
                                     <p>
                                         <strong>Created By:</strong>
-                                        <span className="bg-gradient-to-r ml-3 from-green-200 to-green-400 text-white rounded-full px-3 py-1 font-medium">
+                                        <span className="bg-black ml-3  text-white rounded-full px-3 py-1 font-medium">
                                             {history?.role || "No role available"}
                                         </span>
                                     </p>

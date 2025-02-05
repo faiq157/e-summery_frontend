@@ -3,10 +3,14 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RegisterValidationSchema } from "../../utils/authValidation";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
 const base_URL = import.meta.env.VITE_APP_API_URL;
+
 const Register = () => {
   const [RegisterError, SetRegisterError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false); // State for toggling visibility
+  const [confPasswordVisible, setConfPasswordVisible] = useState(false); // State for confirm password visibility
   const navigate = useNavigate();
 
   const handleSubmit = async (values) => {
@@ -38,14 +42,7 @@ const Register = () => {
   };
 
   return (
-    <div
-      className="flex justify-center flex-col items-center h-screen"
-      id="register"
-    >
-      <div className="flex flex-col justify-center items-center gap-4">
-        <h1 className="text-4xl font-bold">Create Your Account</h1>
-        <p className="text-2xl m-3">Welcome🙌</p>
-      </div>
+    <div className="flex justify-center flex-col items-center h-screen" id="register">
       <div className="flex flex-col justify-center border py-8 border-[#D9D9D9] rounded-lg px-8 items-center">
         {RegisterError && <div className="text-red-500">{RegisterError}</div>}
         <Formik
@@ -66,91 +63,70 @@ const Register = () => {
             <Form className="flex flex-col gap-2">
               <label>Full Name</label>
               <Field
-                className={`py-1 border w-80 rounded-md px-2 ${errors.fullname && touched.fullname ? "border-red-500" : ""
-                  }`}
+                className={`py-1 border w-80 rounded-md px-2 ${errors.fullname && touched.fullname ? "border-red-500" : ""}`}
                 type="text"
                 name="fullname"
                 placeholder="Full Name"
               />
-              <ErrorMessage
-                className="text-red-500 text-xs"
-                name="fullname"
-                component="div"
-              />
+              <ErrorMessage className="text-red-500 text-xs" name="fullname" component="div" />
 
               <label>Email</label>
               <Field
-                className={`py-1 border w-80 rounded-md px-2 ${errors.email && touched.email ? "border-red-500" : ""
-                  }`}
+                className={`py-1 border w-80 rounded-md px-2 ${errors.email && touched.email ? "border-red-500" : ""}`}
                 type="email"
                 name="email"
                 placeholder="Email"
               />
-              <ErrorMessage
-                className="text-red-500 text-xs"
-                name="email"
-                component="div"
-              />
+              <ErrorMessage className="text-red-500 text-xs" name="email" component="div" />
 
-              <label htmlFor="password"> Password</label>
-              <Field
-                className={`py-1 border w-80 rounded-md px-2 ${errors.password && touched.password ? "border-red-500" : ""
-                  }`}
-                type="password"
-                name="password"
-                placeholder="Password"
-              />
-              <ErrorMessage
-                className="text-red-500 text-xs"
-                name="password"
-                component="div"
-              />
+              <label htmlFor="password">Password</label>
+              <div className="relative">
+                <Field
+                  className={`py-1 border w-80 rounded-md px-2 ${errors.password && touched.password ? "border-red-500" : ""}`}
+                  type={passwordVisible ? "text" : "password"} // Toggle password visibility
+                  name="password"
+                  placeholder="Password"
+                />
+                <div
+                  onClick={() => setPasswordVisible(!passwordVisible)} // Toggle visibility on click
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                >
+                  {passwordVisible ? <FaEyeSlash /> : <FaEye />} {/* Show eye icon */}
+                </div>
+              </div>
+              <ErrorMessage className="text-red-500 text-xs" name="password" component="div" />
 
               <label htmlFor="Confpassword">Confirm Password</label>
-              <Field
-                className={`py-1 border w-80 rounded-md px-2 ${errors.Confpassword && touched.Confpassword
-                  ? "border-red-500"
-                  : ""
-                  }`}
-                type="password"
-                name="Confpassword"
-                placeholder="Confirm Password"
-              />
-              <ErrorMessage
-                className="text-red-500 text-xs"
-                name="Confpassword"
-                component="div"
-              />
+              <div className="relative">
+                <Field
+                  className={`py-1 border w-80 rounded-md px-2 ${errors.Confpassword && touched.Confpassword ? "border-red-500" : ""}`}
+                  type={confPasswordVisible ? "text" : "password"} // Toggle confirm password visibility
+                  name="Confpassword"
+                  placeholder="Confirm Password"
+                />
+                <div
+                  onClick={() => setConfPasswordVisible(!confPasswordVisible)} // Toggle visibility on click
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                >
+                  {confPasswordVisible ? <FaEyeSlash /> : <FaEye />} {/* Show eye icon */}
+                </div>
+              </div>
+              <ErrorMessage className="text-red-500 text-xs" name="Confpassword" component="div" />
+
               <label>Department</label>
-              <div className="w-52 text-right">
-                <Field
-                  className={`py-1 border w-80 rounded-md px-2 ${errors.role && touched.role
-                    ? "border-red-500"
-                    : ""
-                    }`}
-                  name="department" type="text" placeholder="Please Enter department" />
-
-              </div>
-              <ErrorMessage
-                className="text-red-500 text-xs"
-                name="role"
-                component="div"
+              <Field
+                className={`py-1 border w-80 rounded-md px-2 ${errors.role && touched.role ? "border-red-500" : ""}`}
+                name="department" type="text" placeholder="Please Enter department"
               />
+              <ErrorMessage className="text-red-500 text-xs" name="role" component="div" />
+
               <label>Role</label>
-              <div className="w-52 text-right">
-                <Field
-                  className={`py-1 border w-80 rounded-md px-2 ${errors.role && touched.role
-                    ? "border-red-500"
-                    : ""
-                    }`}
-                  name="role" type="text" placeholder="Please Enter Role" />
-
-              </div>
-              <ErrorMessage
-                className="text-red-500 text-xs"
-                name="role"
-                component="div"
+              <Field
+                className={`py-1 border w-80 rounded-md px-2 ${errors.role && touched.role ? "border-red-500" : ""}`}
+                name="role" type="text" placeholder="Please Enter Role"
               />
+              <ErrorMessage className="text-red-500 text-xs" name="role" component="div" />
+
               <button
                 className="bg-[#2C2C2C] mb-10 mt-3 rounded-full py-2 text-white"
                 type="submit"
@@ -161,7 +137,6 @@ const Register = () => {
             </Form>
           )}
         </Formik>
-
       </div>
     </div>
   );
