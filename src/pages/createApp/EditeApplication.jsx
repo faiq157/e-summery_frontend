@@ -6,7 +6,7 @@ const EditApplication = ({ isOpen, onClose, notesheet, onEditSave }) => {
     return (
         isOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                <div className="bg-white p-4 rounded-lg shadow-lg w-[60vw] h-[90vh] overflow-auto">
+                <div className="bg-white p-4 rounded-lg shadow-lg w-[60vw] overflow-auto">
                     <div className="flex justify-between">
                         <h2 className="text-2xl font-bold mb-4">Edit Notesheet</h2>
                         <AiOutlineClose onClick={onClose} className="cursor-pointer text-2xl" />

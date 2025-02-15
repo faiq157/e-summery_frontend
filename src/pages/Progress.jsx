@@ -16,7 +16,7 @@ const Progress = () => {
   const [limit] = useState(9);
   const storedToken = localStorage.getItem('token');
   const [dateRange, setDateRange] = useState("all");
-  const [sortOrder, setSortOrder] = useState('asc');
+  const [sortOrder, setSortOrder] = useState('dec');
   useEffect(() => {
     // Fetch the email from the stored user object
     if (storedUser) {

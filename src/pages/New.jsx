@@ -24,7 +24,7 @@ const New = () => {
     const { fetchNotesheets } = useNotesheetContext();
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [sortOrder, setSortOrder] = useState('asc');
+    const [sortOrder, setSortOrder] = useState('dec');
     const [limit] = useState(10);
 
     useEffect(() => {
@@ -90,7 +90,7 @@ const New = () => {
             .post(`${base_URL}/send-notification`, {
                 title: "Notesheet Created",
                 body: "A new notesheet has been successfully created.",
-                userId: userId,
+               userId: `${userId}`
             })
             .then(() => {
                 console.log("Notification sent successfully.");
@@ -134,15 +134,9 @@ const New = () => {
                         email: values.userEmail,
                         trackingId: trackingId,
                         subject: "Tracking ID",
-                        text: `Hello,
-                                Your tracking ID is: ${trackingId}. Please use this tracking ID for any further processing or inquiries related to your notesheet.
-                                To track the progress and updates, click on the following link:
-                                ${`https://e-summery.netlify.app/tracking`}
-                                If you need any assistance, feel free to reach out.
+                        text: `Hello,Your tracking ID is: ${trackingId}. Please use this tracking ID for any further processing or inquiries related to your notesheet.To track the progress and updates, click on the following link:${`https://e-summery.netlify.app/tracking`} If you need any assistance, feel free to reach out.
                                 Best regards,
-                                UET Mardan
-`
-                    })
+                                UET Mardan`})
                     .then(() => {
                         console.log("Approval email sent successfully.");
                     })
@@ -191,7 +185,7 @@ const New = () => {
                     )}
                     {isModalOpen && (
                         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                            <div className="bg-white p-4 rounded-lg shadow-lg w-[60vw] h-[90vh] overflow-auto">
+                            <div className="bg-white p-4 rounded-lg shadow-lg w-[60vw]  overflow-auto">
                                 <div className="flex justify-between">
                                     <h2 className="text-2xl font-bold mb-4">Create New Application</h2>
                                     <AiOutlineClose

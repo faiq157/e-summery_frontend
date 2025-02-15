@@ -1,10 +1,36 @@
-/* eslint-disable react/prop-types */
-// NotesheetForm.js
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup"; // Import Yup for validation
+import * as Yup from "yup";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { motion, AnimatePresence } from "framer-motion";
+import { CloudUpload } from "lucide-react";
 
 const NotesheetForm = ({ initialValues, onSubmit }) => {
+    const [selectedOptions, setSelectedOptions] = useState([]);
+    const [selectedFile, setSelectedFile] = useState(null);
+
+    const handleOptionChange = (option) => {
+        if (selectedOptions.includes(option)) {
+            setSelectedOptions(selectedOptions.filter((item) => item !== option));
+        } else {
+            if (selectedOptions.length < 2) {
+                setSelectedOptions([...selectedOptions, option]);
+            }
+        }
+    };
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+        }
+    };
+
+    const handleRemoveFile = () => {
+        setSelectedFile(null);
+    };
+
     const TextInput = ({ label, name, type = "text", ...rest }) => (
         <div className="mb-2">
             <label htmlFor={name} className="block text-gray-700 font-bold mb-2">
@@ -21,23 +47,6 @@ const NotesheetForm = ({ initialValues, onSubmit }) => {
         </div>
     );
 
-    const FileInput = ({ label, name, setFieldValue }) => (
-        <div className="mb-2">
-            <label htmlFor={name} className="block text-gray-700 font-bold mb-2">
-                {label}
-            </label>
-            <input
-                type="file"
-                name={name}
-                id={name}
-                onChange={(event) => setFieldValue(name, event.currentTarget.files[0])}
-                className="shadow appearance-none bg-transparent border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-            <ErrorMessage name={name} component="div" className="text-red-500 text-xs" />
-        </div>
-    );
-
-    // Validation schema using Yup
     const validationSchema = Yup.object({
         userName: Yup.string().required("Name is required"),
         contact_number: Yup.string()
@@ -47,14 +56,12 @@ const NotesheetForm = ({ initialValues, onSubmit }) => {
             .email("Invalid email address")
             .required("Email is required"),
         subject: Yup.string().required("Subject is required"),
-        description: Yup.string().required("Description is required"),
-        file: Yup.mixed().required("File is required"),
     });
 
     return (
         <Formik
             initialValues={initialValues}
-            validationSchema={validationSchema} // Pass the validation schema
+            validationSchema={validationSchema}
             onSubmit={onSubmit}
         >
             {({ isSubmitting, setFieldValue }) => (
@@ -63,11 +70,105 @@ const NotesheetForm = ({ initialValues, onSubmit }) => {
                     <TextInput label="Contact Number" name="contact_number" />
                     <TextInput label="User Email" name="userEmail" />
                     <TextInput label="Subject" name="subject" />
-                    <TextInput label="Description" name="description" as="textarea" />
-                    <FileInput label="Upload File" name="file" setFieldValue={setFieldValue} />
-                    <div className="mt-6 flex justify-end">
-                        <Button className="rounded-full" type="submit" disabled={isSubmitting}> {isSubmitting ? "Submitting..." : "Submit"} </Button>
+
+                    <div className="mb-4">
+                        <label className="block text-gray-700 font-bold mb-2">
+                            Select up to 2 options:
+                        </label>
+                        <div className="flex items-center space-x-4">
+                            <label className="flex items-center space-x-2">
+                                <Checkbox
+                                    checked={selectedOptions.includes("file")}
+                                    onCheckedChange={() => handleOptionChange("file")}
+                                />
+                                <span>Upload File</span>
+                            </label>
+                            <label className="flex items-center space-x-2">
+                                <Checkbox
+                                    checked={selectedOptions.includes("text")}
+                                    onCheckedChange={() => handleOptionChange("text")}
+                                />
+                                <span>Add Text</span>
+                            </label>
+                        </div>
                     </div>
+
+                    <AnimatePresence mode="wait">
+    {selectedOptions.includes("file") && (
+        <motion.div
+            key="fileInput"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+        >
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center relative">
+                <CloudUpload className="h-12 w-12 text-gray-400 mx-auto" />
+                <p className="text-sm text-gray-600 mb-2">
+                    Drag & drop or click below to upload
+                </p>
+
+                <label
+                    htmlFor="file-upload"
+                    className="cursor-pointer inline-block bg-black text-white px-4 py-2 rounded-full text-sm hover:bg-gray-900 transition"
+                >
+                    Choose File
+                </label>
+                <input
+                    id="file-upload"
+                    type="file"
+                    onChange={(event) => {
+                        handleFileChange(event);
+                        setFieldValue("file", event.currentTarget.files[0]);
+                    }}
+                    className="hidden"
+                />
+            </div>
+
+            {selectedFile && (
+                <div className="mt-4 p-2 border rounded bg-gray-50">
+                    <p className="text-sm text-gray-700 font-medium">
+                        {selectedFile.name} (
+                        {(selectedFile.size / 1024).toFixed(2)} KB)
+                    </p>
+                    <button
+                        type="button"
+                        onClick={handleRemoveFile}
+                        className="text-red-500 text-xs underline mt-1"
+                    >
+                        Remove
+                    </button>
+                </div>
+            )}
+        </motion.div>
+    )}
+
+    {selectedOptions.includes("text") && (
+        <motion.div
+            key="textInput"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+        >
+            <TextInput
+                label="Description"
+                name="description"
+                as="textarea"
+                placeholder="Enter description here..."
+            />
+        </motion.div>
+    )}
+</AnimatePresence>
+
+<div className="mt-6 flex justify-end">
+    <Button className="rounded-full" type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Creating..." : "Create"}
+    </Button>
+</div>
+
                 </Form>
             )}
         </Formik>

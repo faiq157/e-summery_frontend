@@ -23,16 +23,16 @@ const CommentsSection = ({ rolesData }) => {
             </div>
 
 
-            <h3 className="text-2xl font-semibold text-gray-800 mb-4">Comments</h3>
+            <h3 className="text-2xl font-semibold text-gray-800 m-4">Comments</h3>
 
             {filteredComments.length > 0 ? (
                 filteredComments.map((commentData) => (
                     commentData ? (
-                        <div key={commentData._id} className="flex flex-col mb-2">
+                        <div key={commentData._id} className="flex flex-col m-2">
                             <div className="flex items-start space-x-3">
-                                <div className="flex-1">
-                                    <div className="bg-black w-[30%] text-white px-3 rounded-full py-1 ">{commentData.user || 'Unknown User'}</div>
-                                    <div className={`p-4 ml-2  border border-black rounded-lg text-sm max-w-[80%] ${commentData.user ? ' bg-opacity-50 text-black self-end' : 'bg-black bg-opacity-80 text-gray-700 self-start'} shadow-md transition-all duration-300 ease-in-out hover:scale-105`}>
+                                <div className="flex-1  shadow-lg rounded p-2">
+                                <div className="">{`${commentData.user || 'Unknown User'} :`}</div>
+                                    <div >
                                         <div className='flex flex-col'>
                                             {commentData.comment}
                                             {commentData.document && (

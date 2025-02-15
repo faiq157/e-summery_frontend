@@ -21,6 +21,8 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, status, u
     const [totalPages, setTotalPages] = useState(1);
     const storedUser = localStorage.getItem('user');
     const userData = JSON.parse(storedUser);
+    const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
+
 
     useEffect(() => {
         const fetchRoles = async () => {
