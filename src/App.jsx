@@ -22,6 +22,7 @@ import { Bounce, ToastContainer, Zoom } from "react-toastify";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminRoles from "./pages/Admin/AdminRoles";
 import Approval from "./pages/Approval";
+import Timelines from "./pages/Timelines";
 
 
 function App() {
@@ -42,7 +43,7 @@ function App() {
           <Route path="progress" element={<NonAdminRoute><Progress /></NonAdminRoute>} />
           <Route path="received" element={<NonAdminRoute><Received /></NonAdminRoute>} />
           <Route path="completed" element={<NonAdminRoute><Completed /></NonAdminRoute>} />
-
+          <Route path="timelines" element={<NonAdminRoute><Timelines/></NonAdminRoute>}/>
           <Route path="approval" element={<NonAdminRoute><Approval /></NonAdminRoute>} />
           <Route path="setting" element={<NonAdminRoute><Setting /></NonAdminRoute>} />
 

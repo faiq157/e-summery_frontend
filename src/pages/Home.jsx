@@ -5,6 +5,7 @@ import axios from "axios";
 import Loader from "@/components/Loader";
 import Rechart from "@/components/Rechart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import TimelinessChart from "@/components/TimelinessChart";
 
 
 const Home = () => {

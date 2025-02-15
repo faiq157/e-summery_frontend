@@ -12,7 +12,7 @@ import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 
 const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, status, userRole, closeParentModal, refetchData }) => {
     const [roles, setRoles] = useState([]);
-    const [selectedRole, setSelectedRole] = useState(null); // Single selection for radio
+    const [selectedRole, setSelectedRole] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
