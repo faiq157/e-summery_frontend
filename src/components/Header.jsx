@@ -2,13 +2,14 @@ import React, { useEffect, useState, useContext } from 'react';
 import { FaHome, FaRegCheckCircle, FaTractor, FaBell, FaCheckCircle } from 'react-icons/fa';
 import { IoNewspaper, IoSettingsOutline } from 'react-icons/io5';
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import { RiProgress2Fill } from 'react-icons/ri';
+import { RiProgress2Fill, RiTimeLine } from 'react-icons/ri';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import AuthContext from '@/context/AuthContext';
 import axiosInstance from '@/utils/http';
 import { Link } from 'react-router-dom';
 import { VscSortPrecedence } from "react-icons/vsc";
 import { CgTrack } from "react-icons/cg";
+import { icons } from 'lucide-react';
 
 const Header = () => {
   const { logout } = useContext(AuthContext);
@@ -88,7 +89,12 @@ const Header = () => {
     { title: 'Completed', url: '/completed', icon: FaRegCheckCircle },
     { title: 'Tracking', url: '/tracking', icon: CgTrack },
     { title: 'Approval', url: '/approval', icon: IoMdCheckmarkCircleOutline },
+     // Conditionally include Timelines for Vice Chancellor
+  ...(userData?.role === 'Vice Chancellor' ? [
+    { title: "Timelines", url: '/timelines', icon: RiTimeLine }
+  ] : []),
     { title: 'Settings', url: '/setting', icon: IoSettingsOutline },
+ 
   ];
 
   return (
