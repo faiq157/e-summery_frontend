@@ -32,8 +32,16 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
     const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false);  // state for dialog visibility
     const { fetchNotesheets } = useNotesheetContext();
     const [totalPages, setTotalPages] = useState(1);
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
-    console.log("this is user role id", userRole)
+const handlePreviewClick = () => {
+    setIsPreviewOpen(true);
+};
+
+const handleClosePreview = () => {
+    setIsPreviewOpen(false);
+};
+
 
     useEffect(() => {
         const loadComments = async () => {
@@ -144,25 +152,55 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
                     <AiOutlineClose className="text-2xl cursor-pointer" onClick={onClose} />
                 </div>
 
-                <div className="flex justify-between ">
-                    <div className="w-1/2 mb-4">
-                        <p><strong>Subject:</strong> {notesheet?.subject}</p>
-                        <p><strong>Description:</strong> {notesheet?.description}</p>
-                        <p><strong>Application User:</strong> {notesheet?.userName}</p>
-                        <p><strong>Email:</strong> {notesheet?.email}</p>
-                        <p><strong>Contact Number:</strong> {notesheet?.contact_number}</p>
-                        <p><strong>Created at:</strong> {new Date(notesheet?.timestamps.createdAt).toLocaleString()}</p>
-                        {notesheet?.image && (
-                            <div>
-                                <FullScreenImageViewer imageUrl={notesheet?.image} />
-                            </div>
-                        )}
+                <div className="flex justify-between gap-4">
+  <div className="w-1/2 mb-4 space-y-2">
+    <p><strong>Subject:</strong> {notesheet?.subject}</p>
+    <p><strong>Application User:</strong> {notesheet?.userName}</p>
+    <p><strong>Email:</strong> {notesheet?.email}</p>
+    <p><strong>Contact Number:</strong> {notesheet?.contact_number}</p>
+    <p><strong>Created at:</strong> {new Date(notesheet?.timestamps.createdAt).toLocaleString()}</p>
+
+    {/* Conditional Rendering */}
+    {notesheet?.image ? (
+      <div className="relative">
+        <FullScreenImageViewer imageUrl={notesheet?.image} />
+      </div>
+    ) : notesheet?.description ? (
+      <div className="max-h-32 ">
+                {isPreviewOpen && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                <div className="bg-white p-6 rounded-lg shadow-lg w-[80vw] h-[80vh] overflow-auto">
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-2xl font-bold">Application Preview</h2>
+                        <AiOutlineClose className="text-2xl cursor-pointer" onClick={handleClosePreview} />
                     </div>
-                    <CommentsSection rolesData={rolesData} />
-
-
-
+                    <div>
+                    <strong>{`Subject: ${notesheet?.subject}`}</strong>
+                    <p className='whitespace-pre-wrap mt-2'>{notesheet?.description}</p>
+                    </div>
+                   
                 </div>
+            </div>
+        )}
+
+        {notesheet?.description && (
+         <Button
+         className="rounded-full"
+         onClick={handlePreviewClick}
+     >
+        View Application
+     </Button>
+     
+        )}
+      </div>
+    ) : (
+      <p>No description or image available.</p>
+    )}
+  </div>
+
+  <CommentsSection rolesData={rolesData} />
+</div>
+
                 {status !== "In Progress" && status !== "Completed" && (
                     <>
                         <div className={`grid ${userRole.toLowerCase() === "establishment" ? "grid-cols-2" : "grid-cols-1"} gap-2`}>

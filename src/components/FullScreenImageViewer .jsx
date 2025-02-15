@@ -18,7 +18,7 @@ const FullScreenImageViewer = ({ imageUrl }) => {
     return (
         <div className='mt-4'>
             {/* Thumbnail image with hover effect */}
-            <Button className="rounded-full" onClick={handleImageClick} >View Attachment</Button>
+            <Button className="rounded-full" onClick={handleImageClick} >View Application</Button>
 
             {/* Full-screen modal for the image */}
             {isModalOpen && (

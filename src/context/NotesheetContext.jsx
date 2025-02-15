@@ -13,7 +13,7 @@ export const NotesheetProvider = ({ children }) => {
     const fetchNotesheets = async (userRole, status, storedToken, page, limit, setTotalPages, searchQuery, dateRange) => {
         setLoading(true);
         setError(null);
-
+    
         try {
             const response = await axiosInstance.get(`${base_URL}/notesheet/notesheets`, {
                 params: {
@@ -28,26 +28,28 @@ export const NotesheetProvider = ({ children }) => {
                     Authorization: ` ${storedToken}`,
                 },
             });
-
-            // Check if the response contains notesheets and totalPages
+    
             if (Array.isArray(response.data.notesheets)) {
-                // Sort notesheets by creation date (most recent first)
+                // Ensure sorting handles undefined timestamps
                 const sortedNotesheets = response.data.notesheets.sort((a, b) => {
-                    return new Date(b.timestamps.createdAt) - new Date(a.timestamps.createdAt);
+                    const dateA = new Date(a.timestamps?.createdAt || 0);
+                    const dateB = new Date(b.timestamps?.createdAt || 0);
+                    return dateB - dateA; // Sort in descending order (newest first)
                 });
+    
                 setNotesheets(sortedNotesheets);
-                setTotalPages(response.data.pagination.totalPages);
+                setTotalPages(response.data.pagination?.totalPages || 1);
             } else {
                 throw new Error('Invalid data format: Expected an array');
             }
         } catch (err) {
             console.error('Failed to fetch notesheets:', err);
-            const errorMessage = err.response?.data?.message || 'Failed to fetch notesheets';
-            setError(errorMessage);
+            setError(err.response?.data?.message || 'Failed to fetch notesheets');
         } finally {
             setLoading(false);
         }
     };
+    
 
     const deleteNotesheets = async (notesheetId, storedToken) => {
         try {

@@ -48,16 +48,9 @@ const Home = () => {
   return (
     <div>
       <Dashboardlayout>
-        <h1 className="text-3xl font-bold p-4">Dashboard</h1>
-
-        {loading ? (
-          <p className="p-4"><Loader width={600} height={600} /></p>
-        ) : error ? (
-          <p className="p-4 text-red-500">{error}</p>
-        ) : (
-          <div  >
-            {/* Filter UI using ShadCN Select */}
-            <div className="mb-4 w-[95%] flex justify-end items-center ">
+        <div className="flex justify-between items-center mx-9">
+        <h1 className="text-3xl font-bold p-4 ">Dashboard</h1>
+        <div className="mb-4 w-[95%] flex justify-end  items-center ">
               <label htmlFor="filter" className="mr-2">Filter by:</label>
               <Select value={filter} onValueChange={(value) => setFilter(value)} >
                 <SelectTrigger className="w-40 p-2 border border-gray-300 rounded">
@@ -72,6 +65,17 @@ const Home = () => {
                 </SelectContent>
               </Select>
             </div>
+        </div>
+       
+
+        {loading ? (
+          <p className="p-4"><Loader width={600} height={600} /></p>
+        ) : error ? (
+          <p className="p-4 text-red-500">{error}</p>
+        ) : (
+          <div  >
+            {/* Filter UI using ShadCN Select */}
+            
 
             {/* Status counts */}
             <div className="grid grid-cols-1 m-10  md:grid-cols-4 lg:grid-cols-5 ">
