@@ -6,6 +6,8 @@ import Loader from "@/components/Loader";
 import Rechart from "@/components/Rechart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import TimelinessChart from "@/components/TimelinessChart";
+import { useNavigate } from "react-router-dom";
+
 
 
 const Home = () => {
@@ -45,6 +47,11 @@ const Home = () => {
     { value: "15days", label: "15 Days" },
     { value: "monthly", label: "Monthly" },
   ];
+  const navigate = useNavigate();
+
+const navigateTo = (path) => {
+  navigate(path);
+};
 
   return (
     <div>
@@ -75,17 +82,28 @@ const Home = () => {
           <p className="p-4 text-red-500">{error}</p>
         ) : (
           <div  >
-            {/* Filter UI using ShadCN Select */}
-            
-
-            {/* Status counts */}
-            <div className="grid grid-cols-1 m-10  md:grid-cols-4 lg:grid-cols-5 ">
-              <ApplicationSummary title="New Applications" count={statusCounts.New} />
-              <ApplicationSummary title="In Progress" count={statusCounts["In Progress"]} />
-              <ApplicationSummary title="Completed" count={statusCounts.Completed} />
-              <ApplicationSummary title="Received" count={statusCounts.Received} />
-              <ApplicationSummary title="Total Applications" count={statusCounts.New + statusCounts["In Progress"] + statusCounts.Completed + statusCounts.Received} />
-            </div>
+    <div className="grid grid-cols-1 m-10 md:grid-cols-4 lg:grid-cols-5">
+      <div onClick={() => navigateTo("/new")} className="cursor-pointer">
+        <ApplicationSummary title="New Applications" count={statusCounts.New} />
+      </div>
+      <div onClick={() => navigateTo("/progress")} className="cursor-pointer">
+        <ApplicationSummary title="In Progress" count={statusCounts["In Progress"]} />
+      </div>
+      <div onClick={() => navigateTo("/completed")} className="cursor-pointer">
+        <ApplicationSummary title="Completed" count={statusCounts.Completed} />
+      </div>
+      <div onClick={() => navigateTo("/received")} className="cursor-pointer">
+        <ApplicationSummary title="Received" count={statusCounts.Received} />
+      </div>
+      <div
+        className="cursor-pointer"
+      >
+        <ApplicationSummary 
+          title="Total Applications" 
+          count={statusCounts.New + statusCounts["In Progress"] + statusCounts.Completed + statusCounts.Received} 
+        />
+      </div>
+    </div>
 
             {/* Rechart visualization */}
             <Rechart statusCounts={statusCounts} />

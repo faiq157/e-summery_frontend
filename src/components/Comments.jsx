@@ -26,39 +26,41 @@ const CommentsSection = ({ rolesData }) => {
             <h3 className="text-2xl font-semibold text-gray-800 m-4">Comments</h3>
 
             {filteredComments.length > 0 ? (
-                filteredComments.map((commentData) => (
-                    commentData ? (
-                        <div key={commentData._id} className="flex flex-col m-2">
-                            <div className="flex items-start space-x-3">
-                                <div className="flex-1  shadow-lg rounded p-2">
-                                <div className="">{`${commentData.user || 'Unknown User'} :`}</div>
-                                    <div >
-                                        <div className='flex flex-col'>
-                                            {commentData.comment}
-                                            {commentData.document && (
-                                                <a
-                                                    href={commentData.document}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="mt-2 text-blue-500 text-xs underline"
-                                                >
-                                                    View Notesheet File
-                                                </a>
-                                            )}
-                                        </div>
-
-                                        <p className="text-xs flex justify-end text-gray-500 mt-1">{new Date(commentData.timestamp).toLocaleString()}</p>
-                                    </div>
-
-
+    filteredComments
+        .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
+        .map((commentData) => (
+            commentData ? (
+                <div key={commentData._id} className="flex flex-col m-2">
+                    <div className="flex items-start space-x-3">
+                        <div className="flex-1 shadow-lg rounded p-2">
+                            <div className="">{`${commentData.user || 'Unknown User'} :`}</div>
+                            <div>
+                                <div className='flex flex-col'>
+                                    {commentData.comment}
+                                    {commentData.document && (
+                                        <a
+                                            href={commentData.document}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="mt-2 text-blue-500 text-xs underline"
+                                        >
+                                            View Notesheet File
+                                        </a>
+                                    )}
                                 </div>
+                                <p className="text-xs flex justify-end text-gray-500 mt-1">
+                                    {new Date(commentData.timestamp).toLocaleString()}
+                                </p>
                             </div>
                         </div>
-                    ) : null
-                ))
-            ) : (
-                <p className="text-gray-500">No comments available.</p>
-            )}
+                    </div>
+                </div>
+            ) : null
+        ))
+) : (
+    <p className="text-gray-500">No comments available.</p>
+)}
+
         </div>
     );
 };
