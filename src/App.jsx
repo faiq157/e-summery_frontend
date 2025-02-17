@@ -23,6 +23,7 @@ import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminRoles from "./pages/Admin/AdminRoles";
 import Approval from "./pages/Approval";
 import Timelines from "./pages/Timelines";
+import OtpPage from "./pages/Registration/OtpPage";
 
 
 function App() {
@@ -59,6 +60,7 @@ function App() {
         <Route path="/forgot" element={<ForgotPass />} />
         <Route path="/resetpassword/:token" element={<ResetPassword />} />
         <Route path="/tracking" element={<Tracking />} />
+        <Route path="/otp" element={<OtpPage />} />
 
         {/* Catch-all route for 404 */}
         <Route path="*" element={<NotFoundPage />} />
