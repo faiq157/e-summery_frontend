@@ -24,7 +24,6 @@ const Home = () => {
   const storedUser = localStorage.getItem("user");
   const user = JSON.parse(storedUser);
   const role = user.role;
-
   useEffect(() => {
     const fetchStatusCounts = async () => {
       try {

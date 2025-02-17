@@ -2,22 +2,16 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
 import { motion, AnimatePresence } from "framer-motion";
-import { CloudUpload } from "lucide-react";
+import { FaCloudUploadAlt } from "react-icons/fa";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const NotesheetForm = ({ initialValues, onSubmit }) => {
-    const [selectedOptions, setSelectedOptions] = useState([]);
+    const [selectedOption, setSelectedOption] = useState(null);  // Only one option can be selected
     const [selectedFile, setSelectedFile] = useState(null);
 
     const handleOptionChange = (option) => {
-        if (selectedOptions.includes(option)) {
-            setSelectedOptions(selectedOptions.filter((item) => item !== option));
-        } else {
-            if (selectedOptions.length < 2) {
-                setSelectedOptions([...selectedOptions, option]);
-            }
-        }
+        setSelectedOption(option);  // Set the selected option
     };
 
     const handleFileChange = (event) => {
@@ -73,102 +67,99 @@ const NotesheetForm = ({ initialValues, onSubmit }) => {
 
                     <div className="mb-4">
                         <label className="block text-gray-700 font-bold mb-2">
-                            Select up to 2 options:
+                            Select an option:
                         </label>
-                        <div className="flex items-center space-x-4">
+                        <RadioGroup
+                            value={selectedOption}
+                            onValueChange={handleOptionChange}
+                            className="flex items-center space-x-4"
+                        >
                             <label className="flex items-center space-x-2">
-                                <Checkbox
-                                    checked={selectedOptions.includes("file")}
-                                    onCheckedChange={() => handleOptionChange("file")}
-                                />
+                                <RadioGroupItem value="file" />
                                 <span>Upload File</span>
                             </label>
                             <label className="flex items-center space-x-2">
-                                <Checkbox
-                                    checked={selectedOptions.includes("text")}
-                                    onCheckedChange={() => handleOptionChange("text")}
-                                />
+                                <RadioGroupItem value="text" />
                                 <span>Add Text</span>
                             </label>
-                        </div>
+                        </RadioGroup>
                     </div>
 
                     <AnimatePresence mode="wait">
-    {selectedOptions.includes("file") && (
-        <motion.div
-            key="fileInput"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="overflow-hidden"
-        >
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center relative">
-                <CloudUpload className="h-12 w-12 text-gray-400 mx-auto" />
-                <p className="text-sm text-gray-600 mb-2">
-                    Drag & drop or click below to upload
-                </p>
+                        {selectedOption === "file" && (
+                            <motion.div
+                                key="fileInput"
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="overflow-hidden"
+                            >
+                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center relative">
+                                    <FaCloudUploadAlt className="h-12 w-12 text-gray-400 mx-auto" />
+                                    <p className="text-sm text-gray-600 mb-2">
+                                        Drag & drop or click below to upload
+                                    </p>
 
-                <label
-                    htmlFor="file-upload"
-                    className="cursor-pointer inline-block bg-black text-white px-4 py-2 rounded-full text-sm hover:bg-gray-900 transition"
-                >
-                    Choose File
-                </label>
-                <input
-                    id="file-upload"
-                    type="file"
-                    onChange={(event) => {
-                        handleFileChange(event);
-                        setFieldValue("file", event.currentTarget.files[0]);
-                    }}
-                    className="hidden"
-                />
-            </div>
+                                    <label
+                                        htmlFor="file-upload"
+                                        className="cursor-pointer inline-block bg-black text-white px-4 py-2 rounded-full text-sm hover:bg-gray-900 transition"
+                                    >
+                                        Choose File
+                                    </label>
+                                    <input
+                                        id="file-upload"
+                                        type="file"
+                                        onChange={(event) => {
+                                            handleFileChange(event);
+                                            setFieldValue("file", event.currentTarget.files[0]);
+                                        }}
+                                        className="hidden"
+                                    />
+                                </div>
 
-            {selectedFile && (
-                <div className="mt-4 p-2 border rounded bg-gray-50">
-                    <p className="text-sm text-gray-700 font-medium">
-                        {selectedFile.name} (
-                        {(selectedFile.size / 1024).toFixed(2)} KB)
-                    </p>
-                    <button
-                        type="button"
-                        onClick={handleRemoveFile}
-                        className="text-red-500 text-xs underline mt-1"
-                    >
-                        Remove
-                    </button>
-                </div>
-            )}
-        </motion.div>
-    )}
+                                {selectedFile && (
+                                    <div className="mt-4 p-2 border rounded bg-gray-50">
+                                        <p className="text-sm text-gray-700 font-medium">
+                                            {selectedFile.name} (
+                                            {(selectedFile.size / 1024).toFixed(2)} KB)
+                                        </p>
+                                        <button
+                                            type="button"
+                                            onClick={handleRemoveFile}
+                                            className="text-red-500 text-xs underline mt-1"
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                )}
+                            </motion.div>
+                        )}
 
-    {selectedOptions.includes("text") && (
-        <motion.div
-            key="textInput"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="overflow-hidden"
-        >
-            <TextInput
-                label="Description"
-                name="description"
-                as="textarea"
-                placeholder="Enter description here..."
-            />
-        </motion.div>
-    )}
-</AnimatePresence>
+                        {selectedOption === "text" && (
+                            <motion.div
+                                key="textInput"
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="overflow-hidden"
+                            >
+                                <TextInput
+                                    label="Description"
+                                    name="description"
+                                    as="textarea"
+                                    placeholder="Enter description here..."
+                                />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
-<div className="mt-6 flex justify-end">
-    <Button className="rounded-full" type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Creating..." : "Create"}
-    </Button>
-</div>
-
+                    <div className="mt-6 flex justify-end">
+                        <Button className="rounded-full" type="submit" disabled={isSubmitting}>
+                            {isSubmitting ? "Creating..." : "Create"}
+                        </Button>
+                    </div>
                 </Form>
             )}
         </Formik>
