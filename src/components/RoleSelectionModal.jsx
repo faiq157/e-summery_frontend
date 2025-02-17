@@ -188,7 +188,7 @@ const RoleSelectionModal = ({ isOpen, onClose, notesheet, storedToken, status, u
                     </div>
                 </div>
 
-                <div className="mt-6 flex justify-between">
+                <div className="mt-6 flex justify-end">
                     <Button
                         className="rounded-full"
                         onClick={handleSend}
