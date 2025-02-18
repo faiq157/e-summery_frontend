@@ -89,7 +89,6 @@ const Header = () => {
     { title: 'Completed', url: '/completed', icon: FaRegCheckCircle },
     { title: 'Tracking', url: '/tracking', icon: CgTrack },
     { title: 'Approval', url: '/approval', icon: IoMdCheckmarkCircleOutline },
-     // Conditionally include Timelines for Vice Chancellor
   ...(userData?.role === 'Vice Chancellor' ? [
     { title: "Timelines", url: '/timelines', icon: RiTimeLine }
   ] : []),
