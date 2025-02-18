@@ -11,19 +11,8 @@ import {
   Cell,
 } from "recharts";
 
-// Utility function to generate random colors
-const getRandomColor = () => {
-  const letters = "0123456789ABCDEF";
-  let color = "#";
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-};
-
 const TimelinessChart = () => {
   const [chartData, setChartData] = useState([]);
-  const [colorMap, setColorMap] = useState({});
   const base_URL = import.meta.env.VITE_APP_API_URL;
 
   const fetchTimelinessData = async () => {
@@ -44,15 +33,6 @@ const TimelinessChart = () => {
         delayed: data[role].delayed,
       }));
       setChartData(transformedData);
-
-      // Create a color map for each role if not already set
-      const newColorMap = {};
-      Object.keys(data).forEach((role) => {
-        if (!colorMap[role]) {
-          newColorMap[role] = getRandomColor();
-        }
-      });
-      setColorMap((prev) => ({ ...prev, ...newColorMap }));
     } catch (error) {
       console.error("Failed to fetch timeliness data:", error);
     }
@@ -73,22 +53,8 @@ const TimelinessChart = () => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="timely" name="Timely">
-            {chartData.map((entry, index) => (
-              <Cell
-                key={`timely-${index}`}
-                fill={colorMap[entry.role] || getRandomColor()}
-              />
-            ))}
-          </Bar>
-          <Bar dataKey="delayed" name="Delayed">
-            {chartData.map((entry, index) => (
-              <Cell
-                key={`delayed-${index}`}
-                fill={colorMap[entry.role] || getRandomColor()}
-              />
-            ))}
-          </Bar>
+          <Bar dataKey="timely" name="Timely" fill="#4CAF50" /> {/* Green for timely */}
+          <Bar dataKey="delayed" name="Delayed" fill="#F44336" /> {/* Red for delayed */}
         </BarChart>
       </ResponsiveContainer>
     </div>

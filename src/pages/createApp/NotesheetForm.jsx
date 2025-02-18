@@ -7,7 +7,7 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const NotesheetForm = ({ initialValues, onSubmit }) => {
-    const [selectedOption, setSelectedOption] = useState(null);  // Only one option can be selected
+    const [selectedOption, setSelectedOption] = useState("file");  // Only one option can be selected
     const [selectedFile, setSelectedFile] = useState(null);
 
     const handleOptionChange = (option) => {

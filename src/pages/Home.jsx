@@ -7,6 +7,7 @@ import Rechart from "@/components/Rechart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import TimelinessChart from "@/components/TimelinessChart";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "@/utils/http";
 
 
 
@@ -27,7 +28,7 @@ const Home = () => {
   useEffect(() => {
     const fetchStatusCounts = async () => {
       try {
-        const response = await axios.get(`${base_URL}/notesheet/statuscount/?role=${role}&filter=${filter}`);
+        const response = await   axiosInstance.get(`${base_URL}/notesheet/statuscount/?role=${role}&filter=${filter}`);
         setStatusCounts(response.data.statusCount);
       } catch (err) {
         console.error("Error fetching status counts:", err);
