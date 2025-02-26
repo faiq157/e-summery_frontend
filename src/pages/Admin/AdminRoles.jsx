@@ -6,6 +6,7 @@ import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { Checkbox } from "@/components/ui/checkbox";
+import { FaSpinner } from "react-icons/fa";
 
 const base_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -114,24 +115,25 @@ const AdminRoles = () => {
                 <h1 className="text-2xl font-bold">Admin Panel - Roles</h1>
             </div>
 
-            {loading && <p>Loading roles...</p>}
+            {loading &&  <FaSpinner className="animate-spin text-black" size={24} /> }
             {error && <p className="text-red-500">{error}</p>}
 
             {!loading && !error && (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {roles.map(({ id, role }) => (
-                        role.toLowerCase() !== 'admin' && (
-                            <div
-                                key={id}
-                                className="bg-white p-4 shadow-md rounded-md cursor-pointer hover:shadow-lg"
-                                onClick={() => openModal({ id, role })}
-                            >
-                                <h2 className="text-lg font-semibold">{role}</h2>
-                                <p className="text-gray-500 text-sm">ID: {id}</p>
-                            </div>
-                        )
-                    ))}
-                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 text-center">
+                {roles.map(({ id, role }) =>
+                  role.toLowerCase() !== "admin" && (
+                    <div
+                      key={id}
+                      className="bg-white/80 backdrop-blur-md p-6 shadow-lg rounded-2xl cursor-pointer border border-gray-200
+                                 transition-all duration-300 hover:shadow-2xl hover:scale-105"
+                      onClick={() => openModal({ id, role })}
+                    >
+                      <h1 className="text-2xl md:text-3xl font-semibold text-gray-800">{role}</h1>
+                    </div>
+                  )
+                )}
+              </div>
+              
             )}
 
             {roles.length === 0 && !loading && !error && (
