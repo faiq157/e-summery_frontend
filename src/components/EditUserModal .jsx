@@ -108,14 +108,16 @@ const EditUserModal = ({ isOpen, onClose, user, onUpdate }) => {
                     <div className="flex justify-between mt-6">
                         <Button
                             type="button"
+                              variant="destructive"
                             onClick={onClose}
-                            className="bg-gray-500 text-white px-4 py-2 rounded-full"
+                            className=" rounded-full"
                         >
                             Cancel
                         </Button>
                         <Button
                             type="submit"
-                            className="bg-blue-500 text-white px-4 py-2 rounded-full"
+                          variant="secondary"
+                          className="rounded-full"
                         >
                             Save Changes
                         </Button>

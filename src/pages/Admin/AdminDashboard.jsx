@@ -106,7 +106,7 @@ const AdminDashboard = () => {
                             <p className="text-gray-600">Department: {user.department}</p>
                             <p className="text-gray-600">Created At: {new Date(user.createdAt).toLocaleString()}</p>
                             <p className="text-gray-600">Updated At: {new Date(user.updatedAt).toLocaleString()}</p>
-                            <div className="mt-4 flex justify-between">
+                            <div className="mt-4 flex justify-end gap-2">
                                 <Button
                                     onClick={() => openEditModal(user)} // Edit button
                                     className="px-4 py-2 rounded-full"
@@ -148,8 +148,8 @@ const AdminDashboard = () => {
                     <AlertDialogDescription>
                         Are you sure you want to delete this user? This action cannot be undone.
                     </AlertDialogDescription>
-                    <div className="flex justify-end gap-4 p-2 rounded-full">
-                        <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
+                    <div className="flex justify-end gap-4 ">
+                        <AlertDialogCancel className='px-4 py-2 rounded-full' onClick={() => setIsDialogOpen(false)}>
                             Cancel
                         </AlertDialogCancel>
                         <AlertDialogAction

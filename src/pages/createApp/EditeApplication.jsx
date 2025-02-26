@@ -19,7 +19,7 @@ const EditApplication = ({ isOpen, onClose, notesheet, onEditSave }) => {
                             contact_number: notesheet?.contact_number || '',
                             userEmail: notesheet?.userEmail || '',
                             status: notesheet?.status || '',
-                            file: null,
+                            file: notesheet?.file || null,
                         }}
                         onSubmit={onEditSave}
                         onClose={onClose}

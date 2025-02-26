@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaCloudUploadAlt } from "react-icons/fa";
+import { FaCloudUploadAlt, FaSpinner } from "react-icons/fa";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const NotesheetForm = ({ initialValues, onSubmit }) => {
@@ -157,7 +157,7 @@ const NotesheetForm = ({ initialValues, onSubmit }) => {
 
                     <div className="mt-6 flex justify-end">
                         <Button className="rounded-full" type="submit" disabled={isSubmitting}>
-                            {isSubmitting ? "Creating..." : "Create"}
+                            {isSubmitting ? <FaSpinner className="animate-spin text-black" size={24} />  : "Create"}
                         </Button>
                     </div>
                 </Form>

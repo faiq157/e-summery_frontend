@@ -32,13 +32,17 @@ const OtpPage = () => {
       console.log(response.status, response.data); // Log response status and data
 
       if (response.status === 200 && response.data.token && response.data.user) {
-        const { token, user } = response.data;
+        const { token, user } = response.data; 
+        if(user.role === "admin"){
+          navigate("/adminDashboard");
+        }
         // Clear and set local storage
         sessionStorage.removeItem("userEmail");
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
         // Set the sessionStorage again with email
         sessionStorage.setItem("userEmail", email);
+
         navigate("/"); // Redirect after successful verification
       } else {
         setOtpError("Invalid OTP. Please try again.");
