@@ -52,6 +52,7 @@ export const NotesheetProvider = ({ children }) => {
     
 
     const deleteNotesheets = async (notesheetId, storedToken) => {
+        console.log("notesheet",notesheetId);
         try {
             await deleteNotesheet(notesheetId, storedToken);
             setNotesheets((prev) => prev.filter((notesheet) => notesheet._id !== notesheetId));
