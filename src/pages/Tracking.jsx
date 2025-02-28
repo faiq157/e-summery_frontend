@@ -33,7 +33,7 @@ const Tracking = () => {
             <input
               id="trackingId"
               type="text"
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="w-full px-4 py-2 border rounded-full focus:ring-2 focus:ring-black focus:outline-none"
               value={trackingId}
               onChange={(e) => setTrackingId(e.target.value)}
               onKeyDown={handleKeyDown}  // Add this line

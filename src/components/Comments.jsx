@@ -12,7 +12,7 @@ const CommentsSection = ({ rolesData }) => {
     );
 
     return (
-        <div className="w-full sm:w-[80%] md:w-[50%] h-72 overflow-y-auto  ">
+        <div className="w-full sm:w-[80%] md:w-[50%] h-[80%] overflow-y-auto  ">
             <div className=" sticky top-0 z-10 bg-white ">
                 <Input
                     placeholder="Search comments..."
@@ -33,7 +33,11 @@ const CommentsSection = ({ rolesData }) => {
                 <div key={commentData._id} className="flex flex-col m-2">
                     <div className="flex items-start space-x-3">
                         <div className="flex-1 shadow-lg rounded p-2">
-                            <div className="">{`${commentData.user || 'Unknown User'} :`}</div>
+                            <div className='mb-2' >
+                                <span className='font-semibold bg-blue-200 p-2 rounded-full'>
+                                {`${commentData.user || 'Unknown User'} :`}
+                                </span>
+                                </div>
                             <div>
                                 <div className='flex flex-col'>
                                     {commentData.comment}

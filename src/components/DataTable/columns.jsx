@@ -1,4 +1,4 @@
-import { FaPen, FaTrashAlt } from "react-icons/fa";
+import { FaCopy, FaPen, FaTrashAlt } from "react-icons/fa";
 
 // columns.js or columns.jsx
 export const userColumns = (handleEdit, handleDelete) => [
@@ -35,7 +35,7 @@ export const userColumns = (handleEdit, handleDelete) => [
   },
 ];
 
-export const NotesheetData = (handleEdit, handleDelete, notesheets) => {
+export const NotesheetData = (handleEdit, handleDelete, notesheets,handleCopy) => {
   const hasNewStatus = notesheets.some(sheet => sheet.workflow?.[sheet.workflow.length - 1]?.status === "New");
 console.log(hasNewStatus)
   return [
@@ -48,8 +48,27 @@ console.log(hasNewStatus)
       header: "User Name",
     },
     {
-      accessorKey: "trackingId",
+     
       header: "Tracking ID",
+      cell: ({ row }) => {
+        const trackingId = row.original.trackingId;
+        console.log(trackingId)
+        return (
+          <div className="flex justify-start items-center gap-2">
+            <span>{trackingId}</span>
+            <FaCopy
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                handleCopy(trackingId);
+              }}
+              className="cursor-po"
+              size={15}
+            />
+          </div>
+        )
+      },
+
     },
     {
       accessorKey: "userEmail",

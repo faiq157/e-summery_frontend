@@ -61,7 +61,7 @@ const navigateTo = (path) => {
         <div className="mb-4 w-[95%] flex justify-end  items-center ">
               <label htmlFor="filter" className="mr-2">Filter by:</label>
               <Select value={filter} onValueChange={(value) => setFilter(value)} >
-                <SelectTrigger className="w-40 p-2 border border-gray-300 rounded">
+                <SelectTrigger className="w-40 p-2 border border-gray-300 ">
                   <SelectValue placeholder="Select filter" />
                 </SelectTrigger>
                 <SelectContent>
