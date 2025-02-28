@@ -22,7 +22,7 @@ const FilterAndSearch = ({
             </h1>
 
             <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto items-center">
-                <Button onClick={toggleSortOrder} variant="outline" className="flex items-center space-x-2">
+                <Button onClick={toggleSortOrder} variant="outline" className="flex items-center rounded-full space-x-2">
                     {sortOrder === 'asc' ? (
                         <>
                             <AiOutlineArrowUp size={20} />
@@ -37,7 +37,7 @@ const FilterAndSearch = ({
                 </Button>
                 <div className="flex gap-4">
                     {/* Shadcn Select component for date range */}
-                    <Select value={dateRange} onValueChange={onDateRangeChange}>
+                    <Select className={"bg-black"} value={dateRange} onValueChange={onDateRangeChange}>
                         <SelectTrigger className="w-[180px]">
                             <SelectValue placeholder="Select Date Range" />
                         </SelectTrigger>

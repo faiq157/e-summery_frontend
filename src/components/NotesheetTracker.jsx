@@ -27,8 +27,8 @@ const NotesheetTracker = ({ trackingId }) => {
 
   return (
     <div className="min-h-screen  p-6">
-      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Notesheet Tracker</h1>
+      <div className="max-w-4xl mx-auto  rounded-lg p-6">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6"> Track Your Notesheet </h1>
 
         {/* Loading/Error States */}
         {loading && <p className="text-blue-500">Loading...</p>}
@@ -39,7 +39,6 @@ const NotesheetTracker = ({ trackingId }) => {
           <div>
             {/* Current Handler */}
             <div className="mb-10">
-              <h2 className="text-2xl font-semibold text-gray-700 mb-4">Current Handler</h2>
               <div className="flex items-center justify-center p-6   bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-full shadow-lg">
                 <div className="flex items-center justify-center w-14 h-14 bg-white text-blue-700 rounded-full shadow-md">
                   <svg
@@ -67,82 +66,9 @@ const NotesheetTracker = ({ trackingId }) => {
                 </div>
               </div>
             </div>
-
-
-            {/* Workflow Section */}
-            <div className="mb-10">
-              <h2 className="text-2xl font-semibold text-gray-700 mb-6">Workflow</h2>
-              <div className="relative flex flex-col items-center">
-                {notesheetData.workflow && notesheetData.workflow.length > 0 ? (
-                  notesheetData.workflow.map((step, index) => (
-                    <div key={step._id} className="relative flex   items-center w-full">
-                      {/* Line Connector */}
-                      <div className="absolute h-full border-l-2  border-gray-300  left-6"></div>
-                      {/* Status Indicator */}
-                      <div
-                        className={`z-10 flex-shrink-0 w-12 h-12 rounded-full text-white flex items-center justify-center shadow-md ${[
-                          'bg-gradient-to-r from-blue-400 to-blue-600', // Gradient 1
-                          'bg-gradient-to-r from-green-400 to-green-600', // Gradient 2
-                          'bg-gradient-to-r from-yellow-400 to-yellow-600', // Gradient 3
-                          'bg-gradient-to-r from-red-400 to-red-600', // Gradient 4
-                          'bg-gradient-to-r from-purple-400 to-purple-600', // Gradient 5
-                        ][index % 5]}`}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="w-6 h-6"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M12 14c3.866 0 7-1.79 7-4V7a7 7 0 10-14 0v3c0 2.21 3.134 4 7 4z"
-                          />
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M12 14c-4.418 0-8 1.79-8 4v1a2 2 0 002 2h12a2 2 0 002-2v-1c0-2.21-3.582-4-8-4z"
-                          />
-                        </svg>
-                      </div>
-
-
-                      {/* Step Details */}
-                      <div className="ml-6 my-5">
-                        <p className="text-lg font-medium text-gray-800">Role: {step.role}</p>
-                        <p className="flex items-center text-sm">
-                          Status:
-                          <span
-                            className={`ml-2 px-3 py-1 rounded-full text-black text-xs font-semibold ${step.status.toLowerCase() === 'in progress'
-                              ? 'bg-yellow-200'
-                              : step.status.toLowerCase() === 'received'
-                                ? 'bg-blue-200'
-                                : step.status.toLowerCase() === 'completed'
-                                  ? 'bg-green-200'
-                                  : 'bg-gray-400'
-                              }`}
-                          >
-                            {step.status}
-                          </span>
-                        </p>
-                        <p className="text-gray-500 text-sm">
-                          Forwarded At: {new Date(step.forwardedAt).toLocaleString()}
-                        </p>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-gray-500">No workflow data available.</p>
-                )}
-              </div>
-            </div>
-
             {/* History Section */}
             <div>
-              <h2 className="text-2xl font-semibold text-gray-700 mb-6">History</h2>
+              <h2 className="text-2xl font-semibold text-gray-700 mb-6">Tracking History</h2>
               <div className="relative flex flex-col items-center">
                 {notesheetData.history && notesheetData.history.length > 0 ? (
                   notesheetData.history.map((entry, index) => (

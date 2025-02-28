@@ -129,7 +129,7 @@ console.log("notesheet Id",notesheetToDelete)
                 </div>
             ) : (
                 <>
-                    <DataTable columns={NotesheetData(handleEdit, handleOpenDeleteDialog,sortedNotesheets)} data={sortedNotesheets}   onRowClick={handleViewDetails} />
+                    <DataTable columns={NotesheetData(handleEdit, handleOpenDeleteDialog,sortedNotesheets,handleCopy)} data={sortedNotesheets}   onRowClick={handleViewDetails} />
                     {sortedNotesheets.map((notesheet) => (
                         <motion.div
                             key={notesheet._id}
@@ -150,8 +150,9 @@ console.log("notesheet Id",notesheetToDelete)
                                             Are you sure you want to delete this notesheet? This action cannot be undone.
                                         </AlertDialogDescription>
                                         <div className="flex justify-end space-x-2">
+                                        <AlertDialogCancel onClick={handleCloseDeleteDialog}>Cancel</AlertDialogCancel>
                                             <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
-                                            <AlertDialogCancel onClick={handleCloseDeleteDialog}>Cancel</AlertDialogCancel>
+                                           
                                         </div>
                                     </AlertDialogContent>
                                 </AlertDialog>
