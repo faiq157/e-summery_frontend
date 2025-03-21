@@ -126,12 +126,12 @@ const Login = () => {
               </div>
               <ErrorMessage className="text-xs text-red-500" name="password" component="div" />
               <button
-                className="bg-card border mb-10 mt-3 rounded py-2 text-black dark:text-white"
+                className="bg-card border mb-10 mt-3 flex justify-center rounded py-2 text-black dark:text-white"
                 type="submit"
                 disabled={isSubmitting || isLoading}
               >
                 {isLoading ? (
-                  <FaSpinner className="animate-spin text-black" size={24} />
+                  <FaSpinner className="animate-spin  text-black" size={24} />
 
                 ) : (
 

@@ -7,24 +7,25 @@ import Dashboardlayout from "@/layout/Dashboardlayout";
 import { toast } from "react-toastify";
 import axiosInstance from "@/utils/http";
 import ApprovalCard from "@/components/ApprovalCard";
+import NotificationTemplate from "@/components/CreateApproval";
+import ViewNotificationTemplate from "@/components/ViewApproval";
 
 const Approval = () => {
     const { isModalOpen, openModal, closeModal } = useModal();
-    const [submittedData, setSubmittedData] = useState(null);
     const [storedEmail, setStoredEmail] = useState("");
     const [loading, setLoading] = useState(false); // Loading state
-    const storedToken = localStorage.getItem("token");
-    const base_URL = import.meta.env.VITE_APP_API_URL;
     const storedUser = localStorage.getItem("user");
     const [userRole, setUserRole] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const [refetchData, setRefetchData] = useState(false);
+    const [userID, setUserID] = useState("");
 
     useEffect(() => {
         if (storedUser) {
             const userObject = JSON.parse(storedUser);
             setStoredEmail(userObject?.email || "");
             setUserRole(userObject?.role || "");
+            setUserID(userObject?._id || "");
         }
     }, []);
 
@@ -42,59 +43,8 @@ const Approval = () => {
         }
     }, [isModalOpen]);
 
-    const userData = JSON.parse(storedUser);
-    const userId = userData?._id;
-
-    const sendNotification = (userId) => {
-        axiosInstance
-            .post(`${base_URL}/send-notification`, {
-                title: "Approval has been Created",
-                body: "A new notesheet has been successfully created.",
-                userId: userId,
-            })
-            .then(() => {
-                console.log("Notification sent successfully.");
-                toast.success("Notesheet created successfully");
-            })
-            .catch((error) => {
-                console.error("Error sending notification:", error);
-                toast.error("Failed to send notification");
-            });
-    };
-
-    const handleCreateSubmit = (event) => {
-        event.preventDefault();
-        setLoading(true); // Set loading to true
-
-        const formData = new FormData();
-        formData.append("title", event.target.title.value); // Get the title from the input field
-        formData.append("pdf", event.target.file.files[0]); // Get the file from the file input field
-
-        axiosInstance
-            .post(`${base_URL}/approval`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                    Authorization: ` ${storedToken}`,
-                },
-            })
-            .then(() => {
-                toast.success("File uploaded and approval request submitted successfully");
-                setSubmittedData({
-                    title: event.target.title.value,
-                    file: event.target.file.files[0],
-                });
-                handleRefetchData();
-                closeModal();
-                sendNotification(userId);
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-                toast.error("Error submitting approval request");
-            })
-            .finally(() => {
-                setLoading(false); // Reset loading state
-            });
-    };
+   
+   
 
     return (
         <Dashboardlayout>
@@ -121,61 +71,21 @@ const Approval = () => {
 
                     </div>
                 </div>
-
+                <div className="ml-20">
+</div>
                 {/* Notesheet Cards */}
-                <ApprovalCard searchQuery={searchQuery} refetchData={refetchData} />
+                <ApprovalCard searchQuery={searchQuery} refetchData={refetchData} isOpenModel={openModal} isClosedModel={closeModal} />
 
                 {/* Modal for Creating Approval */}
                 {isModalOpen && (
                     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="bg-white p-4 rounded-lg shadow-lg w-[40vw] overflow-auto">
-                            <div className="flex justify-between">
-                                <h2 className="text-2xl font-bold mb-4">Create Approval</h2>
+                        <div className="bg-white p-4 rounded-lg shadow-lg w-[60%] h-[80%] overflow-auto">
+                            <div className="flex justify-end mr-4">
                                 <AiOutlineClose className="text-2xl cursor-pointer" onClick={closeModal} />
                             </div>
-
-                            {/* Create Approval Form */}
-                            <form onSubmit={handleCreateSubmit}>
-                                <div className="mb-4">
-                                    <label
-                                        htmlFor="title"
-                                        className="block text-sm font-medium text-gray-700"
-                                    >
-                                        Title
-                                    </label>
-                                    <input
-                                        id="title"
-                                        name="title"
-                                        type="text"
-                                        className="w-full p-2 border rounded-md shadow-sm focus:outline-none"
-                                        required
-                                    />
-                                </div>
-                                <div className="mb-4">
-                                    <label
-                                        htmlFor="file"
-                                        className="block text-sm font-medium text-gray-700"
-                                    >
-                                        PDF File
-                                    </label>
-                                    <input
-                                        id="file"
-                                        name="file"
-                                        type="file"
-                                        accept="application/pdf"
-                                        className="w-full p-2 border rounded-md shadow-sm focus:outline-none"
-                                        required
-                                    />
-                                </div>
-                                <Button
-                                    type="submit"
-                                    className={`w-full md:w-auto rounded-full ${loading ? "opacity-50 cursor-not-allowed" : ""
-                                        }`}
-                                    disabled={loading}
-                                >
-                                    {loading ? "Submitting..." : "Submit"}
-                                </Button>
-                            </form>
+                            {userRole.toLowerCase() === "establishment" && (
+                                <NotificationTemplate userRole={userRole} refetchData={refetchData} closeModal={closeModal} />
+                            )}
                         </div>
                     </div>
                 )}
