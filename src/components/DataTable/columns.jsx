@@ -1,5 +1,4 @@
-import { FaCopy, FaPen, FaTrashAlt } from "react-icons/fa";
-
+import { FaCopy, FaPaperPlane, FaPen, FaTrashAlt } from "react-icons/fa";
 // columns.js or columns.jsx
 export const userColumns = (handleEdit, handleDelete) => [
   {
@@ -109,4 +108,53 @@ console.log(hasNewStatus)
         ]
       : []),
   ];
+};
+
+
+export const ApprovalData = (triggerAlertDialog, HandledeleteApproval, userRole) => {
+  console.log("userRole is",userRole);
+  const columns = [
+    {
+      accessorKey: "email", // Column for email
+      header: "Email",
+    },
+    {
+      accessorKey: "date", // Column for date
+      header: "Date",
+    },
+    {
+      accessorKey: "title", // Column for title
+      header: "Title",
+    },
+  ];
+
+  if (userRole === "establishment") {
+    columns.push({
+      header: "Actions",
+      cell: ({ row }) => (
+        <div className="flex gap-2">
+          <FaTrashAlt
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              HandledeleteApproval(row.original._id);
+            }}
+            className="cursor-pointer text-red-500 h-8 w-8 hover:text-red-700 p-2 rounded-full"
+            size={20}
+          />
+          <FaPaperPlane
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              triggerAlertDialog(row.original._id);
+            }}
+            className="cursor-pointer text-blue-500 h-8 w-8 hover:text-blue-700 p-2 rounded-full"
+            size={20}
+          />
+        </div>
+      ),
+    });
+  }
+
+  return columns;
 };

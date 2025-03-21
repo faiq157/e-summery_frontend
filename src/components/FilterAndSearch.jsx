@@ -37,7 +37,7 @@ const FilterAndSearch = ({
                 </Button>
                 <div className="flex gap-4">
                     {/* Shadcn Select component for date range */}
-                    <Select className={"bg-black"} value={dateRange} onValueChange={onDateRangeChange}>
+                    <Select  value={dateRange} onValueChange={onDateRangeChange}>
                         <SelectTrigger className="w-[180px]">
                             <SelectValue placeholder="Select Date Range" />
                         </SelectTrigger>

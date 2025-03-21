@@ -5,19 +5,13 @@ import { toast } from "react-toastify";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-    AlertDialog,
-    AlertDialogTrigger,
-    AlertDialogContent,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogCancel,
-    AlertDialogAction,
-} from "./ui/alert-dialog";
 import { Player } from "@lottiefiles/react-lottie-player";
 import Loader from "./Loader";
+import { DataTable } from "./DataTable/Data-Table";
+import { ApprovalData } from "./DataTable/columns";
+import ViewNotificationTemplate from "./ViewApproval";
+import { useModal } from "@/context/ModalContext";
+import { AiOutlineClose } from "react-icons/ai";
 
 const base_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -27,12 +21,13 @@ const ApprovalCard = ({ searchQuery }) => {
     const [error, setError] = useState(null);
     const [roles, setRoles] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentApprovalId, setCurrentApprovalId] = useState(null);
     const [approvalEmail, setApprovalEmail] = useState(""); // new state for email input
     const [userRole, setUserRole] = useState("");
     const [refetchData, setRefetchData] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
+    const [isViewModalOpen, setIsViewModalOpen] = useState(false); // state for view modal visibility
+    const [isSendModalOpen, setIsSendModalOpen] = useState(false); // state for send modal visibility
     const storedUser = localStorage.getItem("user");
     const userObject = storedUser ? JSON.parse(storedUser) : null;
 
@@ -41,6 +36,13 @@ const ApprovalCard = ({ searchQuery }) => {
             setUserRole(userObject?.role || "");
         }
     }, [storedUser, userObject]);
+
+    const userId = userObject?._id;
+
+    const handleRowClick = (approvalId) => {
+        setCurrentApprovalId(approvalId);
+        setIsViewModalOpen(true);
+    };
 
     useEffect(() => {
         const fetchApprovals = async () => {
@@ -61,7 +63,7 @@ const ApprovalCard = ({ searchQuery }) => {
         const fetchSpecificApprovals = async () => {
             try {
                 setLoading(true);
-                const response = await axiosInstance.get(`${base_URL}/approvals`, {
+                const response = await axiosInstance.get(`${base_URL}/approvals/${userId}`, {
                     headers: { "Content-Type": "application/json" },
                 });
                 setApprovals(response.data.data || []);
@@ -86,27 +88,25 @@ const ApprovalCard = ({ searchQuery }) => {
         };
 
         const initializeData = async () => {
-            if (userRole.toLocaleLowerCase() === "establishment") {
+            if (userRole.toLowerCase() === "establishment") {
                 await fetchApprovals();
-                await fetchRoles();
             } else {
                 await fetchSpecificApprovals();
-                await fetchRoles();
             }
+            await fetchRoles();
         };
 
-        initializeData();
+        if (userRole) {
+            initializeData();
+        }
     }, [refetchData, userRole]);
 
-    const openPdf = (pdfUrl) => {
-        if (pdfUrl) {
-            window.open(pdfUrl, "_blank");
-        } else {
-            toast.error("No PDF URL available");
-        }
+    const triggerAlertDialog = (approvalId) => {
+        setCurrentApprovalId(approvalId);
+        setIsSendModalOpen(true);
     };
 
-    const deleteApproval = async (approvalId) => {
+    const HandledeleteApproval = async (approvalId) => {
         try {
             const response = await axiosInstance.delete(`${base_URL}/approval/${approvalId}`, {
                 headers: { "Content-Type": "application/json" },
@@ -153,7 +153,7 @@ const ApprovalCard = ({ searchQuery }) => {
             console.error("Error sending approval:", error);
             toast.error("Failed to send approval. Please try again.");
         } finally {
-            setIsModalOpen(false);
+            setIsSendModalOpen(false);
             setSelectedUsers([]);
         }
     };
@@ -192,7 +192,7 @@ const ApprovalCard = ({ searchQuery }) => {
             console.error("Error sending approval document via email:", error);
             toast.error("Failed to send document. Please try again.");
         } finally {
-            setIsModalOpen(false);
+            setIsSendModalOpen(false);
             setApprovalEmail("");
         }
     };
@@ -206,7 +206,7 @@ const ApprovalCard = ({ searchQuery }) => {
     };
 
     const filteredApprovals = approvals.filter((approval) =>
-        approval.title.toLowerCase().includes(searchQuery.toLowerCase())
+        approval?.title?.toLowerCase()?.includes(searchQuery?.toLowerCase())
     );
     const handleCheckboxChange = () => {
         setIsChecked((prev) => !prev);
@@ -229,80 +229,30 @@ const ApprovalCard = ({ searchQuery }) => {
                     <p className="text-xl font-semibold mt-4">Please add an application.</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredApprovals.map((approval) => (
-                        <div key={approval._id} className="bg-white shadow-lg rounded-lg overflow-hidden">
-                            <div className="p-6">
-                                <h3 className="text-xl font-semibold text-gray-900">{approval.title}</h3>
-                                <div className="flex items-center space-x-2 mt-2">
-                                    <button
-                                        onClick={() => openPdf(approval.pdfUrl)}
-                                        className="text-blue-600 flex justify-center items-center gap-2 hover:text-blue-800"
-                                    >
-                                        <FaEye size={20} /> View Approval
-                                    </button>
-                                </div>
-                                <p className="text-sm text-gray-500 mt-1">
-                                    Created on: {new Date(approval.createdAt).toLocaleDateString()}
-                                </p>
-                                <div className="mt-4 flex space-x-4 items-center">
-                                    {approval.sended && userRole.toLocaleLowerCase() === "establishment" ? (
-                                        <div className="flex items-center gap-2">
-                                            <FaCheckCircle className="text-green-500" size={20} />
-                                            <span className="text-green-600 font-medium">Approval Sent</span>
-                                        </div>
-                                    ) : (
-                                        <>
-                                            {userRole.toLocaleLowerCase() === "establishment" && (
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger asChild>
-                                                        <Button variant="destructive" className="rounded-full">
-                                                            Delete
-                                                        </Button>
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent>
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle>Delete Approval</AlertDialogTitle>
-                                                            <AlertDialogDescription>
-                                                                Are you sure you want to delete this approval? This action cannot be undone.
-                                                            </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
-                                                            <AlertDialogAction
-                                                                className="bg-red-500 hover:bg-red-600 text-white rounded-full px-4 py-2"
-                                                                onClick={() => deleteApproval(approval._id)}
-                                                            >
-                                                                Delete
-                                                            </AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-                                            )}
-                                            {userRole.toLocaleLowerCase() === "establishment" && (
-                                                <Button
-                                                    onClick={() => {
-                                                        setIsModalOpen(true);
-                                                        setCurrentApprovalId(approval._id);
-                                                    }}
-                                                    className="rounded-full"
-                                                >
-                                                    Send
-                                                </Button>
-                                            )}
-                                        </>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+                <div className="">
+                      <DataTable columns={ApprovalData(triggerAlertDialog,HandledeleteApproval,userRole)} data={filteredApprovals} onRowClick={handleRowClick}  />
                 </div>
             )}
 
-            {isModalOpen && (
+            {isViewModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-[40vw] overflow-auto">
+                    <div className="bg-white p-4 rounded-lg shadow-lg no-scrollbar w-[60%] h-[80%] overflow-auto">
+                        <div className="flex justify-end mr-3">
+                            <AiOutlineClose className="text-2xl cursor-pointer" onClick={() => setIsViewModalOpen(false)} />
+                        </div>
+                        <ViewNotificationTemplate userID={userId} refetchData={currentApprovalId} />
+                    </div>
+                </div>
+            )}
+
+            {isSendModalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded w-[40vw] overflow-auto no-scrollbar">
+                    <div className="flex justify-between ">
                         <h2 className="text-xl font-bold mb-4">Send Approval</h2>
+                      
+                            <AiOutlineClose className="text-2xl cursor-pointer" onClick={() => setIsSendModalOpen(false)} />
+                        </div>
                         <div className="mb-4">
                             <p className="text-lg mb-2">Select Users:</p>
                             <div className="space-y-2 h-48 overflow-auto">
@@ -331,11 +281,10 @@ const ApprovalCard = ({ searchQuery }) => {
                             <Checkbox
                                 id="others"
                                 checked={isChecked}
-                                onCheckedChange={setIsChecked}
+                                onCheckedChange={handleCheckboxChange}
                             />
                             <label htmlFor="others" className="cursor-pointer text-lg">Others</label>
                         </div>
-
 
                         <AnimatePresence>
                             {isChecked && (
@@ -363,15 +312,8 @@ const ApprovalCard = ({ searchQuery }) => {
                             )}
                         </AnimatePresence>
 
-
                         <div className="flex justify-end space-x-4">
-                            <Button
-                                variant="outline"
-                                onClick={() => setIsModalOpen(false)}
-                                className="rounded-full"
-                            >
-                                Cancel
-                            </Button>
+                          
                             {/* Button for role-based approval sending */}
                             <Button
                                 onClick={() => sendApproval(currentApprovalId)}

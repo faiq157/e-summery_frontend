@@ -12,7 +12,7 @@ const CommentsSection = ({ rolesData }) => {
     );
 
     return (
-        <div className="w-full sm:w-[80%] md:w-[50%] h-[80%] overflow-y-auto  ">
+        <div className="w-full sm:w-[80%] md:w-[50%] h-[30rem] overflow-y-auto  ">
             <div className=" sticky top-0 z-10 bg-white ">
                 <Input
                     placeholder="Search comments..."
