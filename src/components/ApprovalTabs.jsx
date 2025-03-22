@@ -4,10 +4,9 @@ import Loader from "./Loader";
 import { DataTable } from "./DataTable/Data-Table";
 import { ApprovalData } from "./DataTable/columns";
 
-const ApprovalTabs = ({ approvals, loading, error, handleRowClick, triggerAlertDialog, HandledeleteApproval, userRole }) => {
+const ApprovalTabs = ({ approvals, loading, error, handleRowClick, triggerAlertDialog, HandledeleteApproval, userRole, handleEditClick }) => {
     const defaultTab = userRole.toLowerCase() === "registrar" ? "received" : "new";
     const [selectedTab, setSelectedTab] = useState(defaultTab);
-console.log("this is approval",approvals)
     const filteredApprovals = (status) => {
         return approvals.filter((approval) => approval.status === status);
     };
@@ -30,7 +29,7 @@ console.log("this is approval",approvals)
                     <p className="text-red-600">{error}</p>
                 ) : (
                     <DataTable
-                        columns={ApprovalData(triggerAlertDialog, HandledeleteApproval, userRole)}
+                        columns={ApprovalData(triggerAlertDialog, HandledeleteApproval, userRole, approvals, handleEditClick)}
                         data={filteredApprovals("new")}
                         onRowClick={handleRowClick}
                     />
@@ -44,7 +43,7 @@ console.log("this is approval",approvals)
                     <p className="text-red-600">{error}</p>
                 ) : (
                     <DataTable
-                        columns={ApprovalData(triggerAlertDialog, HandledeleteApproval, userRole)}
+                        columns={ApprovalData(triggerAlertDialog, HandledeleteApproval, userRole, approvals, handleEditClick)}
                         data={filteredApprovals("received")}
                         onRowClick={handleRowClick}
                     />
@@ -57,7 +56,7 @@ console.log("this is approval",approvals)
                     <p className="text-red-600">{error}</p>
                 ) : (
                     <DataTable
-                        columns={ApprovalData(triggerAlertDialog, HandledeleteApproval, userRole,approvals)}
+                        columns={ApprovalData(triggerAlertDialog, HandledeleteApproval, userRole, approvals, handleEditClick)}
                         data={filteredApprovals("completed")}
                         onRowClick={handleRowClick}
                     />

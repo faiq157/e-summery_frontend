@@ -5,9 +5,19 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import axios from "axios";
 import { Button } from "./ui/button";
+import CommentsApproval from "./CommentsApproval";
 
 const ViewNotificationTemplate = ({ refetchData }) => {
-  console.log("this is refecth data", refetchData);
+   const [userRole, setUserRole] = useState("");
+    const storedUser = localStorage.getItem("user");
+    const userObject = storedUser ? JSON.parse(storedUser) : null;
+    useEffect(() => {
+      if (storedUser) {
+        setUserRole(userObject?.role || "");
+      }
+    }, [storedUser, userObject]);
+
+    console.log("this is Role",userRole)
 
   const downloadPDF = () => {
     setTimeout(() => {
@@ -85,6 +95,11 @@ const ViewNotificationTemplate = ({ refetchData }) => {
       <Button onClick={downloadPDF} className="mt-8 rounded-full">
         Download PDF
       </Button>
+
+      {(userRole.toLowerCase() === "registrar" || userRole.toLowerCase() === "establishment") && (
+        <CommentsApproval existingData={refetchData} userRole={userRole} />
+      )}
+   
     </div>
   );
 };
