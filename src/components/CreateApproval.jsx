@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import html2canvas from "html2canvas";
@@ -6,40 +6,58 @@ import jsPDF from "jspdf";
 import axios from "axios";
 import { FaDownload } from "react-icons/fa";
 import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 import { IoCreate } from "react-icons/io5";
 import axiosInstance from "@/utils/http";
+import CommentsApproval from "./CommentsApproval";
 
-const NotificationTemplate = ({closeModal,refetchData}) => {
+const NotificationTemplate = ({ closeModal, existingData }) => {
   const base_URL = import.meta.env.VITE_APP_API_URL;
-  const [bodyText, setBodyText] = useState(`
-    <p>The Vice-Chancellor, University of Engineering & Technology, Mardan, is pleased
-    to constitute the following committee to examine the surplus amount recorded
-    as miscellaneous income and profit from the PSDP project titled 
-    <strong>"Establishment and Upgrading of Core Engineering Departments at the University of Engineering & Technology, Mardan."</strong></p>
-  `);
-
+  const [bodyText, setBodyText] = useState(existingData?.bodyText);
+  const [userRole, setUserRole] = useState("");
+  const storedUser = localStorage.getItem("user");
+  const userObject = storedUser ? JSON.parse(storedUser) : null;
+  useEffect(() => {
+    if (storedUser) {
+      setUserRole(userObject?.role || "");
+    }
+  }, [storedUser, userObject]);
   const [fields, setFields] = useState({
-    registrarOffice: "Office of the Registrar",
-    phoneFax: " 0937-9230205,  0937-9230296",
-    email: " registrar@uetmardan.edu.pk",
-    refNo: "17835/13/2025/UETM-R",
-    date: "24/02/2025",
+    title: existingData?.title || "Approval Title",
+    registrarOffice: existingData?.registrarOffice || "Office of the Registrar",
+    phoneFax: existingData?.phoneFax || " 0937-9230205,  0937-9230296",
+    email: existingData?.email || " registrar@uetmardan.edu.pk",
+    refNo: existingData?.refNo || "17835/13/2025/UETM-R",
+    date: existingData?.date || "24/02/2025",
   });
 
   const [editingField, setEditingField] = useState(null);
+  const [tempValue, setTempValue] = useState("");
   const [isEditing, setIsEditing] = useState(true);
 
-  // Single function to handle click & update logic using switch
   const handleFieldInteraction = (field, value = null) => {
     switch (true) {
       case value === null: // Click to Edit
         setEditingField(field);
+        setTempValue(fields[field]);
         break;
       default: // Save the Edited Value
+        if (value.trim() === "") {
+          alert("Field cannot be empty");
+          return;
+        }
         setFields((prev) => ({ ...prev, [field]: value }));
         setEditingField(null);
         break;
     }
+  };
+
+  const handleInputChange = (e) => {
+    setTempValue(e.target.value);
+  };
+
+  const handleBlur = (field) => {
+    handleFieldInteraction(field, tempValue);
   };
 
   const downloadPDF = () => {
@@ -69,10 +87,9 @@ const NotificationTemplate = ({closeModal,refetchData}) => {
     }, 500);
   };
 
-
-  const createApprovalData = () => {
+  const createOrUpdateApprovalData = () => {
     const data = {
-      title: "Approval Title",
+      title: fields.title,
       registrarOffice: fields.registrarOffice,
       phoneFax: fields.phoneFax,
       email: fields.email,
@@ -80,27 +97,46 @@ const NotificationTemplate = ({closeModal,refetchData}) => {
       date: fields.date,
       bodyText: bodyText,
     };
-    axiosInstance.post(`${base_URL}/approval`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
-    .then(response => {
-      console.log('Success:', response.data);
-      closeModal();
 
-      window.location.reload();
-      
-     
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
+    const request = existingData
+      ? axiosInstance.put(`${base_URL}/approval/${existingData._id}`, data, {
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        })
+      : axiosInstance.post(`${base_URL}/approval`, data, {
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+
+    request
+      .then(response => {
+        console.log('Success:', response.data);
+        closeModal();
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   };
+
+  const renderInputField = (field) => (
+    <Input 
+      type="text" 
+      value={tempValue} 
+      onChange={handleInputChange}
+      onBlur={() => handleBlur(field)}
+      autoFocus
+      className="border p-1 rounded w-full"
+    />
+  );
 
   return (
     <div className="w-full mx-auto p-6 relative ">
-              <h2 className="text-2xl font-bold mb-4 absolute -top-5">Create Approval</h2>
+      <h2 className="text-2xl font-bold mb-4 absolute -top-5">
+        {existingData ? "Edit Approval" : "Create Approval"}
+      </h2>
       <div id="pdf-content">
         {/* Header Section */}
         <div className="flex justify-center gap-3 items-center">
@@ -114,16 +150,7 @@ const NotificationTemplate = ({closeModal,refetchData}) => {
               className="text-sm mt-2 font-semibold cursor-pointer"
               onClick={() => handleFieldInteraction("registrarOffice")}
             >
-              {editingField === "registrarOffice" ? (
-                <input 
-                  type="text" 
-                  value={fields.registrarOffice} 
-                  onChange={(e) => handleFieldInteraction("registrarOffice", e.target.value)}
-                  onBlur={() => handleFieldInteraction("registrarOffice", fields.registrarOffice)}
-                  autoFocus
-                  className="border p-1 rounded w-full"
-                />
-              ) : fields.registrarOffice}
+              {editingField === "registrarOffice" ? renderInputField("registrarOffice") : fields.registrarOffice}
             </p>
           </div>
           
@@ -135,31 +162,13 @@ const NotificationTemplate = ({closeModal,refetchData}) => {
               className="text-sm cursor-pointer"
               onClick={() => handleFieldInteraction("phoneFax")}
             >
-              {editingField === "phoneFax" ? (
-                <input 
-                  type="text" 
-                  value={fields.phoneFax} 
-                  onChange={(e) => handleFieldInteraction("phoneFax", e.target.value)}
-                  onBlur={() => handleFieldInteraction("phoneFax", fields.phoneFax)}
-                  autoFocus
-                  className="border p-1 rounded w-full"
-                />
-              ) : fields.phoneFax}
+              {editingField === "phoneFax" ? renderInputField("phoneFax") : fields.phoneFax}
             </p>
             <p 
               className="text-sm cursor-pointer"
               onClick={() => handleFieldInteraction("email")}
             >
-              {editingField === "email" ? (
-                <input 
-                  type="text" 
-                  value={fields.email} 
-                  onChange={(e) => handleFieldInteraction("email", e.target.value)}
-                  onBlur={() => handleFieldInteraction("email", fields.email)}
-                  autoFocus
-                  className="border p-1 rounded w-full"
-                />
-              ) : fields.email}
+              {editingField === "email" ? renderInputField("email") : fields.email}
             </p>
           </div>
         </div>
@@ -169,32 +178,14 @@ const NotificationTemplate = ({closeModal,refetchData}) => {
             onClick={() => handleFieldInteraction("refNo")}
           >
             <strong>Ref No:</strong> 
-            {editingField === "refNo" ? (
-              <input 
-                type="text" 
-                value={fields.refNo} 
-                onChange={(e) => handleFieldInteraction("refNo", e.target.value)}
-                onBlur={() => handleFieldInteraction("refNo", fields.refNo)}
-                autoFocus
-                className="border p-1 ml-2"
-              />
-            ) : ` ${fields.refNo}`}
+            {editingField === "refNo" ? renderInputField("refNo") : ` ${fields.refNo}`}
           </p>
           <p 
             className="cursor-pointer"
             onClick={() => handleFieldInteraction("date")}
           >
             <strong>Dated:</strong> 
-            {editingField === "date" ? (
-              <input 
-                type="text" 
-                value={fields.date} 
-                onChange={(e) => handleFieldInteraction("date", e.target.value)}
-                onBlur={() => handleFieldInteraction("date", fields.date)}
-                autoFocus
-                className="border p-1 rounded ml-2"
-              />
-            ) : ` ${fields.date}`}
+            {editingField === "date" ? renderInputField("date") : ` ${fields.date}`}
           </p>
         </div>
         <hr className="my-4" />
@@ -202,6 +193,12 @@ const NotificationTemplate = ({closeModal,refetchData}) => {
         {/* Notification Title */}
         <div className="text-center my-6">
           <h2 className="text-3xl font-bold underline">NOTIFICATION</h2>
+          <h3 
+            className="text-sm cursor-pointer"
+            onClick={() => handleFieldInteraction("title")}
+          >
+            {editingField === "title" ? renderInputField("title") : fields.title}
+          </h3>
         </div>
 
         {/* Show Editor in Editing Mode, otherwise Display Formatted Text */}
@@ -225,13 +222,17 @@ const NotificationTemplate = ({closeModal,refetchData}) => {
           <div className="p-4" dangerouslySetInnerHTML={{ __html: bodyText }} />
         )}
       </div>
-
-      <Button onClick={downloadPDF} className="rounded-full">
-        <FaDownload/> Download
-      </Button>
-      <Button onClick={createApprovalData} className="mt-4 px-4 ml-3 py-2 bg-green-500 text-white rounded-full">
-       <IoCreate /> Create
-      </Button>
+      <div className="flex justify-between mt-4">
+        <Button onClick={downloadPDF} className="rounded-full">
+          <FaDownload/> Download
+        </Button>
+        <Button onClick={createOrUpdateApprovalData} className="mt-4 px-4 ml-3 py-2 bg-green-500 text-white rounded-full">
+          <IoCreate /> {existingData ? "Update" : "Create"}
+        </Button>
+      </div>
+      {userRole.toLowerCase() ===  "establishment" &&(
+          <CommentsApproval existingData={existingData} userRole={userRole}/>
+      )}
     </div>
   );
 };
