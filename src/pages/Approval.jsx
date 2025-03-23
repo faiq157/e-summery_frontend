@@ -84,7 +84,7 @@ const Approval = () => {
                                 <AiOutlineClose className="text-2xl cursor-pointer" onClick={closeModal} />
                             </div>
                             {userRole.toLowerCase() === "establishment" && (
-                                <NotificationTemplate userRole={userRole} refetchData={refetchData} closeModal={closeModal} />
+                                <NotificationTemplate refetchData={refetchData} closeModal={closeModal} />
                             )}
                         </div>
                     </div>
