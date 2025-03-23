@@ -9,11 +9,9 @@ const CommentsApproval = ({ existingData, userRole }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const base_URL = import.meta.env.VITE_APP_API_URL;
-  console.log("this is existing dataaaaaaaaa", comments);
 
   useEffect(() => {
-    // Fetch existing comments when the component mounts
-    axiosInstance.get(`${base_URL}/approval/${existingData._id}`)
+    axiosInstance.get(`${base_URL}/approval/${existingData?._id}`)
       .then(response => {
         setComments(response.data.comments);
         console.log(response.data.comments);
@@ -30,7 +28,7 @@ const CommentsApproval = ({ existingData, userRole }) => {
     }
 
     // Send the comment to the backend
-    axiosInstance.post(`${base_URL}/approval/${existingData._id}`, {
+    axiosInstance.post(`${base_URL}/approval/${existingData?._id}`, {
       comment: newComment
     }, {
       headers: {
@@ -46,11 +44,10 @@ const CommentsApproval = ({ existingData, userRole }) => {
       console.error('Error adding comment:', error);
     });
   };
-console.log("this is Role",userRole)
   return (
     <div className="w-full mx-auto p-6">
       <h2 className="text-2xl font-bold mb-4">Comments</h2>
-      {userRole !== "establishment" && existingData.status !== "completed" && (
+      {userRole !== "establishment" && existingData?.status !== "completed" && (
         <div className="flex justify-start mb-4">
           <Input
             type="text"

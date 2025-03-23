@@ -97,9 +97,8 @@ const NotificationTemplate = ({ closeModal, existingData }) => {
       date: fields.date,
       bodyText: bodyText,
     };
-
     const request = existingData
-      ? axiosInstance.put(`${base_URL}/approval/${existingData._id}`, data, {
+      ? axiosInstance.put(`${base_URL}/approval/${existingData?._id}`, data, {
           headers: {
             'Content-Type': 'application/json',
           }
@@ -230,8 +229,8 @@ const NotificationTemplate = ({ closeModal, existingData }) => {
           <IoCreate /> {existingData ? "Update" : "Create"}
         </Button>
       </div>
-      {userRole.toLowerCase() ===  "establishment" &&(
-          <CommentsApproval existingData={existingData} userRole={userRole}/>
+      {existingData && userRole.toLowerCase() === "establishment" && (
+        <CommentsApproval existingData={existingData} userRole={userRole} />
       )}
     </div>
   );
