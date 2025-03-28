@@ -10,6 +10,7 @@ import { Input } from "./ui/input";
 import { IoCreate } from "react-icons/io5";
 import axiosInstance from "@/utils/http";
 import CommentsApproval from "./CommentsApproval";
+import PdfGenerator from "./PdfGenerator";
 
 const NotificationTemplate = ({ closeModal, existingData }) => {
   const base_URL = import.meta.env.VITE_APP_API_URL;
@@ -59,34 +60,8 @@ const NotificationTemplate = ({ closeModal, existingData }) => {
   const handleBlur = (field) => {
     handleFieldInteraction(field, tempValue);
   };
-
-  const downloadPDF = () => {
-    setIsEditing(false);
-    setTimeout(() => {
-      const input = document.getElementById("pdf-content");
-
-      html2canvas(input, {
-        scale: 8, // Higher scale for better resolution
-        useCORS: true, // Handle CORS issues for images
-        backgroundColor: null, // Preserve background transparency
-        logging: false,
-        windowWidth: document.documentElement.scrollWidth,
-        windowHeight: document.documentElement.scrollHeight,
-      }).then((canvas) => {
-        const imgData = canvas.toDataURL("image/png");
-        const pdf = new jsPDF("p", "mm", "a4");
-
-        const imgWidth = 200; // Fit within A4 width
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        const padding = 10;
-
-        pdf.addImage(imgData, "PNG", padding, padding, imgWidth, imgHeight, "", "FAST");
-        pdf.save("notification.pdf");
-        setIsEditing(true);
-      });
-    }, 500);
-  };
-
+  
+  
   const createOrUpdateApprovalData = () => {
     const data = {
       title: fields.title,
@@ -141,7 +116,7 @@ const NotificationTemplate = ({ closeModal, existingData }) => {
         <div className="flex justify-center gap-3 items-center">
           <div className="mt-5">
             <img
-              src="/UET.jpeg"
+              src="/UET.png"
               alt="UET Mardan Logo"
               className="w-24 mx-auto rounded-full"
             />
@@ -222,13 +197,21 @@ const NotificationTemplate = ({ closeModal, existingData }) => {
         )}
       </div>
       <div className="flex justify-between mt-4">
-        <Button onClick={downloadPDF} className="rounded-full">
-          <FaDownload/> Download
-        </Button>
-        <Button onClick={createOrUpdateApprovalData} className="mt-4 px-4 ml-3 py-2 bg-green-500 text-white rounded-full">
-          <IoCreate /> {existingData ? "Update" : "Create"}
-        </Button>
-      </div>
+  <PdfGenerator 
+    fields={fields} 
+    bodyText={bodyText} 
+    disabled={!bodyText || bodyText.trim() === ""} // Disable PdfGenerator if bodyText is empty
+  />
+  <Button 
+    onClick={createOrUpdateApprovalData} 
+    className={`mt-4 px-4 ml-3 py-2 rounded-full ${
+      !bodyText || bodyText.trim() === "" ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 text-white"
+    }`}
+    disabled={!bodyText || bodyText.trim() === ""} // Disable button if bodyText is empty
+  >
+    <IoCreate /> {existingData ? "Update" : "Create"}
+  </Button>
+</div>
       {existingData && userRole.toLowerCase() === "establishment" && (
         <CommentsApproval existingData={existingData} userRole={userRole} />
       )}
