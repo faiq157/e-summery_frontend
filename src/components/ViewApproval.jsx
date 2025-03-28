@@ -6,6 +6,7 @@ import jsPDF from "jspdf";
 import axios from "axios";
 import { Button } from "./ui/button";
 import CommentsApproval from "./CommentsApproval";
+import PdfGenerator from "./PdfGenerator";
 
 const ViewNotificationTemplate = ({ refetchData }) => {
    const [userRole, setUserRole] = useState("");
@@ -19,30 +20,7 @@ const ViewNotificationTemplate = ({ refetchData }) => {
 
     console.log("this is Role",userRole)
 
-  const downloadPDF = () => {
-    setTimeout(() => {
-      const input = document.getElementById("pdf-content");
 
-      html2canvas(input, {
-        scale: 8, // Higher scale for better resolution
-        useCORS: true, // Handle CORS issues for images
-        backgroundColor: null, // Preserve background transparency
-        logging: false,
-        windowWidth: document.documentElement.scrollWidth,
-        windowHeight: document.documentElement.scrollHeight,
-      }).then((canvas) => {
-        const imgData = canvas.toDataURL("image/png");
-        const pdf = new jsPDF("p", "mm", "a4");
-
-        const imgWidth = 200; // Fit within A4 width
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        const padding = 10;
-
-        pdf.addImage(imgData, "PNG", padding, padding, imgWidth, imgHeight, "", "FAST");
-        pdf.save("notification.pdf");
-      });
-    }, 500);
-  };
 
   if (!refetchData) {
     return <div>Loading...</div>;
@@ -56,7 +34,7 @@ const ViewNotificationTemplate = ({ refetchData }) => {
         <div className="flex justify-center gap-3 items-center">
           <div className="mt-5">
             <img
-              src="/UET.jpeg"
+              src="/UET.png"
               alt="UET Mardan Logo"
               className="w-24 mx-auto rounded-full"
             />
@@ -92,10 +70,10 @@ const ViewNotificationTemplate = ({ refetchData }) => {
         <div className="p-5 " dangerouslySetInnerHTML={{ __html: refetchData.bodyText }} />
       </div>
 
-      <Button onClick={downloadPDF} className="mt-8 rounded-full">
-        Download PDF
-      </Button>
-
+      <PdfGenerator
+    fields={refetchData} 
+    bodyText={refetchData.bodyText} 
+  />
       {(userRole.toLowerCase() === "registrar" || userRole.toLowerCase() === "establishment") && (
         <CommentsApproval existingData={refetchData} userRole={userRole} />
       )}
