@@ -110,6 +110,7 @@ const NotesheetForm = ({ initialValues, onSubmit }) => {
                                     <input
                                         id="file-upload"
                                         type="file"
+                                        accept="image/*"
                                         onChange={(event) => {
                                             handleFileChange(event);
                                             setFieldValue("file", event.currentTarget.files[0]);
