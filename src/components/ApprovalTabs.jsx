@@ -7,8 +7,8 @@ import { ApprovalData } from "./DataTable/columns";
 const ApprovalTabs = ({ approvals, loading, error, handleRowClick, triggerAlertDialog, HandledeleteApproval, userRole, handleEditClick }) => {
     const defaultTab = userRole.toLowerCase() === "registrar" ? "received" : "new";
     const [selectedTab, setSelectedTab] = useState(defaultTab);
-    const filteredApprovals = (status) => {
-        return approvals.filter((approval) => approval.status === status);
+    const filteredApprovals = (status,userRole) => {
+        return approvals.filter((approval) => approval.status === status && approval.selectedRole === userRole);
     };
 
     return (
@@ -44,7 +44,7 @@ const ApprovalTabs = ({ approvals, loading, error, handleRowClick, triggerAlertD
                 ) : (
                     <DataTable
                         columns={ApprovalData(triggerAlertDialog, HandledeleteApproval, userRole, approvals, handleEditClick)}
-                        data={filteredApprovals("received")}
+                        data={filteredApprovals("received",userRole)}
                         onRowClick={handleRowClick}
                     />
                 )}

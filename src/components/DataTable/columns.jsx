@@ -167,6 +167,23 @@ export const ApprovalData = (triggerAlertDialog, HandledeleteApproval, userRole,
         );
       },
     });
+  } else if (userRole.toLowerCase() === "registrar") {
+    columns.push({
+      header: "Actions",
+      cell: ({ row }) => (
+        <div className="flex gap-2">
+          <FaPaperPlane
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              triggerAlertDialog(row.original._id);
+            }}
+            className="cursor-pointer text-blue-500 h-8 w-8 hover:text-blue-700 p-2 rounded-full"
+            size={20}
+          />
+        </div>
+      ),
+    });
   }
 
   return columns;
