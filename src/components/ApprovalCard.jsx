@@ -14,6 +14,7 @@ import { useModal } from "@/context/ModalContext";
 import { AiOutlineClose } from "react-icons/ai";
 import ApprovalTabs from "./ApprovalTabs";
 import NotificationTemplate from "./CreateApproval";
+import { set } from "lodash";
 
 const base_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -32,6 +33,7 @@ const ApprovalCard = ({ searchQuery }) => {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false); // state for view modal visibility
   const [isSendModalOpen, setIsSendModalOpen] = useState(false); // state for send modal visibility
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedRole, setSelectedRole] = useState("");
   const storedUser = localStorage.getItem("user");
   const userObject = storedUser ? JSON.parse(storedUser) : null;
   useEffect(() => {
@@ -139,11 +141,14 @@ const ApprovalCard = ({ searchQuery }) => {
       toast.error("Please select at least one user.");
       return;
     }
+    const roles = selectedUsers.map((user) => user.role);
+    console.log("roles", roles);
 
     try {
       const payload = {
         approvalId,
         userIds: selectedUsers,
+        selectedRole,
       };
 
       const response = await axiosInstance.post(`${base_URL}/approval/send`, payload, {
@@ -213,11 +218,12 @@ const ApprovalCard = ({ searchQuery }) => {
     }
   };
 
-  const handleUserSelection = (userId) => {
+  const handleUserSelection = (userId,userselectedRole) => {
+    setSelectedRole(userselectedRole);
     setSelectedUsers((prevSelected) =>
       prevSelected.includes(userId)
         ? prevSelected.filter((id) => id !== userId)
-        : [...prevSelected, userId]
+        : [...prevSelected,userId]
     );
   };
 
@@ -314,9 +320,10 @@ const ApprovalCard = ({ searchQuery }) => {
                       <Checkbox
                         id={role.id}
                         checked={selectedUsers.includes(role.id)}
-                        onCheckedChange={() => handleUserSelection(role.id)}
+                        onCheckedChange={() => handleUserSelection(role.id, role.role)}
                       />
                       <label htmlFor={role.id} className="text-lg">
+                        
                         {role.role}
                       </label>
                     </div>
