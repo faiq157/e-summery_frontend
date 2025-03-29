@@ -169,7 +169,7 @@ const handleClosePreview = () => {
       <div className="max-h-32 ">
                 {isPreviewOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                <div className="bg-white p-6 rounded-lg shadow-lg w-[80vw] h-[80vh] overflow-auto">
+                <div className="bg-white p-6 rounded-lg shadow-lg w-[80vw] h-[80%] overflow-auto">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-2xl font-bold">Application Preview</h2>
                         <AiOutlineClose className="text-2xl cursor-pointer" onClick={handleClosePreview} />

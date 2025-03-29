@@ -218,12 +218,12 @@ const ApprovalCard = ({ searchQuery }) => {
     }
   };
 
-  const handleUserSelection = (userId,userselectedRole) => {
+  const handleUserSelection = (userId, userselectedRole) => {
     setSelectedRole(userselectedRole);
     setSelectedUsers((prevSelected) =>
       prevSelected.includes(userId)
         ? prevSelected.filter((id) => id !== userId)
-        : [...prevSelected,userId]
+        : [...prevSelected, userId]
     );
   };
 
@@ -312,29 +312,55 @@ const ApprovalCard = ({ searchQuery }) => {
               <AiOutlineClose className="text-2xl cursor-pointer" onClick={() => setIsSendModalOpen(false)} />
             </div>
             <div className="mb-4">
-              <p className="text-lg mb-2">Select Users:</p>
+         
               <div className="space-y-2 h-48 overflow-auto">
+              {filteredRoles.some((role) => role.role.toLowerCase() === "registrar") && (
+                      <p className="text-lg font-semibold mt-2">Draft Notification Send</p>
+                    )}
                 {filteredRoles.length > 0 ? (
-                  filteredRoles.map((role) => (
-                    <div key={role.id} className="flex gap-3 items-center">
-                      <Checkbox
-                        id={role.id}
-                        checked={selectedUsers.includes(role.id)}
-                        onCheckedChange={() => handleUserSelection(role.id, role.role)}
-                      />
-                      <label htmlFor={role.id} className="text-lg">
-                        
-                        {role.role}
-                      </label>
-                    </div>
-                  ))
+                  <>
+                    {/* Extract and display the registrar role at the top */}
+                    {filteredRoles
+                      .filter((role) => role.role.toLowerCase() === "registrar")
+                      .map((role) => (
+                        <div key={role.id} className="flex gap-3 items-center">
+                          <Checkbox
+                            id={role.id}
+                            checked={selectedUsers.includes(role.id)}
+                            onCheckedChange={() => handleUserSelection(role.id, role.role)}
+                          />
+                          <label htmlFor={role.id} className="text-lg">
+                            {role.role}
+                          </label>
+                        </div>
+                      ))}
+
+                    {/* Title for registrar */}
+                
+                    <p className="text-lg mb-2">Select Users:</p>
+                    {/* Display other roles */}
+                    {filteredRoles
+                      .filter((role) => role.role.toLowerCase() !== "registrar")
+                      .map((role) => (
+                        <div key={role.id} className="flex gap-3 items-center">
+                          <Checkbox
+                            id={role.id}
+                            checked={selectedUsers.includes(role.id)}
+                            onCheckedChange={() => handleUserSelection(role.id, role.role)}
+                          />
+                          <label htmlFor={role.id} className="text-lg">
+                            {role.role}
+                          </label>
+                        </div>
+                      ))}
+                  </>
                 ) : (
                   <p>No roles available</p>
                 )}
               </div>
             </div>
 
-            {userRole.toLowerCase() !== "registrar" && (
+            {/* {userRole.toLowerCase() !== "registrar" && (
               <>
                 <div className="flex justify-start items-center gap-2">
                   <Checkbox
@@ -371,17 +397,17 @@ const ApprovalCard = ({ searchQuery }) => {
                   )}
                 </AnimatePresence>
               </>
-            )}
+            )} */}
 
             <div className="flex justify-end space-x-4">
               <Button onClick={() => sendApproval(currentApprovalId)} className="rounded-full">
                 Send to Selected Roles
               </Button>
-              {userRole.toLowerCase() !== "registrar" && (
+              {/* {userRole.toLowerCase() !== "registrar" && (
                 <Button onClick={() => sendApprovalByEmail(currentApprovalId)} className="rounded-full">
                   Send via Email
                 </Button>
-              )}
+              )} */}
             </div>
           </div>
         </div>

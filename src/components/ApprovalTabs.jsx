@@ -7,10 +7,14 @@ import { ApprovalData } from "./DataTable/columns";
 const ApprovalTabs = ({ approvals, loading, error, handleRowClick, triggerAlertDialog, HandledeleteApproval, userRole, handleEditClick }) => {
     const defaultTab = userRole.toLowerCase() === "registrar" ? "received" : "new";
     const [selectedTab, setSelectedTab] = useState(defaultTab);
-    const filteredApprovals = (status,userRole) => {
-        return approvals.filter((approval) => approval.status === status && approval.selectedRole === userRole);
+    const filteredApprovals = (status, userRole = null) => {
+        if (status === "received" && !userRole) {
+            throw new Error("userRole is required for 'received' status");
+        }
+        return approvals.filter((approval) => 
+            approval.status === status && (userRole ? approval.selectedRole === userRole : true)
+        );
     };
-
     return (
         <Tabs defaultValue={selectedTab} className="w-full">
             <TabsList>
@@ -29,7 +33,7 @@ const ApprovalTabs = ({ approvals, loading, error, handleRowClick, triggerAlertD
                     <p className="text-red-600">{error}</p>
                 ) : (
                     <DataTable
-                        columns={ApprovalData(triggerAlertDialog, HandledeleteApproval, userRole, approvals, handleEditClick)}
+                        columns={ApprovalData(triggerAlertDialog, HandledeleteApproval, userRole, approvals, handleEditClick,false)}
                         data={filteredApprovals("new")}
                         onRowClick={handleRowClick}
                     />
@@ -43,8 +47,8 @@ const ApprovalTabs = ({ approvals, loading, error, handleRowClick, triggerAlertD
                     <p className="text-red-600">{error}</p>
                 ) : (
                     <DataTable
-                        columns={ApprovalData(triggerAlertDialog, HandledeleteApproval, userRole, approvals, handleEditClick)}
-                        data={filteredApprovals("received",userRole)}
+                        columns={ApprovalData(triggerAlertDialog, HandledeleteApproval, userRole, approvals, handleEditClick,false)}
+                        data={filteredApprovals("received", userRole)}
                         onRowClick={handleRowClick}
                     />
                 )}
@@ -56,7 +60,7 @@ const ApprovalTabs = ({ approvals, loading, error, handleRowClick, triggerAlertD
                     <p className="text-red-600">{error}</p>
                 ) : (
                     <DataTable
-                        columns={ApprovalData(triggerAlertDialog, HandledeleteApproval, userRole, approvals, handleEditClick)}
+                        columns={ApprovalData(triggerAlertDialog, HandledeleteApproval, userRole, approvals, handleEditClick,true)}
                         data={filteredApprovals("completed")}
                         onRowClick={handleRowClick}
                     />
