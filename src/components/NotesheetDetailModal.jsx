@@ -20,6 +20,7 @@ import {
     AlertDialogCancel
 } from "@/components/ui/alert-dialog";
 import CommentsSection from './Comments';
+import { Calendar, FileText, Mail, Phone, User } from 'lucide-react';
 
 
 const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToken, status }) => {
@@ -145,20 +146,51 @@ const handleClosePreview = () => {
     };
 
     return (
-        <div className="fixed inset-0  flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-[60vw]">
-                <div className="flex justify-between mb-4 items-center">
-                    <h2 className="text-2xl font-bold ">Notesheet Details</h2>
-                    <AiOutlineClose className="text-2xl cursor-pointer" onClick={onClose} />
-                </div>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl   overflow-hidden">
+            <div className="flex justify-between items-center p-6 border-b bg-gray-50">
+              <h2 className="text-2xl font-semibold text-gray-800 flex items-center gap-2">
+                <FileText className="text-blue-600" size={24} />
+                Notesheet Details
+              </h2>
+              <AiOutlineClose className="text-2xl cursor-pointer" onClick={onClose} />
+            </div>
 
-                <div className="flex justify-between gap-4">
-  <div className="w-1/2 mb-4 space-y-2">
-    <p><strong>Subject:</strong> {notesheet?.subject}</p>
-    <p><strong>Application User:</strong> {notesheet?.userName}</p>
-    <p><strong>Email:</strong> {notesheet?.email}</p>
-    <p><strong>Contact Number:</strong> {notesheet?.contact_number}</p>
-    <p><strong>Created at:</strong> {new Date(notesheet?.timestamps.createdAt).toLocaleString()}</p>
+                <div className=" flex  ">
+  <div className="w-1/2 mb-4 space-y-2 bg-blue-50 p-4 m-4  rounded-lg">
+  <h3 className="text-lg font-semibold text-blue-800 mb-4">
+                      Subject: {notesheet?.subject}
+                    </h3>
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3">
+                        <User className="text-blue-600" size={20} />
+                        <div>
+                          <p className="text-sm text-gray-600">Application User</p>
+                          <p className="text-gray-800 font-medium">{notesheet?.userName}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Mail className="text-blue-600" size={20} />
+                        <div>
+                          <p className="text-sm text-gray-600">Email</p>
+                          <p className="text-gray-800 font-medium">{notesheet?.email}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Phone className="text-blue-600" size={20} />
+                        <div>
+                          <p className="text-sm text-gray-600">Contact Number</p>
+                          <p className="text-gray-800 font-medium">{notesheet?.contact_number}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Calendar className="text-blue-600" size={20} />
+                        <div>
+                          <p className="text-sm text-gray-600">Created at</p>
+                          <p className="text-gray-800 font-medium">{new Date(notesheet?.timestamps.createdAt).toLocaleString()}</p>
+                        </div>
+                      </div>
+                    </div>
 
     {/* Conditional Rendering */}
     {notesheet?.image ? (
@@ -169,7 +201,7 @@ const handleClosePreview = () => {
       <div className="max-h-32 ">
                 {isPreviewOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                <div className="bg-white p-6 rounded-lg shadow-lg w-[80vw] h-[80%] overflow-auto">
+                <div className="bg-white p-6 rounded-lg shadow-lg w-[80vw] h-[60vh] md:h-[70vh] lg:h-[80vh] ">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-2xl font-bold">Application Preview</h2>
                         <AiOutlineClose className="text-2xl cursor-pointer" onClick={handleClosePreview} />
@@ -200,18 +232,18 @@ const handleClosePreview = () => {
 
   <CommentsSection rolesData={rolesData} />
 </div>
-
+                <div className=" mb-4 p-4 bg-gray-50 rounded-lg">
                 {status !== "In Progress" && status !== "Completed" && (
                     <>
                         <div className={`grid ${userRole.toLowerCase() === "establishment" ? "grid-cols-2" : "grid-cols-1"} gap-2`}>
-                            <div className="mt-3">
+                            <div className="mt-3 relative">
                                 <label htmlFor="comment" className="block text-gray-700 font-bold mb-2">Add a Comment</label>
                                 <textarea
                                     id="comment"
                                     name="comment"
                                     value={comment}
                                     onChange={(e) => setComment(e.target.value)}
-                                    className="shadow appearance-none bg-transparent border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    className="w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white"
                                     rows={3}
                                     required
                                 />
@@ -284,6 +316,7 @@ const handleClosePreview = () => {
                         </div>
                     </>
                 )}
+                </div>
             </div>
             <RoleSelectionModal
                 userRole={userRole}

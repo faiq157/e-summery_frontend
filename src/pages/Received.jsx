@@ -71,7 +71,7 @@ const Received = () => {
 
                 <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
                     <FilterAndSearch
-                        title="Recived Application"
+                        title="Received Application"
                         onDateRangeChange={handleDateRangeChange}
                         searchQuery={searchQuery}
                         onSearchChange={handleSearchChange}
