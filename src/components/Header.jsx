@@ -9,7 +9,7 @@ import axiosInstance from '@/utils/http';
 import { Link } from 'react-router-dom';
 import { VscSortPrecedence } from "react-icons/vsc";
 import { CgTrack } from "react-icons/cg";
-import { icons } from 'lucide-react';
+import { Bell, icons } from 'lucide-react';
 
 const Header = () => {
   const { logout } = useContext(AuthContext);
@@ -146,50 +146,63 @@ const Header = () => {
 
       {/* Modal for Notifications */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-boxdark rounded-lg w-96 p-6 shadow-lg">
-            <h2 className="text-lg font-bold mb-4">Notifications</h2>
-            {loading ? (
-              <p>Loading...</p>
-            ) : notifications.length === 0 ? (
-              <p>No notifications available.</p>
-            ) : (
-              <ul className="space-y-4 h-[60vh] overflow-y-auto">
-                {notifications
-                  .slice()
-                  .sort((a, b) => new Date(b.sentAt) - new Date(a.sentAt))
-                  .map((notification) => (
-                    <li
-                      key={notification._id}
-                      className={`flex flex-col gap-2 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-lg transition-shadow ${!notification.isRead ? 'border-red-500' : ''
-                        }`}
-                      onClick={() => markAsRead(notification._id)}
-                    >
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                        {notification.title}
-                      </h3>
-                      <p className="text-sm text-gray-700 dark:text-gray-300">{notification.body}</p>
-                      {notification.sentAt && (
-                        <span className="text-xs text-gray-500 dark:text-gray-400 self-end">
-                          {new Date(notification.sentAt).toLocaleString()}
-                        </span>
-                      )}
-                      {notification.isRead ? <FaCheckCircle /> : ''}
-                    </li>
-                  ))}
-              </ul>
-            )}
-            <div className="flex justify-between mt-4">
-              <button className="bg-red-500 text-white px-4 py-2 rounded-full" onClick={deleteAllNotifications}>
-                Delete All
-              </button>
-              <button className="bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded-full" onClick={closeModal}>
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white dark:bg-boxdark rounded-xl w-[420px] max-h-[80vh] p-0 shadow-xl overflow-hidden flex flex-col">
+      {/* Modal Header */}
+      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <h2 className="text-lg font-semibold flex items-center gap-2">
+        <Bell className="text-blue-600" size={20} /> Notifications
+        </h2>
+        <button onClick={closeModal} className="text-gray-500 hover:text-gray-700 text-lg font-bold">×</button>
+      </div>
+
+      {/* Modal Content */}
+      <div className="px-4 py-4 overflow-y-auto flex-1 space-y-3">
+        {loading ? (
+          <p>Loading...</p>
+        ) : notifications.length === 0 ? (
+          <p className="text-center text-gray-500">No notifications available.</p>
+        ) : (
+          <ul className="space-y-3">
+            {notifications
+              .slice()
+              .sort((a, b) => new Date(b.sentAt) - new Date(a.sentAt))
+              .map((notification) => (
+                <li
+                  key={notification._id}
+                  className="bg-gray-50 p-4 rounded-lg hover:bg-gray-100 transition-colors"
+                  onClick={() => markAsRead(notification._id)}
+                >
+                  <h3 className="font-semibold text-gray-900 dark:text-white text-[15px]">
+                    {notification.title}
+                  </h3>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm mt-1">
+                    {notification.body}
+                  </p>
+                  {notification.sentAt && (
+                    <div className="text-[12px] text-gray-500 dark:text-gray-400 mt-2">
+                      {new Date(notification.sentAt).toLocaleString()}
+                    </div>
+                  )}
+                </li>
+              ))}
+          </ul>
+        )}
+      </div>
+
+      {/* Modal Footer */}
+      <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-3">
+        <button
+          onClick={deleteAllNotifications}
+          className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg flex items-center justify-center gap-2 text-sm font-semibold"
+        >
+           Delete All
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </>
   );
 };
