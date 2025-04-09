@@ -70,13 +70,10 @@ const CommentsSection = ({ rolesData }) => {
                                 <User size={16} />
                               </div>
                               <div>
-                                <span className="font-semibold text-gray-800 m-1"> {`${commentData.user || 'Unknown User'} `}</span>
+                                <span className="font-semibold text-sm text-gray-800 m-1"> {`${commentData.user || 'Unknown User'} `}</span>
                             
                               </div>
                             </div>
-                            <span className="text-sm text-gray-500">
-                            {new Date(commentData.timestamp).toLocaleString()}
-                            </span>
                             </div> 
                                           
                         
@@ -104,9 +101,11 @@ const CommentsSection = ({ rolesData }) => {
                                                     );
                                                 })()}
                                             </div>
-                                            <p className="text-xs flex justify-end text-gray-500 mt-1">
-                                                
-                                            </p>
+                                           
+                                            <p className="text-sm mt-2 text-right text-gray-500">
+                            {new Date(commentData.timestamp).toLocaleString()}
+                            </p>
+                                        
                                         </div>
                                     </div>
                                 </div>
