@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Input } from './ui/input';
 import Loader from './Loader';
 import { FaSpinner } from 'react-icons/fa';
+import { MessageSquare, User } from 'lucide-react';
 
 const CommentsSection = ({ rolesData }) => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -34,20 +35,24 @@ const CommentsSection = ({ rolesData }) => {
     };
 
     return (
-        <div className="w-full sm:w-[80%] md:w-[50%] h-[20rem], sm:h-[25rem], and lg:h-[30rem] overflow-y-auto">
+        <div className="w-1/2 flex flex-col h-full">
+            <div className='p-6 flex-1 overflow-y-auto'>
+            <div className="space-y-4">
             <div className="sticky top-0 z-10 bg-white">
                 <Input
                     placeholder="Search comments..."
                     value={searchQuery}
                     onChange={(e) => handleSearch(e.target.value)}
-                    className="w-full focus:outline-none outline-none bg-transparent border border-gray-300 rounded-md p-2"
+                    className="w-full px-4 py-2 pl-10 pr-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                 />
             </div>
-
-            <h3 className="text-2xl font-semibold text-gray-800 m-4">Comments</h3>
-
+            <div className='flex items-center space-x-2 mb-4'>
+            <MessageSquare className="text-blue-600" size={20} />
+            <h3 className="text-lg font-semibold text-gray-800">Comments</h3>
+            </div>
+           <div className='h-[20rem] overflow-y-auto'>
             {loading ? (
-                <div className="flex justify-center items-center h-full">
+                <div className="flex justify-center items-center  ">
                 <FaSpinner className="animate-spin  text-black" size={24} />
                 </div>
             ) : filteredComments.length > 0 ? (
@@ -55,14 +60,26 @@ const CommentsSection = ({ rolesData }) => {
                     .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
                     .map((commentData) => (
                         commentData ? (
-                            <div key={commentData._id} className="flex flex-col m-2">
-                                <div className="flex items-start space-x-3">
-                                    <div className="flex-1 shadow-lg rounded p-2">
-                                        <div className="mb-2">
-                                            <span className="font-semibold bg-blue-200 p-2 rounded-full">
-                                                {`${commentData.user || 'Unknown User'} :`}
-                                            </span>
-                                        </div>
+                          
+                            <div key={commentData._id} className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100  transition-colors duration-200">
+                                <div className="flex items-center justify-between mb-2">
+                                    <div className="flex-1 shadow-lg rounded p-2">           
+                              <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <div className="bg-blue-100 text-blue-600 p-2 rounded-full">
+                                <User size={16} />
+                              </div>
+                              <div>
+                                <span className="font-semibold text-gray-800"> {`${commentData.user || 'Unknown User'} `}</span>
+                            
+                              </div>
+                            </div>
+                            <span className="text-sm text-gray-500">
+                            {new Date(commentData.timestamp).toLocaleString()}
+                            </span>
+                            </div> 
+                                          
+                        
                                         <div>
                                             <div className="flex flex-col">
                                                 {commentData.comment}
@@ -88,17 +105,24 @@ const CommentsSection = ({ rolesData }) => {
                                                 })()}
                                             </div>
                                             <p className="text-xs flex justify-end text-gray-500 mt-1">
-                                                {new Date(commentData.timestamp).toLocaleString()}
+                                                
                                             </p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                      
                         ) : null
                     ))
             ) : (
                 <p className="text-gray-500">No comments available.</p>
             )}
+</div>
+            
+            </div>
+            </div>
+         
+           
         </div>
     );
 };

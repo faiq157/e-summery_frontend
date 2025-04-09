@@ -43,12 +43,6 @@ const NotesheetForm = ({ initialValues, onSubmit }) => {
 
     const validationSchema = Yup.object({
         userName: Yup.string().required("Name is required"),
-        contact_number: Yup.string()
-            .matches(/^\d{1,11}$|^\d{12,}$/, "Contact number must not be a 11-digit number")
-            .required("Contact number is required"),
-        userEmail: Yup.string()
-            .email("Invalid email address")
-            .required("Email is required"),
         subject: Yup.string().required("Subject is required"),
     });
 

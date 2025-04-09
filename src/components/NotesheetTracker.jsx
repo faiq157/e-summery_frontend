@@ -28,8 +28,6 @@ const NotesheetTracker = ({ trackingId }) => {
   return (
     <div className="min-h-screen  p-6">
       <div className="max-w-4xl mx-auto  rounded-lg p-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6"> Track Your Notesheet </h1>
-
         {/* Loading/Error States */}
         {loading && <p className="text-blue-500">Loading...</p>}
         {error && <p className="text-red-500">{error}</p>}
@@ -57,7 +55,7 @@ const NotesheetTracker = ({ trackingId }) => {
                   </svg>
                 </div>
                 <div className="ml-4">
-                  <h3 className="text-2xl font-bold">Owner</h3>
+                  <h3 className="text-2xl font-bold">Current Handler</h3>
                   <p className="text-xl font-medium">
                     {notesheetData.currentHandler
                       ? notesheetData.currentHandler
