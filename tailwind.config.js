@@ -10,6 +10,9 @@ export default {
         spin: "spin 1s linear infinite",
         slower: "spin 2s linear infinite",
         fastest: "spin 0.4s linear infinite",
+		animation: {
+			'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+		  },
       },
       backgroundImage: {
         'gradient-r': 'linear-gradient(to right, var(--tw-gradient-stops))',
