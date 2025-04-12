@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { Checkbox } from "@/components/ui/checkbox";
 import { FaSpinner } from "react-icons/fa";
+import { Shield, Users } from "lucide-react";
+import { motion } from "framer-motion"; // Import Framer Motion
 
 const base_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -108,33 +110,47 @@ const AdminRoles = () => {
 
     return (
         <div className="p-6 bg-gray-100 min-h-screen">
-            <div className="flex items-center mb-6 gap-7">
-                <Link to="/AdminDashboard" className="text-black">
+              <div className="flex items-center m-5 gap-3">
+              <Link to="/AdminDashboard" className="text-black">
                     <IoArrowBackCircleSharp className="text-3xl" />
                 </Link>
-                <h1 className="text-2xl font-bold">Admin Panel - Roles</h1>
+            <div className="bg-indigo-600 rounded-xl p-2">
+              <Users className="w-6 h-6 text-white" />
             </div>
-
+            <h1 className="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
+              Admin Panel - Roles
+            </h1>
+          </div>
             {loading &&  <FaSpinner className="animate-spin text-black" size={24} /> }
             {error && <p className="text-red-500">{error}</p>}
 
             {!loading && !error && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 text-center">
-                {roles.map(({ id, role }) =>
-                  role.toLowerCase() !== "admin" && (
-                    <div
-                      key={id}
-                      className="bg-white/80 backdrop-blur-md p-6 shadow-lg rounded-2xl cursor-pointer border border-gray-200
-                                 transition-all duration-300 hover:shadow-2xl hover:scale-105"
-                      onClick={() => openModal({ id, role })}
-                    >
-                      <h1 className="text-2xl md:text-3xl font-semibold text-gray-800">{role}</h1>
-                    </div>
-                  )
-                )}
-              </div>
-              
-            )}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {roles.map((role, index) => (
+            <div
+                key={index}
+                onClick={() => openModal(role)}
+                className={`
+                    group relative bg-white rounded-xl p-6
+                    transform transition-all duration-200 ease-in-out
+                    hover:scale-105 hover:shadow-lg
+                    border-2 ${selectedRole?.id === role.id ? 'border-indigo-500' : 'border-transparent'}
+                    cursor-pointer
+                `}
+            >
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-50 to-purple-50 opacity-0 group-hover:opacity-100 rounded-xl transition-opacity duration-200" />
+                
+                <div className="relative flex items-center justify-between">
+                    <h2 className="text-lg font-semibold text-gray-900">{role.role}</h2>
+                </div>
+                
+                <div className="relative mt-2">
+                    <div className="h-1 w-0 group-hover:w-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300" />
+                </div>
+            </div>
+        ))}
+    </div>
+)}
 
             {roles.length === 0 && !loading && !error && (
                 <p>No roles found.</p>
@@ -143,8 +159,24 @@ const AdminRoles = () => {
             {/* Modal */}
             <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center">
-                    <div className="bg-white p-6 rounded-md shadow-md w-full max-w-md">
-                        <Dialog.Title className="text-xl font-bold">Assign Roles To User </Dialog.Title>
+                <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }} // Initial state
+                        animate={{ opacity: 1, scale: 1 }} // Animation on open
+                        exit={{ opacity: 0, scale: 0.9 }} // Animation on close
+                        transition={{ duration: 0.3 }} // Smooth transition
+                        className="bg-white p-6 rounded-md shadow-md w-full max-w-lg"
+                    >
+                    <div className="bg-white p-6 rounded-md  w-full max-w-md">
+                        
+                         <div className="flex flex-col items-center mb-6">
+                                                    <div className="mb-4 inline-block p-3 bg-indigo-100 rounded-full">
+                                                        <Shield className="w-8 h-8 text-indigo-600" />
+                                                    </div>
+                                                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Grant Access</h3>
+                                                    <p className="text-gray-600 mb-6">
+                                                        Configure access permissions for the selected role
+                                                    </p>
+                                                </div>
                         <p className="text-gray-500 mb-4">Role: {selectedRole?.role}</p>
 
                         {/* Search Input */}
@@ -203,7 +235,9 @@ const AdminRoles = () => {
                                 Save
                             </Button>
                         </div>
+                        
                     </div>
+                      </motion.div>
                 </div>
             </Dialog>
         </div>
