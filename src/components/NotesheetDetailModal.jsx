@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import CommentsSection from './Comments';
 import { Calendar, FileText, Mail, Phone, User } from 'lucide-react';
+import { useApprovalAccess } from '@/context/ApprovalAccessContext';
 
 
 const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToken, status }) => {
@@ -34,6 +35,7 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
     const { fetchNotesheets } = useNotesheetContext();
     const [totalPages, setTotalPages] = useState(1);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+      const { hasAccess  } = useApprovalAccess();
 
 const handlePreviewClick = () => {
     setIsPreviewOpen(true);
@@ -235,7 +237,7 @@ const handleClosePreview = () => {
                 <div className=" mb-4 p-4 bg-gray-50 rounded-lg">
                 {status !== "In Progress" && status !== "Completed" && (
                     <>
-                        <div className={`grid ${userRole.toLowerCase() === "establishment" ? "grid-cols-2" : "grid-cols-1"} gap-2`}>
+                        <div className={`grid ${hasAccess ? "grid-cols-2" : "grid-cols-1"} gap-2`}>
                             <div className="mt-3 relative">
                                 <label htmlFor="comment" className="block text-gray-700 font-bold mb-2">Add a Comment</label>
                                 <textarea
@@ -249,7 +251,7 @@ const handleClosePreview = () => {
                                 />
                             </div>
 
-                            {userRole.toLowerCase() === 'establishment' && (
+                            {hasAccess && (
                                 <div className="mt-3">
                                     <label htmlFor="file" className="block text-lg font-semibold text-gray-800 mb-1">Upload File</label>
                                     <div className="flex items-center justify-center w-full bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 py-3 px-6 hover:border-blue-500 hover:bg-gray-50 transition-all duration-300">
@@ -285,7 +287,7 @@ const handleClosePreview = () => {
                                 <div className='flex gap-4'>
                                     <Button className="rounded-full" onClick={handleSendClick}>Send</Button>
                                     {
-                                        userRole.toLowerCase() === "establishment" && status !== "New" && (
+                                        hasAccess && status !== "New" && (
                                             <AlertDialog>
                                                 <AlertDialogTrigger>
                                                     <Button

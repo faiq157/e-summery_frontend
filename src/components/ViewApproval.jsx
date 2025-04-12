@@ -7,19 +7,15 @@ import axios from "axios";
 import { Button } from "./ui/button";
 import CommentsApproval from "./CommentsApproval";
 import PdfGenerator from "./PdfGenerator";
+import { useApprovalAccess } from "@/context/ApprovalAccessContext";
 
 const ViewNotificationTemplate = ({ refetchData }) => {
-   const [userRole, setUserRole] = useState("");
+
     const storedUser = localStorage.getItem("user");
     const userObject = storedUser ? JSON.parse(storedUser) : null;
-    useEffect(() => {
-      if (storedUser) {
-        setUserRole(userObject?.role || "");
-      }
-    }, [storedUser, userObject]);
-
-    console.log("this is Role",userRole)
-
+        const { hasAccess ,userRole } = useApprovalAccess();
+      
+    
 
 
   if (!refetchData) {
@@ -74,7 +70,7 @@ const ViewNotificationTemplate = ({ refetchData }) => {
     fields={refetchData} 
     bodyText={refetchData.bodyText} 
   />
-      {(userRole.toLowerCase() === "registrar" || userRole.toLowerCase() === "establishment") && (
+      {hasAccess && (
         <CommentsApproval existingData={refetchData} userRole={userRole} />
       )}
    

@@ -23,6 +23,7 @@ import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminRoles from "./pages/Admin/AdminRoles";
 import Approval from "./pages/Approval";
 import Timelines from "./pages/Timelines";
+import ApprovalsAccess from "./pages/Admin/ApprovalsAccess";
 
 
 function App() {
@@ -53,6 +54,7 @@ function App() {
         <Route path="/adminDashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
         <Route path="/register" element={<AdminRoute><Register /></AdminRoute>} />
         <Route path="/adminRoles" element={<AdminRoute><AdminRoles /></AdminRoute>} />
+        <Route path="/approvalsAccess" element={<AdminRoute><ApprovalsAccess /></AdminRoute>} />
 
         {/* Authentication Routes */}
         <Route path="/login" element={<Login />} />

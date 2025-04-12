@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const Rechart = ({ statusCounts }) => {
-    // Prepare data for the bar chart
+    // Prepare data for the line chart
     const data = [
         { name: 'New', value: statusCounts.New },
         { name: 'In Progress', value: statusCounts['In Progress'] },
@@ -12,25 +12,21 @@ const Rechart = ({ statusCounts }) => {
         { name: 'Total', value: statusCounts.Received + statusCounts.Completed + statusCounts['In Progress'] + statusCounts.New },
     ];
 
-    // Define an array of colors (one for each bar)
-    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FF6347']; // Example colors for the bars
+    // Define a color for the line
+    const LINE_COLOR = '#0088FE'; // Example color for the line
 
     return (
         <ResponsiveContainer className={"mt-10"} width="80%" height={300}>
-            <BarChart data={data}>
+            <LineChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
                 <Legend />
 
-                <Bar dataKey="value">
-                    {/* Loop over data to assign a different color to each bar */}
-                    {data.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                </Bar>
-            </BarChart>
+                {/* Define the line for the chart */}
+                <Line type="monotone" dataKey="value" stroke={LINE_COLOR} strokeWidth={2} dot={{ r: 5 }} />
+            </LineChart>
         </ResponsiveContainer>
     );
 };

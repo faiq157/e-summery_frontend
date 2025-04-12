@@ -110,9 +110,17 @@ console.log(hasNewStatus)
   ];
 };
 
-export const ApprovalData = (triggerAlertDialog, HandledeleteApproval, userRole, approvals, handleEditClick, showActions) => {
+export const ApprovalData = (
+  triggerAlertDialog,
+  HandledeleteApproval,
+  userRole,
+  approvals,
+  handleEditClick,
+  showActions
+) => {
   console.log("this is approval", handleEditClick);
-console.log("showActions", showActions)
+  console.log("showActions", showActions);
+
   const columns = [
     {
       accessorKey: "email",
@@ -128,65 +136,41 @@ console.log("showActions", showActions)
     },
   ];
 
-  if (showActions===false) { 
-    if (userRole.toLowerCase() === "establishment") {
-      columns.push({
-        header: "Actions",
-        cell: ({ row }) => {
-        
-          return (
-            <div className="flex gap-2">
-              <FaPen
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  handleEditClick(row.original._id);
-                }}
-                className="cursor-pointer text-black h-8 w-8 hover:text-gray-500 p-2 rounded-full"
-                size={20}
-              />
-              <FaTrashAlt
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  HandledeleteApproval(row.original._id);
-                }}
-                className="cursor-pointer text-red-500 h-8 w-8 hover:text-red-700 p-2 rounded-full"
-                size={20}
-              />
-              <FaPaperPlane
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  triggerAlertDialog(row.original._id);
-                }}
-                className="cursor-pointer text-blue-500 h-8 w-8 hover:text-blue-700 p-2 rounded-full"
-                size={20}
-              />
-            </div>
-          );
-        },
-      });
-    } else if (userRole.toLowerCase() === "registrar") {
-      columns.push({
-        header: "Actions",
-        cell: ({ row }) => {
-          return (
-            <div className="flex gap-2">
-              <FaPaperPlane
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  triggerAlertDialog(row.original._id);
-                }}
-                className="cursor-pointer text-blue-500 h-8 w-8 hover:text-blue-700 p-2 rounded-full"
-                size={20}
-              />
-            </div>
-          );
-        },
-      });
-    }
+  if (showActions === false) {
+    columns.push({
+      header: "Actions",
+      cell: ({ row }) => (
+        <div className="flex gap-2">
+          <FaPen
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              handleEditClick(row.original._id);
+            }}
+            className="cursor-pointer text-black h-8 w-8 hover:text-gray-500 p-2 rounded-full"
+            size={20}
+          />
+          <FaTrashAlt
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              HandledeleteApproval(row.original._id);
+            }}
+            className="cursor-pointer text-red-500 h-8 w-8 hover:text-red-700 p-2 rounded-full"
+            size={20}
+          />
+          <FaPaperPlane
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              triggerAlertDialog(row.original._id);
+            }}
+            className="cursor-pointer text-blue-500 h-8 w-8 hover:text-blue-700 p-2 rounded-full"
+            size={20}
+          />
+        </div>
+      ),
+    });
   }
 
   return columns;

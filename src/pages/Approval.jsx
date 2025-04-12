@@ -9,25 +9,27 @@ import axiosInstance from "@/utils/http";
 import ApprovalCard from "@/components/ApprovalCard";
 import NotificationTemplate from "@/components/CreateApproval";
 import ViewNotificationTemplate from "@/components/ViewApproval";
+import { useApprovalAccess } from "@/context/ApprovalAccessContext";
+const base_URL = import.meta.env.VITE_APP_API_URL;
 
 const Approval = () => {
     const { isModalOpen, openModal, closeModal } = useModal();
     const [storedEmail, setStoredEmail] = useState("");
     const [loading, setLoading] = useState(false); // Loading state
     const storedUser = localStorage.getItem("user");
-    const [userRole, setUserRole] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const [refetchData, setRefetchData] = useState(false);
     const [userID, setUserID] = useState("");
+    const { hasAccess ,userRole } = useApprovalAccess();
 
     useEffect(() => {
         if (storedUser) {
             const userObject = JSON.parse(storedUser);
             setStoredEmail(userObject?.email || "");
-            setUserRole(userObject?.role || "");
             setUserID(userObject?._id || "");
         }
     }, []);
+   
 
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
@@ -37,14 +39,12 @@ const Approval = () => {
         setRefetchData((prev) => !prev);
     };
 
+    console.log(hasAccess, "this is the access");
     useEffect(() => {
         if (!isModalOpen) {
             handleRefetchData();
         }
     }, [isModalOpen]);
-
-   
-   
 
     return (
         <Dashboardlayout>
@@ -61,18 +61,15 @@ const Approval = () => {
                             placeholder="Search notesheets by title..."
                             className="w-full md:w-96 p-2 border rounded-full shadow-sm focus:outline-none"
                         />
-                        {userRole.toLocaleLowerCase() === "establishment" && (
-                            <Button onClick={openModal} className="w-full md:w-auto rounded-full">
-                                Create
-                            </Button>
-                        )}
-
-
-
+                      {console.log("Rendering Button: hasAccess =", hasAccess)}
+                    {hasAccess && (
+                        <Button onClick={openModal} className="w-full md:w-auto rounded-full">
+                            Create
+                        </Button>
+                    )}
                     </div>
                 </div>
-                <div className="ml-20">
-</div>
+                <div className="ml-20"></div>
                 {/* Notesheet Cards */}
                 <ApprovalCard searchQuery={searchQuery} refetchData={refetchData} isOpenModel={openModal} isClosedModel={closeModal} />
 
@@ -83,7 +80,7 @@ const Approval = () => {
                             <div className="flex justify-end mr-4">
                                 <AiOutlineClose className="text-2xl cursor-pointer" onClick={closeModal} />
                             </div>
-                            {userRole.toLowerCase() === "establishment" && (
+                            {hasAccess && (
                                 <NotificationTemplate refetchData={refetchData} closeModal={closeModal} />
                             )}
                         </div>

@@ -1,15 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { FaHome, FaRegCheckCircle, FaTractor, FaBell, FaCheckCircle } from 'react-icons/fa';
-import { IoNewspaper, IoSettingsOutline } from 'react-icons/io5';
-import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import { RiProgress2Fill, RiTimeLine } from 'react-icons/ri';
+import { Bell, User, Home, FileText, Clock, Send, CheckSquare, Target, Shield, Settings, X, TimerIcon } from 'lucide-react';
+
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import AuthContext from '@/context/AuthContext';
 import axiosInstance from '@/utils/http';
 import { Link } from 'react-router-dom';
-import { VscSortPrecedence } from "react-icons/vsc";
-import { CgTrack } from "react-icons/cg";
-import { Bell, icons } from 'lucide-react';
+
 
 const Header = () => {
   const { logout } = useContext(AuthContext);
@@ -82,32 +78,35 @@ const Header = () => {
   const firstLetter = userData?.fullname?.charAt(0) || userData?.name?.charAt(0) || '';
 
   const items = [
-    { title: 'Home', url: '/', icon: FaHome },
-    { title: 'New', url: '/new', icon: IoNewspaper },
-    { title: 'Progress', url: '/progress', icon: RiProgress2Fill },
-    { title: 'Received', url: '/received', icon: VscSortPrecedence },
-    { title: 'Completed', url: '/completed', icon: FaRegCheckCircle },
-    { title: 'Tracking', url: '/tracking', icon: CgTrack },
-    { title: 'Approval', url: '/approval', icon: IoMdCheckmarkCircleOutline },
+    { title: 'Home', url: '/', icon: Home },
+    { title: 'New', url: '/new', icon: FileText },
+    { title: 'Progress', url: '/progress', icon: Clock },
+    { title: 'Received', url: '/received', icon: Send },
+    { title: 'Completed', url: '/completed', icon: CheckSquare },
+    { title: 'Tracking', url: '/tracking', icon: Target },
+    { title: 'Approval', url: '/approval', icon: Shield },
   ...(userData?.role === 'Vice Chancellor' ? [
-    { title: "Timelines", url: '/timelines', icon: RiTimeLine }
+    { title: "Timelines", url: '/timelines', icon: TimerIcon }
   ] : []),
-    { title: 'Settings', url: '/setting', icon: IoSettingsOutline },
+    { title: 'Settings', url: '/setting', icon: Settings },
  
   ];
+
+
 
   return (
     <>
       <header className="top-0 flex w-full bg-background border-b-2 dark:border-border h-20 drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
         <nav className="flex items-center gap-6 px-8">
+       
           {items.map((item) => (
             <a
               key={item.title}
               href={item.url}
-              className={`flex flex-col items-center hover:bg-gray-100 dark:hover:bg-gray-800 hover:scale-105 gap-2 text-gray-800 rounded-lg p-2 dark:text-white ${location.pathname === item.url ? 'bg-gray-200 dark:bg-gray-700' : ''
+              className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100/50 hover:text-gray-900 transition-all group ${location.pathname === item.url ? 'bg-gray-200 dark:bg-gray-700' : ''
                 }`}
             >
-              <item.icon className="w-5 h-5" />
+              <item.icon className="h-5 w-5 mr-2 group-hover:text-indigo-600 transition-colors" />
               <span>{item.title}</span>
             </a>
           ))}
@@ -115,7 +114,7 @@ const Header = () => {
         <div className="flex items-center gap-4 ml-auto mr-8">
           {/* Notification Bell */}
           <button className="relative text-gray-800 dark:text-white hover:text-gray-600" onClick={openModal}>
-            <FaBell className="w-6 h-6" />
+            <Bell className="w-6 h-6" />
             {hasUnreadNotifications && <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full"></span>}
           </button>
           <DropdownMenu>
