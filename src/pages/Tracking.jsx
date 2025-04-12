@@ -65,7 +65,7 @@ const Tracking = () => {
         {submittedId ? (
           <NotesheetTracker trackingId={submittedId} />
         ) : (
-          <p className="text-gray-500">Please enter a tracking ID to track the notesheet.</p>
+          <p className="text-gray-500 text-center">Please enter a tracking ID to track the notesheet.</p>
         )}
  
     </div>

@@ -36,7 +36,7 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
     const [totalPages, setTotalPages] = useState(1);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
       const { hasAccess  } = useApprovalAccess();
-
+console.log("completed button has access to.",hasAccess)
 const handlePreviewClick = () => {
     setIsPreviewOpen(true);
 };

@@ -31,8 +31,8 @@ export const ApprovalAccessProvider = ({ children }) => {
       });
 
       const data = await response.json();
-      const approvalAccess = data?.data?.[0]?.approvalAccess || [];
-        console.log("this si approvcakl vdata ",approvalAccess)
+      const approvalAccess = data.data.approvalAccess
+      console.log(approvalAccess, "approval selected ");
       if (Array.isArray(approvalAccess) && approvalAccess.includes(role)) {
         setHasAccess(true);
       } else {

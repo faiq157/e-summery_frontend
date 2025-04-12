@@ -50,7 +50,8 @@ const ApprovalsAccess = () => {
             });
 
             const data = await response.json();
-            const approvalAccess = data?.data?.[0]?.approvalAccess || [];
+            const approvalAccess = data.data.approvalAccess
+            console.log(approvalAccess,"approval selected ")
             setSelectedUsers(
                 roles
                     .filter((role) => approvalAccess.includes(role.role))
