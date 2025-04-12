@@ -3,10 +3,12 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs"
 import Loader from "./Loader";
 import { DataTable } from "./DataTable/Data-Table";
 import { ApprovalData } from "./DataTable/columns";
+import { useApprovalAccess } from "@/context/ApprovalAccessContext";
 
 const ApprovalTabs = ({ approvals, loading, error, handleRowClick, triggerAlertDialog, HandledeleteApproval, userRole, handleEditClick }) => {
-    const defaultTab = userRole.toLowerCase() === "registrar" ? "received" : "new";
-    const [selectedTab, setSelectedTab] = useState(defaultTab);
+    console.log("this is Approval ",approvals)
+     const { hasAccess  } = useApprovalAccess();
+    const [selectedTab, setSelectedTab] = useState("new");
     const filteredApprovals = (status, userRole = null) => {
         if (status === "received" && !userRole) {
             throw new Error("userRole is required for 'received' status");
@@ -18,7 +20,7 @@ const ApprovalTabs = ({ approvals, loading, error, handleRowClick, triggerAlertD
     return (
         <Tabs defaultValue={selectedTab} className="w-full">
             <TabsList>
-                {userRole.toLowerCase() === "establishment" && (
+                {hasAccess && (
                     <TabsTrigger value="new" onClick={() => setSelectedTab("new")}>New</TabsTrigger>
                 )}
 

@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import TimelinessChart from "@/components/TimelinessChart";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "@/utils/http";
+import { CheckCircle, Files, FileText, InboxIcon, Loader2 } from "lucide-react";
 
 
 
@@ -84,23 +85,23 @@ const navigateTo = (path) => {
           <div  >
     <div className="grid grid-cols-1 m-10 md:grid-cols-4 lg:grid-cols-5">
       <div onClick={() => navigateTo("/new")} className="cursor-pointer">
-        <ApplicationSummary title="New Applications" count={statusCounts.New} />
+        <ApplicationSummary title="New Applications" count={statusCounts.New}  icon={FileText} color='bg-blue-500'  />
       </div>
       <div onClick={() => navigateTo("/progress")} className="cursor-pointer">
-        <ApplicationSummary title="In Progress" count={statusCounts["In Progress"]} />
+        <ApplicationSummary title="In Progress" count={statusCounts["In Progress"]} icon={Loader2} color='bg-emerald-500' />
       </div>
       <div onClick={() => navigateTo("/completed")} className="cursor-pointer">
-        <ApplicationSummary title="Completed" count={statusCounts.Completed} />
+        <ApplicationSummary title="Completed" count={statusCounts.Completed}  icon={CheckCircle} color='bg-amber-500'  />
       </div>
       <div onClick={() => navigateTo("/received")} className="cursor-pointer">
-        <ApplicationSummary title="Received" count={statusCounts.Received} />
+        <ApplicationSummary title="Received" count={statusCounts.Received}  icon={InboxIcon} color='bg-orange-500' />
       </div>
       <div
         className="cursor-pointer"
       >
         <ApplicationSummary 
           title="Total Applications" 
-          count={statusCounts.New + statusCounts["In Progress"] + statusCounts.Completed + statusCounts.Received} 
+          count={statusCounts.New + statusCounts["In Progress"] + statusCounts.Completed + statusCounts.Received}   icon={Files} color='bg-red-500'
         />
       </div>
     </div>

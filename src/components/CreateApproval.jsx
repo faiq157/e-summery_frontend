@@ -11,18 +11,17 @@ import { IoCreate } from "react-icons/io5";
 import axiosInstance from "@/utils/http";
 import CommentsApproval from "./CommentsApproval";
 import PdfGenerator from "./PdfGenerator";
+import { useApprovalAccess } from "@/context/ApprovalAccessContext";
 
 const NotificationTemplate = ({ closeModal, existingData }) => {
   const base_URL = import.meta.env.VITE_APP_API_URL;
   const [bodyText, setBodyText] = useState(existingData?.bodyText);
-  const [userRole, setUserRole] = useState("");
   const storedUser = localStorage.getItem("user");
   const userObject = storedUser ? JSON.parse(storedUser) : null;
-  useEffect(() => {
-    if (storedUser) {
-      setUserRole(userObject?.role || "");
-    }
-  }, [storedUser, userObject]);
+      const { hasAccess ,userRole } = useApprovalAccess();
+      const userId = userObject?._id;
+  
+
   const [fields, setFields] = useState({
     title: existingData?.title || "Approval Title",
     registrarOffice: existingData?.registrarOffice || "Office of the Registrar",
@@ -71,6 +70,7 @@ const NotificationTemplate = ({ closeModal, existingData }) => {
       refNo: fields.refNo,
       date: fields.date,
       bodyText: bodyText,
+      userId:userId
     };
     const request = existingData
       ? axiosInstance.put(`${base_URL}/approval/${existingData?._id}`, data, {
@@ -212,7 +212,7 @@ const NotificationTemplate = ({ closeModal, existingData }) => {
     <IoCreate /> {existingData ? "Update" : "Create"}
   </Button>
 </div>
-      {existingData && userRole.toLowerCase() === "establishment" && (
+      {existingData && hasAccess && (
         <CommentsApproval existingData={existingData} userRole={userRole} />
       )}
     </div>

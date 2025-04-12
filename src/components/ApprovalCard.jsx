@@ -15,6 +15,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import ApprovalTabs from "./ApprovalTabs";
 import NotificationTemplate from "./CreateApproval";
 import { set } from "lodash";
+import { useApprovalAccess } from "@/context/ApprovalAccessContext";
 
 const base_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -27,7 +28,7 @@ const ApprovalCard = ({ searchQuery }) => {
   const [currentApprovalId, setCurrentApprovalId] = useState(null);
   const [editData, setEditData] = useState(null);
   const [approvalEmail, setApprovalEmail] = useState(""); // new state for email input
-  const [userRole, setUserRole] = useState("");
+
   const [refetchData, setRefetchData] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false); // state for view modal visibility
@@ -36,11 +37,8 @@ const ApprovalCard = ({ searchQuery }) => {
   const [selectedRole, setSelectedRole] = useState("");
   const storedUser = localStorage.getItem("user");
   const userObject = storedUser ? JSON.parse(storedUser) : null;
-  useEffect(() => {
-    if (storedUser) {
-      setUserRole(userObject?.role || "");
-    }
-  }, [storedUser, userObject]);
+    const { hasAccess ,userRole } = useApprovalAccess();
+  
 
   const userId = userObject?._id;
 
@@ -59,7 +57,7 @@ const ApprovalCard = ({ searchQuery }) => {
     const fetchApprovals = async () => {
       try {
         setLoading(true);
-        const response = await axiosInstance.get(`${base_URL}/approvals`, {
+        const response = await axiosInstance.get(`${base_URL}/approvals/user/${userId}`, {
           headers: { "Content-Type": "application/json" },
         });
         setApprovals(response.data.data || []);
@@ -99,13 +97,14 @@ const ApprovalCard = ({ searchQuery }) => {
     };
 
     const initializeData = async () => {
-      if (userRole.toLowerCase() === "establishment") {
+      if (hasAccess) {
         await fetchApprovals();
       } else {
         await fetchSpecificApprovals();
       }
       await fetchRoles();
     };
+    
 
     if (userRole) {
       initializeData();
@@ -235,13 +234,10 @@ const ApprovalCard = ({ searchQuery }) => {
     setIsChecked((prev) => !prev);
   };
 
-  const filteredRoles = userRole.toLowerCase() === "registrar"
-    ? roles.filter((role) => role.role.toLowerCase() === "establishment")
-    : roles;
 
   return (
     <div className="p-8">
-      {userRole.toLowerCase() === "establishment" || userRole.toLowerCase() === "registrar" ? (
+      {hasAccess ? (
         <ApprovalTabs
           approvals={filteredApprovals}
           loading={loading}
@@ -314,32 +310,17 @@ const ApprovalCard = ({ searchQuery }) => {
             <div className="mb-4">
          
               <div className="space-y-2 h-48 overflow-auto">
-              {filteredRoles.some((role) => role.role.toLowerCase() === "registrar") && (
+           
                       <p className="text-lg font-semibold mt-2">Draft Notification Send</p>
-                    )}
-                {filteredRoles.length > 0 ? (
-                  <>
-                    {/* Extract and display the registrar role at the top */}
-                    {filteredRoles
-                      .filter((role) => role.role.toLowerCase() === "registrar")
-                      .map((role) => (
-                        <div key={role.id} className="flex gap-3 items-center">
-                          <Checkbox
-                            id={role.id}
-                            checked={selectedUsers.includes(role.id)}
-                            onCheckedChange={() => handleUserSelection(role.id, role.role)}
-                          />
-                          <label htmlFor={role.id} className="text-lg">
-                            {role.role}
-                          </label>
-                        </div>
-                      ))}
 
+                {roles.length > 0 ? (
+                  <>
+                 
                     {/* Title for registrar */}
                 
                     <p className="text-lg mb-2">Select Users:</p>
                     {/* Display other roles */}
-                    {filteredRoles
+                    {roles
                       .filter((role) => role.role.toLowerCase() !== "registrar")
                       .map((role) => (
                         <div key={role.id} className="flex gap-3 items-center">

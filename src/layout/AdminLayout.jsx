@@ -28,7 +28,9 @@ const AdminLayout = ({ children, onSearchChange, searchQuery }) => {
                         className="px-4 py-2 rounded-full w-64 text-black"
                     />
                     <Link className="bg-white px-6 py-2 rounded-full text-black hover:bg-gray-200" to="/adminRoles">Assign Role</Link>
-
+                    <Link className="bg-white px-6 py-2 rounded-full text-black hover:bg-gray-200" to="/approvalsAccess">
+                        Approvals Access
+                    </Link>
                     <Link to="/register">
                         <button className="bg-white px-6 py-2 rounded-full text-black hover:bg-gray-200">
                             Create User
