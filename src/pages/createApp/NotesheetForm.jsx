@@ -102,15 +102,16 @@ const NotesheetForm = ({ initialValues, onSubmit }) => {
                                         Choose File
                                     </label>
                                     <input
-                                        id="file-upload"
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={(event) => {
-                                            handleFileChange(event);
-                                            setFieldValue("file", event.currentTarget.files[0]);
-                                        }}
-                                        className="hidden"
-                                    />
+                                            id="file-upload"
+                                            type="file"
+                                            accept="image/*,.pdf,.doc,.docx"
+                                            onChange={(event) => {
+                                                handleFileChange(event);
+                                                setFieldValue("file", event.currentTarget.files[0]);
+                                            }}
+                                            className="hidden"
+                                            />
+                                    
                                 </div>
 
                                 {selectedFile && (

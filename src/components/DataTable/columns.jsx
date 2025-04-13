@@ -118,9 +118,6 @@ export const ApprovalData = (
   handleEditClick,
   showActions
 ) => {
-  console.log("this is approval", handleEditClick);
-  console.log("showActions", showActions);
-
   const columns = [
     {
       accessorKey: "email",
@@ -139,37 +136,45 @@ export const ApprovalData = (
   if (showActions === false) {
     columns.push({
       header: "Actions",
-      cell: ({ row }) => (
-        <div className="flex gap-2">
-          <FaPen
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              handleEditClick(row.original._id);
-            }}
-            className="cursor-pointer text-black h-8 w-8 hover:text-gray-500 p-2 rounded-full"
-            size={20}
-          />
-          <FaTrashAlt
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              HandledeleteApproval(row.original._id);
-            }}
-            className="cursor-pointer text-red-500 h-8 w-8 hover:text-red-700 p-2 rounded-full"
-            size={20}
-          />
-          <FaPaperPlane
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              triggerAlertDialog(row.original._id);
-            }}
-            className="cursor-pointer text-blue-500 h-8 w-8 hover:text-blue-700 p-2 rounded-full"
-            size={20}
-          />
-        </div>
-      ),
+      cell: ({ row }) => {
+        const status = row.original.status; // Access the status of the row
+
+        return (
+          <div className="flex gap-2">
+            {status !== "received" && (
+              <>
+                <FaPen
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    handleEditClick(row.original._id);
+                  }}
+                  className="cursor-pointer text-black h-8 w-8 hover:text-gray-500 p-2 rounded-full"
+                  size={20}
+                />
+                <FaTrashAlt
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    HandledeleteApproval(row.original._id);
+                  }}
+                  className="cursor-pointer text-red-500 h-8 w-8 hover:text-red-700 p-2 rounded-full"
+                  size={20}
+                />
+              </>
+            )}
+            <FaPaperPlane
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                triggerAlertDialog(row.original._id);
+              }}
+              className="cursor-pointer text-blue-500 h-8 w-8 hover:text-blue-700 p-2 rounded-full"
+              size={20}
+            />
+          </div>
+        );
+      },
     });
   }
 

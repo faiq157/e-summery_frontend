@@ -16,6 +16,7 @@ import ApprovalTabs from "./ApprovalTabs";
 import NotificationTemplate from "./CreateApproval";
 import { set } from "lodash";
 import { useApprovalAccess } from "@/context/ApprovalAccessContext";
+import { Mail, MailCheck, Send } from "lucide-react";
 
 const base_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -37,8 +38,19 @@ const ApprovalCard = ({ searchQuery }) => {
   const [selectedRole, setSelectedRole] = useState("");
   const storedUser = localStorage.getItem("user");
   const userObject = storedUser ? JSON.parse(storedUser) : null;
-    const { hasAccess ,userRole } = useApprovalAccess();
-  
+    const { hasAccess ,userRole,approvalAccessData } = useApprovalAccess();
+    const [showRadioList, setShowRadioList] = useState(true); // State to toggle radio button list
+    const [showCheckboxList, setShowCheckboxList] = useState(false); // State to toggle checkbox list
+    
+    const handleToggleRadioList = () => {
+      setShowRadioList(true);
+      setShowCheckboxList(false); // Hide checkbox list when radio list is shown
+    };
+    
+    const handleToggleCheckboxList = () => {
+      setShowCheckboxList(true);
+      setShowRadioList(false); // Hide radio list when checkbox list is shown
+    };
 
   const userId = userObject?._id;
 
@@ -302,44 +314,116 @@ const ApprovalCard = ({ searchQuery }) => {
 
       {isSendModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded w-[40vw] overflow-auto no-scrollbar">
-            <div className="flex justify-between ">
-              <h2 className="text-xl font-bold mb-4">Send Approval</h2>
+          <div className="bg-white p-6 rounded w-[50vw] overflow-auto no-scrollbar">
+            <div className="flex mb-3 justify-between ">
+            <div className="flex items-center  gap-3">
+                  <div className="bg-indigo-100 p-2 rounded-lg">
+                    <Send className="w-5 h-5 text-indigo-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900">Send Notification</h3>
+                  
+                  </div>
+                </div>
               <AiOutlineClose className="text-2xl cursor-pointer" onClick={() => setIsSendModalOpen(false)} />
             </div>
             <div className="mb-4">
-         
-              <div className="space-y-2 h-48 overflow-auto">
-           
-                      <p className="text-lg font-semibold mt-2">Draft Notification Send</p>
+  {/* Toggle Checkboxes */}
+  <div className="flex gap-4 m-5 items-center">
+  <button
+    className={`px-4 py-2 rounded-lg border ${
+      showRadioList
+        ? "border-indigo-500 bg-indigo-50/50 text-indigo-600"
+        : "border-gray-200 hover:border-indigo-200 hover:bg-indigo-50/30"
+    }`}
+    onClick={handleToggleRadioList}
+  >
+    <div className="flex items-center gap-2">
+      <Mail className={`w-5 h-5 ${showRadioList ? "text-blue-600" : "text-gray-600"}`} />
+      <div>
+        <p className="font-semibold">Draft Notification</p>
+        <p className="text-sm text-gray-500">Send as draft first</p>
+      </div>
+    </div>
+  </button>
 
-                {roles.length > 0 ? (
-                  <>
-                 
-                    {/* Title for registrar */}
-                
-                    <p className="text-lg mb-2">Select Users:</p>
-                    {/* Display other roles */}
-                    {roles
-                      .filter((role) => role.role.toLowerCase() !== "registrar")
-                      .map((role) => (
-                        <div key={role.id} className="flex gap-3 items-center">
-                          <Checkbox
-                            id={role.id}
-                            checked={selectedUsers.includes(role.id)}
-                            onCheckedChange={() => handleUserSelection(role.id, role.role)}
-                          />
-                          <label htmlFor={role.id} className="text-lg">
-                            {role.role}
-                          </label>
-                        </div>
-                      ))}
-                  </>
-                ) : (
-                  <p>No roles available</p>
-                )}
+  <button
+    className={`px-4 py-2 rounded-lg border ${
+      showCheckboxList
+        ? "border-indigo-500 bg-indigo-50/50 text-indigo-600"
+        : "border-gray-200 hover:border-indigo-200 hover:bg-indigo-50/30"
+    }`}
+    onClick={handleToggleCheckboxList}
+  >
+    <div className="flex items-center gap-2">
+      <MailCheck className={`w-5 h-5 ${showCheckboxList ? "text-blue-600" : "text-gray-600"}`} />
+      <div>
+        <p className="font-semibold">Final Notification</p>
+        <p className="text-sm text-gray-500">Send as final version</p>
+      </div>
+    </div>
+  </button>
+</div>
+
+  {/* Radio Button List */}
+  {showRadioList && (
+    <div className="space-y-2 h-48 overflow-auto">
+      {roles.length > 0 ? (
+        <>
+          {roles
+            .filter((role) => approvalAccessData.includes(role.role))
+            .map((role) => (
+              <div key={role.id} className="flex gap-3 items-center">
+                <input
+                  type="radio"
+                  id={role.id}
+                  name="roleSelection"
+                  value={role.id}
+                  checked={selectedUsers.includes(role.id)}
+                  onChange={() => setSelectedUsers([role.id], handleUserSelection(role.id, role.role))}
+                />
+                <label htmlFor={role.id} className="text-lg cursor-pointer">
+                  {role.role}
+                </label>
               </div>
+            ))}
+        </>
+      ) : (
+        <p>No roles available</p>
+      )}
+    </div>
+  )}
+
+  {/* Checkbox List */}
+  {showCheckboxList && (
+    <div className="space-y-2 h-48 overflow-auto">
+      {roles.length > 0 ? (
+        <>
+          {roles.map((role) => (
+            <div key={role.id} className="flex gap-3 items-center">
+              <Checkbox
+                id={role.id}
+                checked={selectedUsers.includes(role.id)}
+                onCheckedChange={() =>
+                  setSelectedUsers((prevSelected) =>
+                    prevSelected.includes(role.id)
+                      ? prevSelected.filter((id) => id !== role.id)
+                      : [...prevSelected, role.id]
+                  )
+                }
+              />
+              <label htmlFor={role.id} className="text-lg">
+                {role.role}
+              </label>
             </div>
+          ))}
+        </>
+      ) : (
+        <p>No roles available</p>
+      )}
+    </div>
+  )}
+</div>
 
             {/* {userRole.toLowerCase() !== "registrar" && (
               <>
