@@ -7,6 +7,7 @@ const base_URL = import.meta.env.VITE_APP_API_URL;
 export const ApprovalAccessProvider = ({ children }) => {
   const [hasAccess, setHasAccess] = useState(false);
   const [userRole, setUserRole] = useState("");
+  const [approvalAccessData, setApprovalAccessData] = useState([]); // New state for storing approval access data
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -31,7 +32,8 @@ export const ApprovalAccessProvider = ({ children }) => {
       });
 
       const data = await response.json();
-      const approvalAccess = data.data.approvalAccess
+      const approvalAccess = data.data.approvalAccess;
+      setApprovalAccessData(approvalAccess); // Store the fetched data in state
       console.log(approvalAccess, "approval selected ");
       if (Array.isArray(approvalAccess) && approvalAccess.includes(role)) {
         setHasAccess(true);
@@ -46,7 +48,9 @@ export const ApprovalAccessProvider = ({ children }) => {
   };
 
   return (
-    <ApprovalAccessContext.Provider value={{ hasAccess, userRole }}>
+    <ApprovalAccessContext.Provider
+      value={{ hasAccess, userRole, approvalAccessData }} // Provide the data via context
+    >
       {children}
     </ApprovalAccessContext.Provider>
   );
