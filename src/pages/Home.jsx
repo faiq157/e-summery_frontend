@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import TimelinessChart from "@/components/TimelinessChart";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "@/utils/http";
-import { CheckCircle, Files, FileText, InboxIcon, Loader2 } from "lucide-react";
+import { CheckCircle, Files, FileText, InboxIcon, ListChecks, Loader2 } from "lucide-react";
 
 
 
@@ -24,12 +24,20 @@ const Home = () => {
   const [filter, setFilter] = useState("weekly");  // Default filter
   const base_URL = import.meta.env.VITE_APP_API_URL;
   const storedUser = localStorage.getItem("user");
+  const storedToken = localStorage.getItem("token");
   const user = JSON.parse(storedUser);
   const role = user.role;
   useEffect(() => {
     const fetchStatusCounts = async () => {
       try {
-        const response = await   axiosInstance.get(`${base_URL}/notesheet/statuscount/?role=${role}&filter=${filter}`);
+        const response = await axiosInstance.get(
+          `${base_URL}/notesheet/statuscount/?role=${role}&filter=${filter}`,
+          {
+            headers: {
+              Authorization: ` ${storedToken}`,
+            },
+          }
+        );
         setStatusCounts(response.data.statusCount);
       } catch (err) {
         console.error("Error fetching status counts:", err);
@@ -38,9 +46,10 @@ const Home = () => {
         setLoading(false);
       }
     };
-
+  
     fetchStatusCounts();
   }, [filter]);
+  
 
   // Filter options for ShadCN Select
   const filterOptions = [
@@ -101,7 +110,7 @@ const navigateTo = (path) => {
       >
         <ApplicationSummary 
           title="Total Applications" 
-          count={statusCounts.New + statusCounts["In Progress"] + statusCounts.Completed + statusCounts.Received}   icon={Files} color='bg-red-500'
+          count={statusCounts.New + statusCounts["In Progress"] + statusCounts.Completed + statusCounts.Received}   icon={ListChecks } color='bg-red-500'
         />
       </div>
     </div>

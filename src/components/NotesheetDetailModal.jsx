@@ -175,7 +175,7 @@ const handleClosePreview = () => {
                         <Mail className="text-blue-600" size={20} />
                         <div>
                           <p className="text-sm text-gray-600">Email</p>
-                          <p className="text-gray-800 font-medium">{notesheet?.email}</p>
+                          <p className="text-gray-800 font-medium">{notesheet?.userEmail}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
