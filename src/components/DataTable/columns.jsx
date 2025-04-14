@@ -1,3 +1,4 @@
+import { Copy, Pencil, Trash } from "lucide-react";
 import { FaCopy, FaPaperPlane, FaPen, FaTrashAlt } from "react-icons/fa";
 // columns.js or columns.jsx
 export const userColumns = (handleEdit, handleDelete) => [
@@ -19,14 +20,14 @@ export const userColumns = (handleEdit, handleDelete) => [
     // Custom column for edit and delete icons
     cell: ({ row }) => (
       <div className="flex gap-2">
-        <FaPen
+        <Pencil
           onClick={() => handleEdit(row.original)} 
-          className="cursor-pointer text-black h-8 w-8 hover:text-gray-500 p-2 rounded-full"
+          className="cursor-pointer text-black h-10 w-10 hover:text-gray-500  rounded-full"
           size={20} // Set the size of the icon
         />
-        <FaTrashAlt
+        <Trash
           onClick={() => handleDelete(row.original._id)} 
-          className="cursor-pointer text-red-500 h-8 w-8 hover:text-red-700 p-2 rounded-full"
+          className="cursor-pointer text-red-500 h-8 w-8 hover:text-red-700  rounded-full"
           size={20} // Set the size of the icon
         />
       </div>
@@ -55,7 +56,7 @@ console.log(hasNewStatus)
         return (
           <div className="flex justify-start items-center gap-2">
             <span>{trackingId}</span>
-            <FaCopy
+            <Copy
               onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
@@ -83,7 +84,7 @@ console.log(hasNewStatus)
 
               return (
                 <div className="flex gap-2">
-                  <FaPen
+                  <Pencil
                     onClick={(e) => {
                       e.stopPropagation();
                       e.preventDefault();
@@ -92,7 +93,7 @@ console.log(hasNewStatus)
                     className="cursor-pointer text-black h-8 w-8 hover:text-gray-500 p-2 rounded-full"
                     size={20}
                   />
-                  <FaTrashAlt
+                  <Trash
                     onClick={(e) => {
                       e.stopPropagation();
                       e.preventDefault();
@@ -143,16 +144,8 @@ export const ApprovalData = (
           <div className="flex gap-2">
             {status !== "received" && (
               <>
-                <FaPen
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    handleEditClick(row.original._id);
-                  }}
-                  className="cursor-pointer text-black h-8 w-8 hover:text-gray-500 p-2 rounded-full"
-                  size={20}
-                />
-                <FaTrashAlt
+              
+                <Trash
                   onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
@@ -163,6 +156,15 @@ export const ApprovalData = (
                 />
               </>
             )}
+              <Pencil
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    handleEditClick(row.original._id);
+                  }}
+                  className="cursor-pointer text-black h-8 w-8 hover:text-gray-500 p-2 rounded-full"
+                  size={20}
+                />
             <FaPaperPlane
               onClick={(e) => {
                 e.stopPropagation();
