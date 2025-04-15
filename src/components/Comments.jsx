@@ -61,11 +61,11 @@ const CommentsSection = ({ rolesData }) => {
                     .map((commentData) => (
                         commentData ? (
                           
-                            <div key={commentData._id} className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 m-2  transition-colors duration-200">
+                            <div key={commentData._id} className="bg-gray-50 rounded-lg p-2 hover:bg-gray-100 m-2  transition-colors duration-200">
                                 <div className="flex items-center gap-2 justify-between mb-2">
                                     <div className="flex-1 rounded p-2">           
                               <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center ">
+                            <div className="flex items-center mr-8 ">
                               <div className="bg-blue-100 text-blue-600 p-2 rounded-full">
                                 <User size={16} />
                               </div>
