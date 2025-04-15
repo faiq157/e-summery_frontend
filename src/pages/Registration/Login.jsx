@@ -81,8 +81,8 @@ const Login = () => {
       <div className="relative bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl p-8 space-y-8 border border-white/20">
         {/* Logo and Title */}
         <div className="text-center space-y-2">
-          <div className="inline-block p-4 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500">
-            <Users className="w-8 h-8 text-white" />
+          <div className="inline-block p-4 rounded-full ">
+          <img src="./UET.png" alt="Logo" className="w-24 h-24 shadow-lg shadow-slate-900 rounded-full" />
           </div>
           <h2 className="text-2xl font-bold text-gray-900">Welcome Back</h2>
           <p className="text-gray-500">Sign in to access your dashboard</p>
