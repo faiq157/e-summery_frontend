@@ -7,7 +7,7 @@ import { addComment, fetchComments } from '@/constant/notesheetAPI';
 import { toast } from 'react-toastify';
 import FullScreenImageViewer from './FullScreenImageViewer ';
 import axiosInstance from '@/utils/http';
-
+import jsPDF from 'jspdf';
 const base_URL = import.meta.env.VITE_APP_API_URL;
 import { useNotesheetContext } from '@/context/NotesheetContext';
 import {
@@ -20,7 +20,7 @@ import {
     AlertDialogCancel
 } from "@/components/ui/alert-dialog";
 import CommentsSection from './Comments';
-import { Calendar, FileText, Mail, Phone, User } from 'lucide-react';
+import { Calendar, Download, FileText, Mail, Phone, User } from 'lucide-react';
 import { useApprovalAccess } from '@/context/ApprovalAccessContext';
 
 
@@ -36,7 +36,7 @@ const NotesheetDetailModal = ({ isOpen, onClose, notesheet, userRole, storedToke
     const [totalPages, setTotalPages] = useState(1);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
       const { hasAccess  } = useApprovalAccess();
-console.log("completed button has access to.",hasAccess)
+console.log("completed role data to.",rolesData)
 const handlePreviewClick = () => {
     setIsPreviewOpen(true);
 };
@@ -147,6 +147,117 @@ const handleClosePreview = () => {
         setFile(e.target.files[0]);
     };
 
+    function base64ToBlob(base64, contentType) {
+        const byteCharacters = atob(base64.split(',')[1]);
+        const byteArrays = [];
+      
+        for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+          const slice = byteCharacters.slice(offset, offset + 512);
+          const byteNumbers = new Array(slice.length);
+          for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+          }
+          byteArrays.push(new Uint8Array(byteNumbers));
+        }
+      
+        return new Blob(byteArrays, { type: contentType });
+      }
+      const generatePDF = (notesheet, rolesData) => {
+        const doc = new jsPDF();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        let yOffset = 20;
+      
+        // Title
+        doc.setFontSize(18);
+        doc.setTextColor(33, 37, 41);
+        doc.text('Notesheet Details', 20, yOffset);
+        yOffset += 10;
+      
+        // Subject
+        doc.setFontSize(14);
+        doc.setTextColor(0, 0, 128);
+        doc.text(`Subject: ${notesheet?.subject || ''}`, 20, yOffset);
+        yOffset += 10;
+      
+        // User Info
+        doc.setFontSize(12);
+        doc.setTextColor(50, 50, 50);
+        doc.text(`Application User: ${notesheet?.userName || ''}`, 20, yOffset);
+        yOffset += 8;
+        doc.text(`Email: ${notesheet?.userEmail || ''}`, 20, yOffset);
+        yOffset += 8;
+        doc.text(`Contact Number: ${notesheet?.contact_number || ''}`, 20, yOffset);
+        yOffset += 8;
+        doc.text(`Created At: ${new Date(notesheet?.timestamps?.createdAt).toLocaleString()}`, 20, yOffset);
+        yOffset += 12;
+      
+        // Comments Section
+        if (rolesData && rolesData.length > 0) {
+          doc.setFontSize(14);
+          doc.setTextColor(0, 0, 0);
+          doc.text('Comments:', 20, yOffset);
+          yOffset += 10;
+      
+          rolesData.forEach((item, index) => {
+            doc.setFontSize(12);
+            doc.setTextColor(40, 40, 40);
+            const commentHeader = `${index + 1}. ${item.user || 'Unknown User'} - ${new Date(item.timestamp).toLocaleString()}`;
+            const commentLines = doc.splitTextToSize(`${item.comment || ''}`, 170);
+      
+            // Page break if needed
+            if (yOffset + commentLines.length * 7 + 10 > pageHeight) {
+              doc.addPage();
+              yOffset = 20;
+            }
+      
+            doc.text(commentHeader, 20, yOffset);
+            yOffset += 8;
+            doc.text(commentLines, 25, yOffset);
+            yOffset += commentLines.length * 7 + 5;
+          });
+        }
+      
+        // Description Section
+        if (notesheet?.description) {
+          doc.setFontSize(14);
+          doc.setTextColor(0, 0, 0);
+          if (yOffset + 20 > pageHeight) {
+            doc.addPage();
+            yOffset = 20;
+          }
+          doc.text('Application Description:', 20, yOffset);
+          yOffset += 10;
+      
+          const splitText = doc.splitTextToSize(notesheet.description, 170);
+          if (yOffset + splitText.length * 7 > pageHeight) {
+            doc.addPage();
+            yOffset = 20;
+          }
+          doc.text(splitText, 20, yOffset);
+          yOffset += splitText.length * 7 + 10;
+        }
+      
+        // Image Section
+        if (notesheet?.image) {
+          const img = new Image();
+          img.src = notesheet.image;
+      
+          img.onload = () => {
+            if (yOffset + 100 > pageHeight) {
+              doc.addPage();
+              yOffset = 20;
+            }
+            doc.addImage(img, 'JPEG', 20, yOffset, 170, 100);
+            doc.save('notesheet-details.pdf');
+          };
+          return; // Wait for image to load before saving
+        }
+      
+        // Save the document if there's no image
+        doc.save('notesheet-details.pdf');
+      };
+      
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl   overflow-hidden">
@@ -159,8 +270,8 @@ const handleClosePreview = () => {
             </div>
 
                 <div className=" flex  ">
-  <div className="w-1/2 mb-4 space-y-2 bg-blue-50 p-4 m-4  rounded-lg">
-  <h3 className="text-lg font-semibold text-blue-800 mb-4">
+                    <div className="w-1/2 mb-4 space-y-2 bg-blue-50 p-4 m-4  rounded-lg">
+                    <h3 className="text-lg font-semibold text-blue-800 mb-4">
                       Subject: {notesheet?.subject}
                     </h3>
                     <div className="space-y-4">
@@ -192,7 +303,10 @@ const handleClosePreview = () => {
                           <p className="text-gray-800 font-medium">{new Date(notesheet?.timestamps.createdAt).toLocaleString()}</p>
                         </div>
                       </div>
+                      
                     </div>
+                    <div className='flex justify-between items-center '>
+
 
     {/* Conditional Rendering */}
     {notesheet?.image ? (
@@ -230,8 +344,13 @@ const handleClosePreview = () => {
     ) : (
       <p>No description or image available.</p>
     )}
-  </div>
 
+                 
+<Button className='rounded-full' onClick={() => generatePDF(notesheet,rolesData)}>
+                        <Download className="" />
+                        </Button>
+  </div>
+  </div>
   <CommentsSection rolesData={rolesData} />
 </div>
                 <div className=" mb-4 p-4 bg-gray-50 rounded-lg">
