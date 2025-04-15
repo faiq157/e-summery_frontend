@@ -67,7 +67,7 @@ const NotesheetTracker = ({ trackingId }) => {
                   {/* Animated Timeline Dot */}
                   <div className="absolute left-0 top-0 -ml-2 group-hover:scale-125 transition-transform duration-300">
                     <div className="w-4 h-4 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg" />
-                    <div className="absolute inset-0 rounded-full animate-ping bg-blue-500 opacity-75" />
+                    <div className={`absolute inset-0 rounded-full animate-ping bg-blue-500 opacity-75`} />
                   </div>
                   
                   {/* Content Card */}
@@ -76,6 +76,7 @@ const NotesheetTracker = ({ trackingId }) => {
                       <div className="flex items-start justify-between">
                         <div className="space-y-1">
                           <h4 className="text-lg font-semibold text-gray-800">{item.role}</h4>
+                          {console.log("itemssss",item)}
                           <p className="text-gray-600">{item.action}</p>
                         </div>
                         <div className="flex items-center text-gray-500 bg-white/50 px-3 py-1 rounded-full">

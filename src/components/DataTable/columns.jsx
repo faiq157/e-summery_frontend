@@ -22,12 +22,12 @@ export const userColumns = (handleEdit, handleDelete) => [
       <div className="flex gap-2">
         <Pencil
           onClick={() => handleEdit(row.original)} 
-          className="cursor-pointer text-black h-10 w-10 hover:text-gray-500  rounded-full"
+          className="cursor-pointer text-black h-5 w-5 hover:text-gray-500  rounded-full"
           size={20} // Set the size of the icon
         />
         <Trash
           onClick={() => handleDelete(row.original._id)} 
-          className="cursor-pointer text-red-500 h-8 w-8 hover:text-red-700  rounded-full"
+          className="cursor-pointer text-red-500 h-5 w-5 hover:text-red-700  rounded-full"
           size={20} // Set the size of the icon
         />
       </div>

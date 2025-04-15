@@ -98,6 +98,9 @@ const Header = () => {
     <>
       <header className="top-0 flex w-full bg-background border-b-2 dark:border-border h-20 drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
         <nav className="flex items-center gap-6 px-8">
+          <span className='mr-8'>
+          <img src='./UET.png' alt="Logo" className="w-14 h-14 shadow-lg shadow-slate-900 rounded-full" />
+          </span>
        
           {items.map((item) => (
             <a
