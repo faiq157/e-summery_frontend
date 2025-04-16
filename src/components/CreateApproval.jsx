@@ -185,7 +185,8 @@ const NotificationTemplate = ({ closeModal, existingData }) => {
             modules={{
               toolbar: [
                 [{ header: [1, 2, false] }],
-                ["bold", "italic", "underline"],
+                ["bold", "italic", "underline", "strike"], 
+                [{ color: [] }, { background: [] }], 
                 [{ list: "ordered" }, { list: "bullet" }],
                 ["link", "image"],
                 ["clean"],
