@@ -267,7 +267,7 @@ const NotesheetDetailModal = ({
             onClick={onClose}
           />
         </div>
-
+       
         <div className=" flex  ">
           <div className="w-1/2 mb-4 space-y-2 bg-blue-50 p-4 m-4  rounded-lg">
             <h3 className="text-lg font-semibold text-blue-800 mb-4">
