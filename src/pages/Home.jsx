@@ -21,7 +21,7 @@ const Home = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [filter, setFilter] = useState("weekly");  // Default filter
+  const [filter, setFilter] = useState("all");  // Default filter
   const base_URL = import.meta.env.VITE_APP_API_URL;
   const storedUser = localStorage.getItem("user");
   const storedToken = localStorage.getItem("token");
@@ -53,9 +53,11 @@ const Home = () => {
 
   // Filter options for ShadCN Select
   const filterOptions = [
+   { value: "all", label: "All Time" },
     { value: "weekly", label: "Weekly" },
     { value: "15days", label: "15 Days" },
     { value: "monthly", label: "Monthly" },
+  
   ];
   const navigate = useNavigate();
 
